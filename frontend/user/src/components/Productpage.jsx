@@ -19,7 +19,7 @@ const Productpage = () => {
        fetchProduct()
     },[])
 
- const handleDisplay=async(id)=>{}
+ const handleDisplay=async(id)=>{
    
         navigate(`/products/display/${id}`)
     
