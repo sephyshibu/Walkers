@@ -233,5 +233,36 @@ const getProducts=async(req,res)=>{
 
 }
 
+const fetchproductdetails=async(req,res)=>{
+    console.log("entered")
+    const{id}=req.params
+    console.log("product display etail",id)
 
-module.exports={getProducts,signup,login,verifyotp,resendotp,googleLogin}
+    try{
+        const productdetails=await Productdb.findById(id)
+        console.log("details",productdetails)
+        const productdata=productdetails.toObject()
+        res.status(200).json(productdata)   
+     }
+     catch (err) {
+        console.error("Error fetching product details:", err);
+        res.status(500).json({ message: "Failed to fetch product details" });
+    }
+
+}
+const fetchrecom=async(req,res)=>{
+    const{category}=req.params
+
+    try{
+        const recommendations=await Productdb.find({category:category})
+        const recomdetails=recommendations
+        res.status(200).json(recomdetails)
+    }
+    catch (err) {
+        console.error("Error fetching product recommendations:", err);
+        res.status(500).json({ message: "Failed to fetch product recommendations" });
+    }
+
+}
+
+module.exports={fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

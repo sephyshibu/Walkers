@@ -17,7 +17,7 @@ function App() {
         <Route path='/otp' element={<Otp/>}/>
         <Route path='/home' element={<Home/>}/>
         <Route path='/product' element={<Productpage/>}/>
-        <Route path='/product/display:id' element={<ProductDisplay/>}/>
+        <Route path='/products/display/:id' element={<ProductDisplay/>}/>
       </Routes>
     </Router>
  )

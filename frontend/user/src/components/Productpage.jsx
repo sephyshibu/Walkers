@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosInstanceuser from '../axios'
 import './Productpage.css'
 import BannerC from './Banner'
-import {useNavigate} from 'react-redux'
+import { useNavigate } from 'react-router'
 const Productpage = () => {
     const[groupProducts, setgroupProducts]=useState({})
     const navigate=useNavigate()
