@@ -1,0 +1,123 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .otpcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f6f9;
+    margin: 0;
+    flex-direction: column;
+  }
+  
+  .formotp {
+    padding: 50px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    background: linear-gradient(135deg, #e40f0f 0%, #0c62e5 100%); /* Red and blue gradient */
+    animation: slideIn 0.5s ease-out; /* Animation for form appearance */
+  }
+  
+ .verifyotp{
+    font-size: 50px;
+    color: #0c62e5;
+    margin-bottom: 25px;
+ }
+  .formotp-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .formotp-input:focus {
+    border-color: #0c62e5; /* Blue focus */
+    outline: none;
+    transform: scale(1.05); /* Slight scale up effect */
+  }
+  
+  .Otpbtn {
+    width: 100%;
+    padding: 14px;
+    background-color: #e40f0f;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-bottom: 25px;
+  }
+  
+  .Otpbtn:hover {
+    background-color: #7c0d0d;
+    transform: scale(1.05);
+  }
+  .countdown-text{
+    color: white;
+    font-size: 20px;
+    
+  }
+  .resendbtn {
+    width: 100%;
+    padding: 14px;
+    background-color: #0c62e5;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin-top: 15px;
+  }
+  
+  .resendbtn:hover {
+    background-color: #003a8c;
+    transform: scale(1.05);
+  }
+  
+  .countdown-text {
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  
+  .countdown-text span {
+    font-weight: bold;
+    color: #e40f0f; /* Red for timer text */
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  .success-message {
+    color: green;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  @keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

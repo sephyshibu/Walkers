@@ -1,0 +1,69 @@
+*{
+  box-sizing: border-box;
+  margin:0;
+  padding: 0;
+
+}
+.banner img {
+  margin-top: 50px;
+  width: 100%;
+  height: auto;
+  object-fit: cover; /* Ensure the image covers the area without stretching */
+  display: block; /* Remove any default extra space around the image */
+}
+
+.productsuserpage {
+  padding: 0; /* Remove extra padding */
+  overflow-x: hidden; /* Hide horizontal scroll */
+  height: auto; /* Let height adjust based on content */
+  min-height: 100vh; /* Ensure the page fills the viewport height */
+  display: flex;
+  flex-direction: column; /* Arrange the banner and products vertically */
+}
+
+.category-section {
+  margin-bottom: 40px;
+}
+
+.category-section h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start; /* Align cards to the start */
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: inline-block; /* Allow cards to shrink to fit */
+  max-width: 200px; /* Set a reasonable max-width */
+  width: auto; /* Dynamically size the card */
+}
+
+.product-card img {
+  width: 100%;
+  height: auto; /* Maintain image aspect ratio */
+  max-height: 150px; /* Optional: Restrict max image height */
+  object-fit: contain; /* Ensure the image doesn't stretch */
+  border-radius: 5px;
+}
+
+.product-card h3 {
+  font-size: 1rem;
+  margin: 10px 0;
+}
+
+.product-card p {
+  font-size: 0.9rem;
+  color: #555;
+}

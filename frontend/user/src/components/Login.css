@@ -1,0 +1,142 @@
+/* Global Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    
+   
+  }
+/*   
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  } */
+  
+  /* Login Container */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin-top: 200px;
+   
+    animation: fadeInUp 1.5s ease-in-out;
+    overflow: hidden;
+  }
+  
+
+  
+  /* Logo Container */
+  .logo-container, .logo-container1 {
+    position: absolute;
+    width: 60%;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: fadeInTop 1.5s ease-in-out;
+}
+
+@keyframes fadeInTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) translateX(-50%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+}
+
+/* More animations for form input fields */
+.form-input {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+    animation: zoomIn 1s ease-in-out;
+}
+
+@keyframes zoomIn {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.login-btn {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #f50303;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    animation: slideUp 1s ease-in-out;
+}
+
+@keyframes slideUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+  .login-btn:hover {
+    background-color: #cc3333;
+    transform: scale(1.05);
+  }
+  
+  .login-btn:active {
+    transform: scale(1);
+  }
+  
+  /* Google Login Button */
+  .google-btn {
+    margin-top: 15px;
+    padding: 1px;
+   
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .google-btn:hover {
+    background-color: #7891b9;
+  }
+  
+  /* Messages */
+  .error-message, .success-message {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #e74c3c;
+  }
+  
+  .success-message {
+    color: #2ecc71;
+  }
+  
+  .paragraph{
+    margin-top: 10px;
+    font-size: 15px;
+  }

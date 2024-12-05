@@ -1,0 +1,111 @@
+/* General Page Styling */
+.edit-category-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+  }
+  
+  .edit-category-container {
+    background: #fff;
+    padding: 40px 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-in-out;
+    width: 800px;
+    text-align: center;
+  }
+  
+  .edit-category-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  /* Input Styling */
+  .input-group {
+    margin-bottom: 20px;
+    
+  }
+ 
+  .category-inputs {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+   
+  }
+  
+  .category-inputs:focus {
+    border-color: #4caf50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+  }
+  
+  /* Button Group */
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  
+  button {
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .save-button {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .save-button:hover {
+    background-color: #388e3c;
+    transform: scale(1.1);
+  }
+  
+  .delete-button {
+    background-color: #ff5722;
+    color: #fff;
+  }
+  
+  .delete-button:hover {
+    background-color: #e64a19;
+    transform: scale(1.1);
+  }
+  
+  .close-button {
+    background-color: #2196f3;
+    color: #fff;
+  }
+  
+  .close-button:hover {
+    background-color: #1976d2;
+    transform: scale(1.1);
+  }
+  
+  /* Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  

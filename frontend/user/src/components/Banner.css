@@ -1,0 +1,23 @@
+*{
+    box-sizing: border-box;
+    margin:0;
+    padding: 0;
+  }
+.bannerParentDiv { 
+    width: 100%;
+    height: auto; /* Let the banner adjust its height dynamically */
+    position: relative; /* Position it at the top */
+  }
+  
+  .bannerChildDiv {
+    width: 100%;
+    height: auto;
+  }
+  
+  .banner img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Ensure the image covers the area without stretching */
+    display: block; /* Remove any default extra space around the image */
+  }
+  
