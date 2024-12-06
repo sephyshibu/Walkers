@@ -5,10 +5,11 @@ import './Home.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axiosInstanceuser from '../axios';
-
+import { useNavigate } from 'react-router';
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
+  const navigate=useNavigate()
   useEffect(()=>{
      const fetchcategoryname=async()=>{
       console.log("useeffect")
@@ -32,7 +33,9 @@ const Home = () => {
      fetchcategoryname()
   },[])
 
-
+  const handleClick=(id)=>{
+      navigate(`/`)
+  }
   return (
     <div className="App">
       <Navbar />
@@ -57,7 +60,7 @@ const Home = () => {
         <h2>Our Category</h2>
         <div className="category-grid">
          {formdata.map((item,index)=>(
-          <div key={index} className='category card'>
+          <div key={index} className='category-card' onClick={()=>handleClick(item)}>
              <h3>{item}</h3>
           </div>
          ))}
