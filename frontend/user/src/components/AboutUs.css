@@ -1,0 +1,140 @@
+.about-us {
+    background-color: #f8f8f8; /* Light gray background */
+    padding: 30px;
+    text-align: center;
+    min-height: 400px;
+  }
+  
+  .about-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .image-column {
+    flex: 1;
+    margin-right: 30px;
+    text-align: left;
+    position: relative; /* Add position: relative to the image column */
+  }
+  
+  .image-column img {
+    width: 250px;
+    height: auto;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .image-column img:nth-child(1) {
+    z-index: 3;
+    width: 60%;
+    
+  }
+  
+  .image-column img:nth-child(2) {
+    z-index: 2;
+    position: absolute; /* Make images absolute within the column */
+    top: 100px; /* Adjust top position as needed */
+    left: 180px; /* Adjust left position as needed */
+    transform: translateX(-50px) scale(0.9);
+    width: 55%;
+  }
+  
+  .image-column img:nth-child(3) {
+    z-index: 1;
+    position: absolute; /* Make images absolute within the column */
+    top: 50px; /* Adjust top position as needed */
+    left: 380px; /* Adjust left position as needed */
+    transform: translateY(-100px) scale(0.8);
+    width: 55%;
+  }
+  
+  .image-column img:hover {
+    transform: scale(1.1);
+  }
+  
+  .text-column {
+    flex: 1; /* Equal width for text column */
+    text-align: left;
+  }
+  
+  .text-column h1 {
+    font-size: 2em; /* Reduce heading size */
+    margin-bottom: 15px;
+    color: #dc3545; /* Red heading */
+  }
+  
+  .text-column p {
+    font-size: 1em; /* Reduce paragraph size */
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: justify;
+    hyphens: auto;
+  }
+  
+.text-column h2{
+    color:  #dc3545;
+    margin-bottom: 30px;
+}
+
+  .features-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .feature-card {
+    background-color: #fff; /* White card background */
+    border: 1px solid #ddd; /* Light gray border */
+    padding: 20px;
+    margin-bottom: 20px;
+    width: calc(33.33% - 20px);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: #007bff; /* Blue border on hover */
+  }
+  
+  .feature-card h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #007bff; /* Blue heading */
+  }
+  
+  .feature-card p {
+    font-size: 0.9em;
+    line-height: 1.4;
+    color: #333; /* Dark gray text */
+  }
+  
+  /* ... (rest of the styles) ... */
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .about-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .image-column {
+      margin-right: 0;
+      margin-bottom: 30px;
+    }
+  
+    .image-column img {
+      position: static; /* Remove overlay effect on smaller screens */
+      transform: none;
+    }
+  
+    .text-column {
+      text-align: center;
+    }
+  
+    .text-column p {
+      text-align: center;
+    }
+  }
+  

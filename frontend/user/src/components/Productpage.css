@@ -1,10 +1,21 @@
 /* General Page Styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Ensure elements respect their boundaries */
+}
 .products-user-page {
   font-family: 'Arial', sans-serif;
   background: linear-gradient(120deg, #d37a7a, #687796);
   color: #fff;
-  padding: 20px 40px;
+  padding: 20px 0px;
   animation: fadeIn 1s ease-in-out;
+}
+.products-user-page .banner {
+  margin-top: 70px; /* Adjust based on navbar height */
+  background-color: #f2f2f2; /* Neutral background color */
+  padding: 20px 0;
+  text-align: center;
 }
 
 .page-title {

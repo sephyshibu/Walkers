@@ -3,6 +3,7 @@ import axiosInstanceuser from '../axios'
 import './Productpage.css'
 import BannerC from './Banner'
 import { useNavigate } from 'react-router'
+import Navbar from './Navbar'
 const Productpage = () => {
     const[groupProducts, setgroupProducts]=useState({})
     const navigate=useNavigate()
@@ -27,6 +28,7 @@ const Productpage = () => {
  }
   return (
     <div className='products-user-page'>
+        <Navbar/>
          <div className="banner">
         <img
           src="../images/banner copy.png"
