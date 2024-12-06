@@ -264,5 +264,17 @@ const fetchrecom=async(req,res)=>{
     }
 
 }
-
-module.exports={fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+const categoryname=async(req,res)=>{
+    try {
+        const categories= await Categorydb.find({status:true})
+     
+       const categorynames=categories.map((item)=>item.categoryname)
+       console.log("list of categories", categorynames)
+        
+        res.status(200).json({message:"success in fetching category name", categorynames})
+    } catch (error) {
+        console.error("Error fetching category names:", err);
+        res.status(500).json({ message: "Failed to fetch category names" });
+    }
+}
+module.exports={categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
