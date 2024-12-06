@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstanceuser from '../axios';
 import './Productpage.css';
-import { useNavigate } from 'react-router';
+import { useNavigate ,useLocation} from 'react-router';
 import Navbar from './Navbar';
 
 const Productpage = () => {
     const [groupProducts, setGroupProducts] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('ALL PRODUCTS'); // Track selected category
     const navigate = useNavigate();
-
+    const location=useLocation()
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const response = await axiosInstanceuser.get('/getproducts');
                 setGroupProducts(response.data.groupProducts);
+
+                // to get parameter from search url
+                const params=new URLSearchParams(location.search)
+                const categoryFromQuery = params.get('category');
+                if (categoryFromQuery) {
+                    setSelectedCategory(categoryFromQuery);
+                }
+                
             } catch (error) {
                 console.log('Error in fetching products');
             }

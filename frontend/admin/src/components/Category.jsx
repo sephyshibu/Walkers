@@ -83,6 +83,7 @@ const Category = () => {
                         
                         <th>category Name</th>
                         <th>category Status</th>
+                       
                         <th>Actions</th>
                         
                     </tr>
@@ -95,6 +96,7 @@ const Category = () => {
                         >
                         
                             <td>{list.categoryname}</td>
+                            
                             {/* <td>{user.phonenumber}</td> */}
                             <td>{list.status ? "Active":"InActive"}</td>
                             <td>

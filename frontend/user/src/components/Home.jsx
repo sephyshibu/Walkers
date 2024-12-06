@@ -33,8 +33,8 @@ const Home = () => {
      fetchcategoryname()
   },[])
 
-  const handleClick=(id)=>{
-      navigate(`/`)
+  const handleClick=(name)=>{
+      navigate(`/product?category=${name}`)
   }
   return (
     <div className="App">
@@ -57,11 +57,16 @@ const Home = () => {
       </div>
 
       <div className="about-category">
-        <h2>Our Category</h2>
+        <h2 className='category-titles'>Our Category</h2>
         <div className="category-grid">
          {formdata.map((item,index)=>(
           <div key={index} className='category-card' onClick={()=>handleClick(item)}>
-             <h3>{item}</h3>
+            <div className="image-container">
+              <h3>{item}</h3>
+              <div className="hover-overlay">
+                    <span>Click Me</span>
+                </div>
+        </div> 
           </div>
          ))}
         </div>
