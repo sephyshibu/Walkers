@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axiosInstanceuser from "../axios";
 import "./ProductDisplay.css";
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
-
+import { useNavigate } from "react-router-dom";
 
 
 const ProductDisplay = () => {
@@ -20,7 +20,7 @@ const ProductDisplay = () => {
     description: "",
     stockStatus: "",
   });
-
+  const navigate=useNavigate()
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -65,11 +65,17 @@ const ProductDisplay = () => {
   const handleThumbnailClick = (image) => {
     setMainImage(image); // Update the main image when a thumbnail is clicked
   };
+
+  const handleDisplay=(id)=>{
+    console.log("entered")
+    navigate(`/products/display/${id}`)
+  }
   return (
     <div className="product-display">
       {error && <p className="error-message">{error}</p>}
       {!error && (
         <>
+        <div className="product-top">
           <div className="product-left">
             <div className="main-image-container">
             <TransformWrapper>
@@ -84,7 +90,7 @@ const ProductDisplay = () => {
                     )}
                 </TransformComponent>
             </TransformWrapper>
-               
+         
            
             </div>
             <div className="thumbnail-container">
@@ -101,7 +107,7 @@ const ProductDisplay = () => {
               ))}
             </div>
           </div>
-
+        </div>   
 
           <div className="product-right">
             <h1 className="product-title">{formdata.title}</h1>
@@ -149,6 +155,7 @@ const ProductDisplay = () => {
                     src={product.images[0]}
                     alt={product.title}
                     className="recommendation-image"
+                    onClick={()=>handleDisplay(product._id)}
                   />
                   <h3 className="recommendation-title">{product.title}</h3>
                   <p className="recommendation-price">${product.price}</p>

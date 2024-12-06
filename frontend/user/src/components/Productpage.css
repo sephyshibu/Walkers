@@ -1,69 +1,127 @@
-*{
-  box-sizing: border-box;
-  margin:0;
-  padding: 0;
-
+/* General Page Styling */
+.products-user-page {
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(120deg, #d37a7a, #687796);
+  color: #fff;
+  padding: 20px 40px;
+  animation: fadeIn 1s ease-in-out;
 }
+
+.page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 30px;
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Banner Styling */
 .banner img {
-  margin-top: 50px;
   width: 100%;
-  height: auto;
-  object-fit: cover; /* Ensure the image covers the area without stretching */
-  display: block; /* Remove any default extra space around the image */
-}
-
-.productsuserpage {
-  padding: 0; /* Remove extra padding */
-  overflow-x: hidden; /* Hide horizontal scroll */
-  height: auto; /* Let height adjust based on content */
-  min-height: 100vh; /* Ensure the page fills the viewport height */
-  display: flex;
-  flex-direction: column; /* Arrange the banner and products vertically */
-}
-
-.category-section {
+  border-radius: 12px;
   margin-bottom: 40px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-.category-section h2 {
+/* Category Section */
+.category-section {
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.category-title {
   font-size: 1.8rem;
-  color: #333;
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(255, 77, 77, 0.85);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  letter-spacing: 0.5px;
 }
 
+/* Product Grid */
 .products-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: flex-start; /* Align cards to the start */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  padding: 0 20px;
 }
 
+/* Product Card Styling */
 .product-card {
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: #333;
+  border-radius: 12px;
+  padding: 20px;
   text-align: center;
-  display: inline-block; /* Allow cards to shrink to fit */
-  max-width: 200px; /* Set a reasonable max-width */
-  width: auto; /* Dynamically size the card */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
-.product-card img {
+.product-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.product-image {
   width: 100%;
-  height: auto; /* Maintain image aspect ratio */
-  max-height: 150px; /* Optional: Restrict max image height */
-  object-fit: contain; /* Ensure the image doesn't stretch */
-  border-radius: 5px;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
 }
 
-.product-card h3 {
-  font-size: 1rem;
-  margin: 10px 0;
+.product-card:hover .product-image {
+  transform: scale(1.05);
 }
 
-.product-card p {
-  font-size: 0.9rem;
-  color: #555;
+.product-title {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+}
+
+.product-price {
+  font-size: 1.1rem;
+  color: #ff4d4d;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Divider Between Categories */
+.category-divider {
+  height: 3px;
+  background: rgba(77, 136, 255, 0.85);
+  margin: 30px auto;
+  width: 70%;
+  border-radius: 8px;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+  }
+
+  .category-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
