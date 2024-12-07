@@ -70,6 +70,7 @@ const login=()=>{
             localStorage.setItem('userId',userId)
             
             console.log(backresponse.data.message)
+            setformdata(' ')
             seterror('')
             navigate('/home')
         }
@@ -94,6 +95,8 @@ const login=()=>{
           });
     
           setmsg(backresponse.data.message);
+          const userId='usergoogleId'
+          localStorage.setItem('userId',userId)
           seterror("");
           navigate("/home");
         } catch (err) {

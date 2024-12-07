@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 
 
-const adminSlice=createSlice({
+const userSlice=createSlice({
     name:"user",
     initialState:{
         username:"",
@@ -21,5 +21,5 @@ const adminSlice=createSlice({
     }
 })
 
-export const{loginuser,logoutuser}=adminSlice.actions
-export default adminSlice.reducer
+export const{loginuser,logoutuser}=userSlice.actions
+export default userSlice.reducer

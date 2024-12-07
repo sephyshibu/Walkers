@@ -7,15 +7,29 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const userId=localStorage.getItem('userId')
+
+  const handleLoginLogout=()=>{
+    if(userId)
+    {
+      localStorage.removeItem('userId')
+      navigate('/')
+      
+    }
+    else{
+      navigate('/login')
+    }
+  }
+
   const handleAboutUsClick = () => {
-    if (location.pathname === '/home') {
+    if (location.pathname === '/') {
       // If already on the home page, scroll to the "About Us" section
       document.getElementById('about-us-section').scrollIntoView({
         behavior: 'smooth',
       });
     } else {
       // Navigate to the home page and scroll after navigation
-      navigate('/home');
+      navigate('/');
       setTimeout(() => {
         document.getElementById('about-us-section').scrollIntoView({
           behavior: 'smooth',
@@ -47,6 +61,11 @@ const Navbar = () => {
           </li>
           <li className={location.pathname === "/account" ? "active-link" : ""}>
             <Link to="/account">My Account</Link>
+          </li>
+          <li>
+            <button className="auth-button" onClick={handleLoginLogout}>
+              {userId ? 'Logout' : 'Login'}
+            </button>
           </li>
         </ul>
       </div>

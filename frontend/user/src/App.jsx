@@ -8,17 +8,18 @@ import Home from './components/Home'
 import Productpage from './components/Productpage'
 import ProductDisplay from './components/ProductDisplay'
 import AboutUs from './components/AboutUs'
+import ProtectedRouter from './components/ProtectedRouter'
 function App() {
   
  return(
     <Router>
       <Routes>
-        <Route path='/' element={<Login/>}/>
+        <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/otp' element={<Otp/>}/>
-        <Route path='/home' element={<Home/>}/>
-        <Route path='/product' element={<Productpage/>}/>
-        <Route path='/products/display/:id' element={<ProductDisplay/>}/>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
+        <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
         
       </Routes>
     </Router>

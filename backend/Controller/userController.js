@@ -104,23 +104,55 @@ const login=async(req,res)=>{
     //generate token
 
     const token=jwt.sign({username:user.username}, process.env.JWT_SECRET,{expiresIn:'2m'})
-    const refreshToken=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'7d'})
+    const refreshToken=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
     console.log("Access Token", token)
     console.log("refresh token", refreshToken)
 
-    res.cookie('refreshToken', refreshToken, {
-        secure: process.env.NODE_ENV === 'production', // Set to true only in production
-        httpOnly: true,
-        sameSite: 'strict', // Or 'lax' if you need it to work cross-origin
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    let options = {
+        maxAge: 1000 * 60 * 15, // expire after 15 minutes
+        httpOnly: true, // Cookie will not be exposed to client side code
+        sameSite: "none", // If client and server origins are different
+        secure: true // use with HTTPS only
+    }
+
+   console.log("refresh token created during login",refresh)
+    // Set the cookie
+   res.cookie("refresh token User", refresh, options);
+
     res.status(200).json({message:"Login Successfully",username: user.username, token})
+    console.log("backend Admin",  token);
+     return; // Prevent further execution
 }
+
 catch(error){
     console.log(error)
     res.status(500).json({message:"internal server error"})
 }
 }
+
+const refreshToken = async(req, res) => {
+    const refreshToken = req.cookies?.refreshToken;
+    console.log("refreshhhh",refreshToken)
+  
+    if (!refreshToken) { 
+      return res.status(400).json({ message: 'Refresh token missing' });
+    }
+  
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+      const newAccessToken = jwt.sign(
+        { username: decoded.username },
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' }
+      );
+  
+      res.json({ token: newAccessToken });
+    } catch (err) {
+      console.error('Error verifying refresh token:', err);
+      return res.status(500).json({ message: 'Failed to refresh token' });
+    }
+  };
+
 
 
 const verifyotp=async (req,res)=>{
@@ -277,4 +309,4 @@ const categoryname=async(req,res)=>{
         res.status(500).json({ message: "Failed to fetch category names" });
     }
 }
-module.exports={categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
