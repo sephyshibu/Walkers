@@ -79,11 +79,11 @@ const addCategory=async(req,res)=>{
     const{category}=req.body
     console.log(category)
     try{
-       const cat=await Categorydb.findOne({category})
+       const cat=await Categorydb.findOne({categoryname:category})
        console.log("null",cat)
        if(cat)
        {
-        return res.status(400).json({message:"Category Already Existed"})
+        return res.status(403).json({message:"Category Already Existed"})
        }
        console.log("edf")
        const newcategory=new Categorydb({

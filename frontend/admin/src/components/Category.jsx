@@ -6,6 +6,7 @@ const Category = () => {
     const [category,setcategory]=useState("")
     const[lists,setlists]=useState([])
     const[error,seterror]=useState('')
+    // const[msg,setmsg]=useState('')
     const navigate=useNavigate()
 
     useEffect(()=>{
@@ -31,6 +32,17 @@ const Category = () => {
         setcategory(e.target.value)
     }
     const handleSubmit=async(e)=>{
+        const invalid=/[^a-zA-Z0-9\s]/.test(category.trim())
+        if (!category.trim()) {
+            seterror('Category name cannot be empty');
+            return;
+        }
+        if(invalid){
+            seterror('Category cannot be only special characters')
+            return
+        }
+
+
         console.log("dcds")
         e.preventDefault()
         try{
@@ -40,8 +52,12 @@ const Category = () => {
             setcategory("")
         }
         catch (err) {
-            console.error("Error adding category:", err);
-            seterror('Failed to add category');
+            if (err.response && err.response.data && err.response.data.message) {
+                seterror(err.response.data.message); // Server's custom message
+            }else{
+                seterror('Failed to add category');
+            }
+            
         }
         
     }
@@ -128,7 +144,7 @@ const Category = () => {
                     
             </form>
         </div>
-        <button  className="submit-button" onClick={handleSubmit}>Submit</button>
+        <button  className="submit-button" onClick={handleSubmit}>Add</button>
     </div>
   )
 }
