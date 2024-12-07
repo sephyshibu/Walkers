@@ -104,9 +104,9 @@ const login=async(req,res)=>{
     //generate token
 
     const token=jwt.sign({username:user.username}, process.env.JWT_SECRET,{expiresIn:'2m'})
-    const refreshToken=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
+    const refresh=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
     console.log("Access Token", token)
-    console.log("refresh token", refreshToken)
+    console.log("refresh token", refresh)
 
     let options = {
         maxAge: 1000 * 60 * 15, // expire after 15 minutes
@@ -117,9 +117,9 @@ const login=async(req,res)=>{
 
    console.log("refresh token created during login",refresh)
     // Set the cookie
-   res.cookie("refresh token User", refresh, options);
+   res.cookie("refreshtokenUser", refresh, options);
 
-    res.status(200).json({message:"Login Successfully",username: user.username, token})
+    res.status(200).json({message:"Login Successfully",id: user._id,username: user.username, token})
     console.log("backend Admin",  token);
      return; // Prevent further execution
 }

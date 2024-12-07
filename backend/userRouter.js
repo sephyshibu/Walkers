@@ -6,7 +6,7 @@ const verifyAccessToken =require( './middleware/verifyaccessToken')
 
 router.post('/signup',signup)
 router.post('/refresh',refreshToken)
-router.post('/',login)
+router.post('/login',login)
 router.post('/verifyotp',verifyotp)
 router.post('/resendotp',resendotp)
 router.post('/auth/google',googleLogin)

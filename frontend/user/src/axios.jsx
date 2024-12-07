@@ -70,7 +70,7 @@ axiosInstanceuser.interceptors.response.use(
       
       catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        // store.dispatch(logout()); 
+        store.dispatch(logoutuser()); 
         return Promise.reject(refreshError);
       }
     }

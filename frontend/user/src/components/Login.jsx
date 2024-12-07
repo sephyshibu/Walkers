@@ -60,7 +60,7 @@ const login=()=>{
 
         try{
 
-            const backresponse=await axiosInstance.post('/',formdata)
+            const backresponse=await axiosInstance.post('/login',formdata)
             console.log("user Backend data login",backresponse)
             dispatch(loginuser({username: backresponse.data.username,token:backresponse.data.token}))
             setmsg(backresponse.data.message)
@@ -72,7 +72,7 @@ const login=()=>{
             console.log(backresponse.data.message)
             setformdata(' ')
             seterror('')
-            navigate('/home')
+            navigate('/')
         }
         catch(err)
         {

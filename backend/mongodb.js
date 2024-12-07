@@ -21,7 +21,9 @@ const userSchema= new mongoose.Schema({
     },
     googleId:{
         type:String,
-        unique:true
+        unique:true,
+        required:false,
+        default:null
     },
     password:{
         type:String,
