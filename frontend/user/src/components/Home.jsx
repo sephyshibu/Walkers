@@ -9,11 +9,14 @@ import { useNavigate } from 'react-router';
 import pic1 from '../images/pic1.jpg'
 import pic2 from '../images/pic2.jpg'
 import pic3 from '../images/pic3.jpg'
-
-
+import banner1 from '../images/Business.png'
+import banner2 from '../images/Business 1.png'
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const banners = [banner1, banner2]; // Array of banner images
+
   const navigate=useNavigate()
   useEffect(()=>{
      const fetchcategoryname=async()=>{
@@ -38,6 +41,14 @@ const Home = () => {
      fetchcategoryname()
   },[])
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % banners.length); // Cycle through slides
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, [banners.length]);
+
   const handleClick=(name)=>{
       navigate(`/product?category=${name}`)
   }
@@ -54,19 +65,21 @@ const Home = () => {
   return (
     <div className="App">
       <Navbar />
+      <div className="products-user-page">
       <div className="banner">
-        <div className="banner-content">
+        <img
+          className="banner-image"
+          src={banners[currentSlide]}
+          alt={`Banner ${currentSlide + 1}`}
+        />
+        {/* <div className="banner-content">
           <h1 className="banner-title">Power Your World with Solar</h1>
           <p className="banner-subtitle">
             Explore our range of high-efficiency solar products to light up your life sustainably.
           </p>
-        </div>
-        <img
-          className="banner-image"
-          src="../images/banner copy.png"
-          alt="Solar Products Banner"
-        />
+        </div> */}
       </div>
+    </div>
       <div id="about-us-section" className="aboutsection">
         <AboutUs />
       </div>

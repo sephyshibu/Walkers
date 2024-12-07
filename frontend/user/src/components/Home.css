@@ -25,7 +25,7 @@ body {
   }
   
   /* Banner Styling */
-  .banner {
+  /* .banner {
     position: relative;
     height: 90vh;
     display: flex;
@@ -33,32 +33,60 @@ body {
     justify-content: space-around;
     overflow: hidden;
     background: linear-gradient(to right, #f6d365, #fda085);
-  }
+  } */
   
+  .banner {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+  }
+  .banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    animation: fade 2s ease-in-out;
+  }
+
   .banner-content {
-    max-width: 50%;
-    animation: slideInLeft 1s ease-out;
-  }
-  
-  .banner-title {
-    font-size: 3rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: white;
-    margin: 0;
+    text-align: center;
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 10px;
+  }
+  .banner-title {
+    font-size: 2.5rem;
+    font-weight: bold;
   }
   
   .banner-subtitle {
-    font-size: 1.5rem;
-    color: white;
+    font-size: 1.2rem;
     margin-top: 10px;
   }
-  
-  .banner-image {
-    height: 35%;
-    animation: slideInRight 1.2s ease-out;
-    transform: scale(0.8);
+
+  /* Fade Animation */
+@keyframes fade {
+  from {
+    opacity: 0;
   }
-  
+  to {
+    opacity: 1;
+  }
+}
+  /* .banner-image {
+    margin-top: 105px;
+    height: 55%;
+    animation: slideInRight 1.2s ease-out;
+    transform: scale(0.9);
+  }
+   */
   /* About Section */
   .aboutsection {
     padding: 50px 20px;

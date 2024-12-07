@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import {Link,useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css'; // Add this CSS file for styling
-
+import walker from '../images/walkers-logo.png'
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -41,9 +41,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="logo" onClick={() => navigate('/')}>
-          MyStore
-        </div>
+      <div className="logo" onClick={() => navigate('/')}>
+      <img src={walker} alt="Logo" className="logo-image" />
+    </div>
         <ul className="navbar-links">
           <li className={location.pathname === "/" ? "active-link" : ""}>
             <Link to="/">Home</Link>

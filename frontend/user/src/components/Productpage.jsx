@@ -50,6 +50,20 @@ const Productpage = () => {
                 <img src="../images/banner copy.png" alt="" />
             </div>
 
+
+            {/* <div className="banner"> */}
+            {/* <video 
+                className="banner-video"
+                src="../videos/banner.mp4" // Replace with the actual path to your video
+                autoPlay
+                loop
+                muted
+            >
+                Your browser does not support the video tag.
+            </video>
+            </div> */}
+
+
             <h1 className="page-title">Our Products</h1>
 
             {/* Filter Buttons */}
