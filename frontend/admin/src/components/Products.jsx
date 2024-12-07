@@ -75,7 +75,7 @@ const Products = () => {
   const handleAddProduct = async () => {
     const { title, price, category, sku, description, stockStatus, availableQuantity } = formData;
 
-    if (!title || !price || !category || !sku || !description || !availableQuantity) {
+    if (!title || !price || !category || !sku || !description || !availableQuantity || !stockStatus) {
       setError('All fields are required.');
       return;
     }
@@ -160,6 +160,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
     <div className="products-dashboard-container">
       <h1 className="dashboard-title">Products Dashboard</h1>
       <div>
+      {error && <p className="error-messages">{error}</p>}
       <form className="product-form">
         <input
           type="text"
@@ -213,6 +214,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
             <input type='text' 
                 name="stockStatus"
                 className="input-groupss"
+                placeholder='available or out-of-stock'
                 value={formData.stockStatus} 
                 onChange={handleInputChange}>
                     
