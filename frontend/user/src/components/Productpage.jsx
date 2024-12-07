@@ -3,7 +3,7 @@ import axiosInstanceuser from '../axios';
 import './Productpage.css';
 import { useNavigate ,useLocation} from 'react-router';
 import Navbar from './Navbar';
-
+import banner1 from '../images/Business.png'
 const Productpage = () => {
     const [groupProducts, setGroupProducts] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('ALL PRODUCTS'); // Track selected category
@@ -47,8 +47,12 @@ const Productpage = () => {
         <div className="products-user-page">
             <Navbar />
             <div className="banner">
-                <img src="../images/banner copy.png" alt="" />
+                <img src={banner1} alt="" />
             </div>
+            <header className="page-header">
+                <h1 className="page-title">Our Exclusive Products</h1>
+                <p className="page-subtitle">Explore categories tailored for your needs</p>
+            </header>
 
 
             {/* <div className="banner"> */}
@@ -72,6 +76,7 @@ const Productpage = () => {
                 <select
                     id="category-select"
                     value={selectedCategory}
+                    className="filter-select"
                     onChange={handleFilter}
                 >
                     <option value="ALL PRODUCTS">All Products</option>
@@ -101,7 +106,7 @@ const Productpage = () => {
                             </div>
                         ))}
                     </div>
-                    <div className="category-divider"></div>
+                    
                 </div>
             ))}
         </div>

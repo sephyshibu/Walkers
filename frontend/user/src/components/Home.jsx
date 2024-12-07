@@ -55,8 +55,8 @@ const Home = () => {
 
   const categoryImages = {
     "Solar Panels": pic1,
-    "Invertor": pic2,
-    "Fencing machine": pic3,
+    "Fencing accessories": pic2,
+    "Battery Chargers": pic3,
    
     // Add more categories with their respective images
 };
@@ -85,7 +85,7 @@ const Home = () => {
       </div>
 
       <div className="about-category">
-        <h2 className='category-titles'>Our Category</h2>
+        <h2 className='category-titles'>Product Categories</h2>
         <div className="category-grid">
          {formdata.map((item,index)=>(
           <div key={index} className='category-card' onClick={()=>handleClick(item)}>

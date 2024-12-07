@@ -14,6 +14,26 @@
   margin-top: 70px;
   text-align: center;
 }
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.page-title {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.page-subtitle {
+  font-size: 1.2rem;
+  color: #7f8c8d;
+  font-style: italic;
+  margin-top: 0;
+}
 
 .page-title {
   text-align: center;
@@ -37,20 +57,33 @@
 }
 
 .category-title {
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  color: #444;
+  font-size: 2rem;
   font-weight: bold;
+  color: #1abc9c;
+  text-align: left;
+  margin: 30px 0 20px;
+  text-transform: capitalize;
+  border-bottom: 2px solid #16a085;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  animation: fadeIn 1.5s ease-in-out;
 }
-
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 /* Product Grid */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Adjust the minimum size */
-  gap: 20px; /* Consistent spacing between cards */
-  padding: 0 20px;
+  grid-template-columns: repeat(3, 1fr); /* Always 3 columns */
+  gap: 25px; /* Consistent spacing between cards */
+  padding: 90px 120px; /* Padding within the grid boundaries */
   justify-items: center; /* Center align items in the grid */
 }
 
@@ -72,6 +105,68 @@
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+/* Filter Dropdown Section */
+/* Filter Dropdown Section */
+.filter-dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #e3fdfd, #ffe6fa);
+  border-radius: 12px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  gap: 15px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Label Styling */
+.filter-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2c3e50;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Select Dropdown Styling */
+.filter-select {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: #34495e;
+  appearance: none; /* Hides default dropdown arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Focus & Hover Effects */
+.filter-select:hover {
+  background: #f9f9f9;
+}
+
+.filter-select:focus {
+  outline: 2px solid #16a085;
+  box-shadow: 0 0 8px rgba(22, 160, 133, 0.5);
+}
+
+/* Option Styling */
+.filter-select option {
+  background: #ffffff;
+  color: #2c3e50;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 10px;
 }
 
 .product-image {
@@ -115,7 +210,7 @@
 /* Responsive Styling */
 @media (max-width: 768px) {
   .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
   }
 
   .product-card {
