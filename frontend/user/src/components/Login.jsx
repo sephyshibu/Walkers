@@ -98,9 +98,13 @@ const login=()=>{
           const userId='usergoogleId'
           localStorage.setItem('userId',userId)
           seterror("");
-          navigate("/home");
+          navigate("/");
         } catch (err) {
+            if (err.response && err.response.data && err.response.data.message) {
+                seterror(err.response.data.message); // Server's custom message
+            } else{
           seterror("Google Login Failed. Please try again.");
+            }
           setmsg("");
         }
       };

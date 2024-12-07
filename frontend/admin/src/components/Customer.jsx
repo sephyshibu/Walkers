@@ -3,10 +3,13 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import axiosInstanceadmin from '../axios'
 import { current } from '@reduxjs/toolkit'
+import {useSelector} from 'react-redux'
 import './Customer.css'
 const Customer = () => {
     const[users,setusers]=useState([])
     const[error,seterror]=useState('')
+    const token=useSelector((state)=>state.admin.token)
+    console.log("In customer page admin token", token)
     useEffect(()=>{
         const fetchusers=async()=>{
             try{
@@ -23,6 +26,7 @@ const Customer = () => {
     },[])
 
     const toggleActive = async (userId, currentStatus) => {
+       
         try {
             const response = await axiosInstanceadmin.put(`/customer/${userId}/block`, {
                 status: !currentStatus

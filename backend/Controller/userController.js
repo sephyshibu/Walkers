@@ -90,7 +90,7 @@ const login=async(req,res)=>{
     const user=await Users.findOne({username:username})
     if(user.status===false)
     {
-        return res.status(500).json({message:"User is Blocked by admin"})
+        return res.status(403).json({message:"User is Blocked by admin"})
     }
     if(!user)
         {
@@ -219,6 +219,11 @@ const googleLogin=async(req,res)=>{
         const { sub: googleId, email, name: username } = payload;
          // Check if the user already exists
         let user = await Users.findOne({ googleId });
+        
+        if(user.status===false)
+        {
+            return res.status(403).json({message:"User is Blocked by admin"})
+        }
 
         if (!user) {
             // Create a new user if not found
@@ -232,6 +237,7 @@ const googleLogin=async(req,res)=>{
           }
        
         res.status(200).json({ message: 'Google login successful', user });
+        
       } catch (err) {
         res.status(401).json({ message: 'Invalid Google Token' });
       }

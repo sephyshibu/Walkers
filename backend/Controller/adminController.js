@@ -208,7 +208,7 @@ const softdeleteproduct=async(req,res)=>{
 
 const toggleUserStatus=async(req,res)=>{
     const{userId}=req.params
-
+    console.log("userId toggle",userId)
     try{
         const user=await Users.findById(userId)
         if(!user)
