@@ -31,12 +31,13 @@ const Category = () => {
         setcategory(e.target.value)
     }
     const handleSubmit=async(e)=>{
+        console.log("dcds")
         e.preventDefault()
         try{
-            const response=await axiosInstanceadmin.post('/addcategory',{categoryname:category})
+            const response=await axiosInstanceadmin.post('/addcategory',{category:category})
             console.log(response.data) 
             setlists([...lists,response.data])
-            setcategory(" ")
+            setcategory("")
         }
         catch (err) {
             console.error("Error adding category:", err);

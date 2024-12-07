@@ -79,7 +79,7 @@ const addCategory=async(req,res)=>{
     const{category}=req.body
     console.log(category)
     try{
-       const cat=await Categorydb.findOne({categoryname: category})
+       const cat=await Categorydb.findOne({category})
        console.log("null",cat)
        if(cat)
        {
@@ -92,7 +92,7 @@ const addCategory=async(req,res)=>{
     })
     
     await newcategory.save()
-    res.status(200).json({message:"Category added Successfully"})
+    res.status(200).json(newcategory)
     }
     catch (error) {
         console.error("error",error)
