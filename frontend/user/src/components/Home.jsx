@@ -6,6 +6,11 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import axiosInstanceuser from '../axios';
 import { useNavigate } from 'react-router';
+import pic1 from '../images/pic1.jpg'
+import pic2 from '../images/pic2.jpg'
+import pic3 from '../images/pic3.jpg'
+
+
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
@@ -36,6 +41,16 @@ const Home = () => {
   const handleClick=(name)=>{
       navigate(`/product?category=${name}`)
   }
+
+  const categoryImages = {
+    "Solar Panels": pic1,
+    "Invertor": pic2,
+    "Fencing machine": pic3,
+   
+    // Add more categories with their respective images
+};
+
+
   return (
     <div className="App">
       <Navbar />
@@ -61,11 +76,16 @@ const Home = () => {
         <div className="category-grid">
          {formdata.map((item,index)=>(
           <div key={index} className='category-card' onClick={()=>handleClick(item)}>
-            <div className="image-container">
-              <h3>{item}</h3>
-              <div className="hover-overlay">
+            <div className="image-containers">
+              <img 
+                        src={categoryImages[item]} 
+                        alt={item} 
+                        className="category-images" 
+              />
+             <div className="category-names">{item}</div>
+              {/* <div className="hover-overlay">
                     <span>Click Me</span>
-                </div>
+                </div> */}
         </div> 
           </div>
          ))}

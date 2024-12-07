@@ -35,17 +35,22 @@
   object-fit: cover;
   opacity: 0;
   transform: translateX(-100%);
-  animation: slideIn 1s forwards;
+  transition: all 1s ease-out; /* Smooth transition */
 }
 
-.image-slide:nth-child(1) {
-  animation-delay: 0s;
+.image-slide.animate {
+  opacity: 1;
+  transform: translateX(0);
 }
-.image-slide:nth-child(2) {
-  animation-delay: 0.3s;
+
+.image-slide:nth-child(1).animate {
+  transition-delay: 0s;
 }
-.image-slide:nth-child(3) {
-  animation-delay: 0.6s;
+.image-slide:nth-child(2).animate {
+  transition-delay: 0.3s;
+}
+.image-slide:nth-child(3).animate {
+  transition-delay: 0.6s;
 }
 
 @keyframes slideIn {

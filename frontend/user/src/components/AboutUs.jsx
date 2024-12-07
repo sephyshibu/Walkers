@@ -1,4 +1,4 @@
-import React from 'react';
+import React ,{useEffect} from 'react';
 import './AboutUs.css';
 import pic1 from '../images/pic1.jpg'; 
 import pic2 from '../images/pic2.jpg';
@@ -10,6 +10,27 @@ const AboutUs = () => {
         { title: 'Cost-Effective Solutions', description: 'We offer competitive pricing and financing options.' },
         { title: '24/7 Customer Support', description: 'Our dedicated team is available around the clock.' },
     ];
+    useEffect(() => {
+        const section = document.getElementById("about-us-section");
+        const imageSlides = document.querySelectorAll(".image-slide");
+    
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                imageSlides.forEach((img) => img.classList.add("animate"));
+              }
+            });
+          },
+          { threshold: 0.3 } // Trigger when 30% of the section is visible
+        );
+    
+        if (section) observer.observe(section);
+    
+        return () => {
+          if (section) observer.unobserve(section);
+        };
+      }, []);
     
     return (
         <div id="about-us-section" className="about-us">
