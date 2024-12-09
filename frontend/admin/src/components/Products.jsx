@@ -8,6 +8,8 @@ import './Product.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Display 5 items per page
   const [formData, setFormData] = useState({
     title: '',
     price: '',
@@ -42,6 +44,24 @@ const Products = () => {
     fetchProducts();
   }, []); // Ensure the dependency array is empty to run only on mount.
   
+
+   // Calculate products to display for the current page
+   const startIndex = (currentPage - 1) * itemsPerPage;
+   const endIndex = startIndex + itemsPerPage;
+   const displayedProducts = products.slice(startIndex, endIndex);
+ 
+   // Handle Next and Previous buttons
+   const handleNext = () => {
+     if (endIndex < products.length) {
+       setCurrentPage((prevPage) => prevPage + 1);
+     }
+   };
+ 
+   const handlePrevious = () => {
+     if (startIndex > 0) {
+       setCurrentPage((prevPage) => prevPage - 1);
+     }
+   };
 
 
   const handleFileChange = (event) => {
@@ -264,7 +284,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map((product) => (
+                    {displayedProducts.map((product) => (
                         <tr key={product._id} className="table-row">
                             <td>{product.title}</td>
                             <td>{product.price}</td>
@@ -288,6 +308,27 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                     ))}
                 </tbody>
             </table>
+            <div className="pagination-controls">
+        <button
+          className="pagination-button"
+          onClick={handlePrevious}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
+        </span>
+        <button
+          className="pagination-button"
+          onClick={handleNext}
+          disabled={endIndex >= products.length}
+        >
+          Next
+        </button>
+      </div>
+  
+
 
         </div>
     </div>
