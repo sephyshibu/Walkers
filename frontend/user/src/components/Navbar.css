@@ -1,17 +1,18 @@
 /* General Navbar Styling */
 .navbar {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
-  background-color:white; /* Dark background */
+  background-color: white;
   padding: 10px 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: fixed;
+  position: fixed; /* Keep navbar fixed at the top */
   top: 0;
+  left: 0; /* Ensure full width */
   width: 100%;
-  z-index: 1000;
+  z-index: 1000; 
 }
-
 .navbar-container {
   display: flex;
   align-items: center;

@@ -1,17 +1,20 @@
 /* General Page Styling */
+
 .product-display {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f8f8;
-    color: #333;
-    padding: 40px 20px;
-    max-width: 1200px;
-    margin: auto;
-  }
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f8f8;
+  color: #333;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto; /* Center the content */
+  margin-top: 150px;
+  padding-top: 80px; /* Add top padding to accommodate navbar height */ 
+}
   
   /* Product Top Section */
   .product-top {
     display: flex;
-    gap: 15px;
+    gap:20px;
   }
   
   

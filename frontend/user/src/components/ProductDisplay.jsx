@@ -4,7 +4,7 @@ import axiosInstanceuser from "../axios";
 import "./ProductDisplay.css";
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
 import { useNavigate } from "react-router-dom";
-
+import Navbar from "./Navbar";
 
 const ProductDisplay = () => {
   const { id } = useParams();
@@ -72,6 +72,7 @@ const ProductDisplay = () => {
   }
   return (
     <div className="product-display">
+      <Navbar/>
       {error && <p className="error-message">{error}</p>}
       {!error && (
         <>
