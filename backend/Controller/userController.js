@@ -88,19 +88,22 @@ const login=async(req,res)=>{
 
     
     const user=await Users.findOne({username:username})
-    if(user.status===false)
-    {
-        return res.status(403).json({message:"User is Blocked by admin"})
-    }
     if(!user)
         {
-            return res.status(500).json({message:"Invalid username"})
+            return res.status(404).json({message:"User doesnot found"})
         }
     const match = await bcrypt.compare(password, user.password);
     if(!match)
         {
-                return res.status(500).json({message:"Invalid user password"})
+                return res.status(401).json({message:"Invalid user password"})
         }
+   
+    
+    if(user.status===false)
+    {
+        return res.status(403).json({message:"User is Blocked by admin"})
+    }
+ 
     //generate token
 
     const token=jwt.sign({username:user.username}, process.env.JWT_SECRET,{expiresIn:'2m'})
@@ -125,7 +128,7 @@ const login=async(req,res)=>{
 }
 
 catch(error){
-    console.log(error)
+    console.error("Login error:", error);
     res.status(500).json({message:"internal server error"})
 }
 }
