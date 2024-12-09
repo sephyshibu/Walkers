@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import axiosInstanceuser from '../axios';
 import { useNavigate } from 'react-router';
 import pic1 from '../images/pic1.jpg'
-import pic2 from '../images/pic2.jpg'
-import pic3 from '../images/pic3.jpg'
+import pic5 from '../images/pic5.jpeg'
+import pic4 from '../images/pic4.jpg'
 import banner1 from '../images/Business.png'
 import banner2 from '../images/Business 1.png'
 const Home = () => {
@@ -55,8 +55,8 @@ const Home = () => {
 
   const categoryImages = {
     "Solar Panels": pic1,
-    "Fencing accessories": pic2,
-    "Battery Chargers": pic3,
+    "Fencing accessories": pic4,
+    "Battery Chargers": pic5,
    
     // Add more categories with their respective images
 };
