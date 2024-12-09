@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import AboutUs from './AboutUs';
+import Footer from './Footer';
 import './Home.css';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -71,7 +72,7 @@ const Home = () => {
 
   const categoryImages = {
     "Solar Panels": pic1,
-    "Fencing accessories": pic4,
+    "Fencing Accessories": pic4,
     "Battery Chargers": pic5,
    
     
@@ -122,7 +123,7 @@ const Home = () => {
     </button>
   </div>
       </div>
-      
+      <Footer/>
     </div>
 
     

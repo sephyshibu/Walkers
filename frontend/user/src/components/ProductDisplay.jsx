@@ -5,6 +5,7 @@ import "./ProductDisplay.css";
 import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pan-pinch";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 const ProductDisplay = () => {
   const { id } = useParams();
@@ -166,6 +167,7 @@ const ProductDisplay = () => {
             </div>
         </>
       )}
+     
     </div>
   );
 };

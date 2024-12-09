@@ -4,6 +4,7 @@ import './Productpage.css';
 import { useNavigate ,useLocation} from 'react-router';
 import Navbar from './Navbar';
 import banner1 from '../images/Business.png'
+import Footer from './Footer';
 const Productpage = () => {
     const [groupProducts, setGroupProducts] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('ALL PRODUCTS'); // Track selected category
@@ -109,7 +110,9 @@ const Productpage = () => {
                     
                 </div>
             ))}
+              <Footer/>
         </div>
+      
     );
 };
 

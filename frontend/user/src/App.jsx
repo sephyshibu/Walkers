@@ -9,10 +9,12 @@ import Productpage from './components/Productpage'
 import ProductDisplay from './components/ProductDisplay'
 import AboutUs from './components/AboutUs'
 import ProtectedRouter from './components/ProtectedRouter'
+import ScrollToTop from './components/ScrollToTop'
 function App() {
   
  return(
     <Router>
+      <ScrollToTop/>
       <Routes>
         <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>

@@ -66,8 +66,19 @@ const Products = () => {
 
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
-    setImageFiles(files);
-    const newPreviewUrls = files.map((file) => URL.createObjectURL(file));
+    const validExtentions=['image/jpg','image/png','image/jpeg']
+
+    const validfiles=files.filter((file)=>validExtentions.includes(file.type))
+    const invalidfiles=files.filter((file)=>!validExtentions.includes(file.type))
+    
+    if(invalidfiles.length>0)
+    {
+      setError("Only PNG ,JPG, JPEG  files rae allowed")
+      return
+    }
+    setError(' ')
+    setImageFiles(validfiles);
+    const newPreviewUrls = validfiles.map((file) => URL.createObjectURL(file));
     setPreviewUrls(newPreviewUrls);
   };
 
@@ -240,7 +251,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                     
                 </input>
 
-        <input type="file" accept="image/*" onChange={handleFileChange} className="input-file" />
+        <input type="file" accept="image/jpg, image.png, image.jpeg" onChange={handleFileChange} className="input-file" />
 
         {previewUrls.length > 0 && currentImageIndex < previewUrls.length && (
           <div className="cropper-container">
@@ -300,7 +311,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                             </td>
                             <td>
                                 <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
-                                <button className="delete-button" onClick={() => handleDeleteProduct(product._id,product.status)}>
+                                <button  className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id,product.status)}>
                                         {product.status?"Delete":"Undo"}
                                 </button>
                             </td>
