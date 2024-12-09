@@ -39,6 +39,7 @@ const Category = () => {
         }
         if(invalid){
             seterror('Category cannot be only special characters')
+            return
         }
 
 

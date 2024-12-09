@@ -77,9 +77,11 @@ const refreshToken = async(req, res) => {
 
 const addCategory=async(req,res)=>{
     const{category}=req.body
+    const normalizedCategory=category.trim().toLowerCase()
+
     console.log(category)
     try{
-       const cat=await Categorydb.findOne({categoryname:category})
+       const cat=await Categorydb.findOne({ categoryname: { $regex: `^${normalizedCategory}$`, $options: "i"}})
        console.log("null",cat)
        if(cat)
        {
