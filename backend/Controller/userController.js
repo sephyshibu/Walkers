@@ -17,8 +17,8 @@ async function SendVerificationEmail(email,otp) {
     try {
         const transporter = nodemailer.createTransport({
             service:'gmail',
-            port:587,
-            secure:false,
+            port:465,
+            secure:true,
             requireTLS:true,
             auth:{
                 user:process.env.NODEMAILER_GMAIL,
@@ -43,7 +43,7 @@ async function SendVerificationEmail(email,otp) {
 const signup=async(req,res)=>{
     
     const{username,email,password,confirmpassword,phonenumber}=req.body
-    
+    console.log(username,email,password,confirmpassword,phonenumber)
     if(!username) return res.status(400).json({message:"Username is required"})
     try{
         const emailuser=await Users.findOne({email:email})
@@ -64,11 +64,11 @@ const signup=async(req,res)=>{
         const otp=generateOTP()
         const emailSent= await SendVerificationEmail(email,otp)
         if(!emailSent){
-            return res.json("email error")
+            return res.json(" failed to send email error")
         }
 
         req.session.userOTP=otp
-        req.session.userData={username,email,password,phonenumber}
+        req.session.userData={email,password,username}
         console.log("session ", req.session)
         console.log("OTP send session",req.session.userOTP)
         res.status(200).json({message:"Backend Successful"})
@@ -163,6 +163,8 @@ const verifyotp=async (req,res)=>{
     try {
         const{otp}=req.body
         console.log("OTP from frontend",otp)
+        console.log('otp from the backend',req.session.userOTP)
+        console.log(req.session.userData)
         if(otp===req.session.userOTP)
         {
             const user=req.session.userData
@@ -231,7 +233,7 @@ const googleLogin=async(req,res)=>{
         if (!user) {
             // Create a new user if not found
             user = new Users({
-              googleId,
+              googleId:"sephy",
               email,
               username,
             });

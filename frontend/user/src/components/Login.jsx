@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
-import axiosInstance from '../axios'
+// import axiosInstanceuser from '../axios'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import {gapi} from 'gapi-script'
 import {loginuser} from '../features/userSlice'
@@ -8,6 +8,8 @@ import {useDispatch} from 'react-redux'
 import walkerslogo from '../images/Walkers-logo.png'
 import walker from '../images/Walkers.png'
 import './Login.css'
+import {jwtDecode} from 'jwt-decode'
+import axiosInstanceuser from "../axios";
 const login=()=>{
     const clientId="865878871412-3q1p7g2abnt5jrqbsuhp81k1ipjclikl.apps.googleusercontent.com"
     const[formdata,setformdata]=useState({
@@ -60,7 +62,7 @@ const login=()=>{
 
         try{
 
-            const backresponse=await axiosInstance.post('/login',formdata)
+            const backresponse=await axiosInstanceuser.post('/login',formdata)
             console.log("user Backend data login",backresponse)
             dispatch(loginuser({username: backresponse.data.username,token:backresponse.data.token}))
             setmsg(backresponse.data.message)
@@ -90,7 +92,7 @@ const login=()=>{
           const { credential } = credentialResponse;
     
           // Send the Google token to the backend
-          const backresponse = await axiosInstance.post("/auth/google", {
+          const backresponse = await axiosInstanceuser.post("/auth/google", {
             token: credential,
           });
     
@@ -108,6 +110,23 @@ const login=()=>{
           setmsg("");
         }
       };
+
+
+    // const handleGoogleLogin=async(credentialResponse)=>{
+    //     if(credentialResponse?.credential)
+    //     {
+    //         try {
+    //             const credential=jwtDecode(credentialResponse.credential)
+    //             console.log(credential)
+    //             const{email}=credential
+    //             console.log(email)
+    //             const response=await axiosInstanceuser.post('/login',{email})
+    //             console.log(response)
+    //         } catch (error) {
+    //             console.log('error in google login',error.message)
+    //         }
+    //     }
+    // }
     return(
         <div className="login-container">
             <div className="logo-container">

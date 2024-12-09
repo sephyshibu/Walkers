@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axiosInstance from '../axios'
+import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
 import './Otp.css'
 const Otp = () => {
@@ -43,14 +43,14 @@ const Otp = () => {
     const handleSubmit=async(e)=>{
         e.preventDefault()
         try{
-            const verifyotp=await axiosInstance.post('/verifyotp',otp)
+            const verifyotp=await axiosInstanceuser.post('/verifyotp',otp)
             setmsg(verifyotp.data.message)
             seterror('')
             navigate('/')
         }
         catch(err)
         {
-          console.error(err);
+          console.log(err.message);
           seterror('Something went wrong during otp verification');
           setmsg('');
         }

@@ -9,21 +9,23 @@ const userSchema= new mongoose.Schema({
     },
     email:{
         type:String,
-        required:false
+        required:true
     },
     phonenumber:{
         type:Number,
         required:false,
         unique:true,
         sparse:true,
-        default:null
+        
         
     },
     googleId:{
         type:String,
-        unique:true,
-        required:false,
-        default:null
+        default:null,
+        sparse:true,
+        required:false
+       
+        
     },
     password:{
         type:String,
