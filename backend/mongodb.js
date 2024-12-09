@@ -34,6 +34,11 @@ const userSchema= new mongoose.Schema({
     status:{
         type:Boolean,
         default:true
+    },
+    googleVerified:{
+        type:Boolean,
+        default:false,
+        required:false
     }
     
 })

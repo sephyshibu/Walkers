@@ -87,46 +87,48 @@ const login=()=>{
         }
 
     }
-    const handleGoogleLogin = async (credentialResponse) => {
-        try {
-          const { credential } = credentialResponse;
+    // const handleGoogleLogin = async (credentialResponse) => {
+    //     try {
+    //       const { credential } = credentialResponse;
+            
+    //       // Send the Google token to the backend
+    //       const backresponse = await axiosInstanceuser.post("/auth/google", {
+    //         token: credential,
+    //       });
     
-          // Send the Google token to the backend
-          const backresponse = await axiosInstanceuser.post("/auth/google", {
-            token: credential,
-          });
-    
-          setmsg(backresponse.data.message);
-          const userId='usergoogleId'
-          localStorage.setItem('userId',userId)
-          seterror("");
-          navigate("/");
-        } catch (err) {
-            if (err.response && err.response.data && err.response.data.message) {
-                seterror(err.response.data.message); // Server's custom message
-            } else{
-          seterror("Google Login Failed. Please try again.");
-            }
-          setmsg("");
-        }
-      };
-
-
-    // const handleGoogleLogin=async(credentialResponse)=>{
-    //     if(credentialResponse?.credential)
-    //     {
-    //         try {
-    //             const credential=jwtDecode(credentialResponse.credential)
-    //             console.log(credential)
-    //             const{email}=credential
-    //             console.log(email)
-    //             const response=await axiosInstanceuser.post('/login',{email})
-    //             console.log(response)
-    //         } catch (error) {
-    //             console.log('error in google login',error.message)
+    //       setmsg(backresponse.data.message);
+    //       const userId='usergoogleId'
+    //       localStorage.setItem('userId',userId)
+    //       seterror("");
+    //       navigate("/");
+    //     } catch (err) {
+    //         if (err.response && err.response.data && err.response.data.message) {
+    //             seterror(err.response.data.message); // Server's custom message
+    //         } else{
+    //       seterror("Google Login Failed. Please try again.");
     //         }
+    //       setmsg("");
     //     }
-    // }
+    //   };
+
+
+    const handleGoogleLogin=async(credentialResponse)=>{
+        if(credentialResponse?.credential)
+        {
+            try {
+                console.log(credentialResponse)
+                const credential=jwtDecode(credentialResponse.credential)
+                console.log(credential)
+                const{email,sub,name}=credential
+                console.log(email)
+                const response=await axiosInstanceuser.post('/auth/google',{email,sub,name})
+                console.log(response)
+                navigate('/')
+            } catch (error) {
+                console.log('error in google login',error.message)
+            }
+        }
+    }
     return(
         <div className="login-container">
             <div className="logo-container">

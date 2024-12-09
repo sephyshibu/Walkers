@@ -59,7 +59,7 @@ const Otp = () => {
     const handleResend=async(e)=>{
         e.preventDefault()
         try{
-           const resendotp=await axiosInstance.post('/resendotp') 
+           const resendotp=await axiosInstanceuser.post('/resendotp') 
            setmsg(resendotp.data.message)
            seterror('')
         

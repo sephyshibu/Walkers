@@ -213,35 +213,52 @@ const resendotp=async (req,res)=>{
     }
 }
 const googleLogin=async(req,res)=>{
-    const client=new OAuth2Client(process.env.GOOGLE_CLIENTID)
-    const {token}=req.body
+    // const client=new OAuth2Client(process.env.GOOGLE_CLIENTID)
+    const {email,sub,name}=req.body
+    console.log(email,sub,name)
     try {
-        const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: process.env.GOOGLE_CLIENTID,
+        const olduser = await Users.findOne({
+                email
         });
-        const payload = ticket.getPayload();
-        const { sub: googleId, email, name: username } = payload;
-         // Check if the user already exists
-        let user = await Users.findOne({ googleId });
+        console.log(olduser)
+        // const payload = ticket.getPayload();
+        // const { sub: googleId, email, name: username } = payload;
+        //  // Check if the user already exists
+        // let user = await Users.findOne({ googleId });
         
-        if(user.status===false)
+        if(olduser)
         {
-            return res.status(403).json({message:"User is Blocked by admin"})
-        }
+            if(olduser.status===false)
+                {
+                    return res.status(403).json({message:"User is Blocked by admin"})
+                }
+        
 
-        if (!user) {
-            // Create a new user if not found
-            user = new Users({
-              googleId:"sephy",
-              email,
-              username,
-            });
+           return res.status(200).json({message:"googele lgoin successfull"}) 
+        }
+        else{
+            const newuser = new Users({
+                googleId:sub,
+                email:email,
+                username:name,
+              });
+        
+              await newuser.save();
+             return res.status(200).json({ message: 'Google login successful', newuser });
+        }
       
-            await user.save();
-          }
+        // if (!olduser) {
+        //     // Create a new user if not found
+        //     const newuser = new Users({
+        //       googleId:sub,
+        //       email:email,
+        //       username:name,
+        //     });
+      
+        //     await newuser.save();
+        //   }
        
-        res.status(200).json({ message: 'Google login successful', user });
+        // res.status(200).json({ message: 'Google login successful', newuser });
         
       } catch (err) {
         res.status(401).json({ message: 'Invalid Google Token' });
