@@ -45,6 +45,9 @@ const login=()=>{
         {
             if (err.response && err.response.data && err.response.data.message) {
                 seterror(err.response.data.message);
+                
+            }
+            else{
                 seterror('Something went wrong. Please try again.');
             }
             setmsg('');
@@ -79,8 +82,8 @@ const login=()=>{
                 <button  className="adminlogin-btn" onClick={handleSubmit}>Submit</button>
                 
               
-                {error && <p className="error-message">{error}</p>}
-                {msg && <p className="success-message">{msg}</p>}
+                {error && <p className="error-messageadmin">{error}</p>}
+                {msg && <p className="success-messageadmin">{msg}</p>}
             </form>
         </div>
     )

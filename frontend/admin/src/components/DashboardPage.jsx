@@ -13,7 +13,7 @@ const DashboardPage = () => {
   
   
   const pieData = {
-    labels: ['Electronics', 'Fashion', 'Home'],
+    labels: ['Solar Panels', 'Invertors', 'Battery Chargers'],
     datasets: [
       {
         data: [300, 150, 100],
@@ -29,7 +29,7 @@ const DashboardPage = () => {
         label: 'Sales',
         backgroundColor: '#FF6384',
         borderColor: '#FF6384',
-        data: [65, 59, 80, 81, 56],
+        data: [65, 59, 80, 81, 95],
         fill: false,  // Ensure the line doesn't fill under it
         tension: 0.1, // Smooth out the line
       },
@@ -42,11 +42,11 @@ const DashboardPage = () => {
       <div className="cards">
         <div className="card card-red">
           <h3>Total Income</h3>
-          <p>$50,000</p>
+          <p>Rs.50,000</p>
         </div>
         <div className="card card-blue">
           <h3>Annual Sales</h3>
-          <p>$120,000</p>
+          <p>R120,000</p>
         </div>
         <div className="card card-green">
           <h3>Total Users</h3>

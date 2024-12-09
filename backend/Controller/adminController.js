@@ -31,16 +31,16 @@ const loginAdmin=async(req,res)=>{
             console.log("Admin login successful"); // Log success
 
             // Send JSON response and return
-            res.status(200).json({
+            return res.status(200).json({
                 message: "Admin Login Successfully",
                 token,
             });
-            console.log("backend Admin",  token);
-            return; // Prevent further execution
+            // console.log("backend Admin",  token);
+         // Prevent further execution
             }
     
     // If isAdmin or credentials are invalid
-    res.status(401).json({ message: "Invalid credentials or not an admin" });
+   return res.status(401).json({ message: "Invalid credentials or not an admin" });
 }
 catch(error){
     console.log(error)
@@ -83,7 +83,7 @@ const addCategory=async(req,res)=>{
        console.log("null",cat)
        if(cat)
        {
-        return res.status(403).json({message:"Category Already Existed"})
+        return res.status(400).json({message:"Category Already Existed"})
        }
        console.log("edf")
        const newcategory=new Categorydb({

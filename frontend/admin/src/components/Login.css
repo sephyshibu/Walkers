@@ -54,7 +54,7 @@
 }
 
 /* Success and Error Message Styling */
-.error-message, .success-message {
+.error-messageadmin, .success-messageadmin {
     font-size: 14px;
     margin-top: 15px;
     text-align: center;
@@ -63,12 +63,12 @@
     transition: all 0.3s ease;
 }
 
-.error-message {
+.error-messageadmin {
     background-color: #e74c3c;
     color: white;
 }
 
-.success-message {
+.success-messageadmin {
     background-color: #2ecc71;
     color: white;
 }
@@ -86,7 +86,7 @@
 }
 
 /* Focused State for Error */
-.error-message {
+.error-messageadmin {
     animation: shake 0.5s ease-in-out;
 }
 
