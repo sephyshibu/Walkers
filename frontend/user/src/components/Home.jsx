@@ -14,6 +14,7 @@ import banner2 from '../images/Business 1.png'
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
+  const [startIndex, setStartIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const banners = [banner1, banner2]; // Array of banner images
 
@@ -26,7 +27,7 @@ const Home = () => {
         const category=response.data.categorynames
         setformdata(category)
         console.log("List of categories",category)
-        // Extract category names into an array
+       
      
 
       
@@ -53,12 +54,27 @@ const Home = () => {
       navigate(`/product?category=${name}`)
   }
 
+
+  const currentCategories = formdata.slice(startIndex, startIndex + 3);
+  const handleNext = () => {
+    if (startIndex + 3 < formdata.length) {
+      setStartIndex(startIndex + 1);
+    }
+  };
+  
+  const handlePrev = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - 1);
+    }
+  };
+  
+
   const categoryImages = {
     "Solar Panels": pic1,
     "Fencing accessories": pic4,
     "Battery Chargers": pic5,
    
-    // Add more categories with their respective images
+    
 };
 
 
@@ -72,12 +88,7 @@ const Home = () => {
           src={banners[currentSlide]}
           alt={`Banner ${currentSlide + 1}`}
         />
-        {/* <div className="banner-content">
-          <h1 className="banner-title">Power Your World with Solar</h1>
-          <p className="banner-subtitle">
-            Explore our range of high-efficiency solar products to light up your life sustainably.
-          </p>
-        </div> */}
+        
       </div>
     </div>
       <div id="about-us-section" className="aboutsection">
@@ -87,7 +98,7 @@ const Home = () => {
       <div className="about-category">
         <h2 className='category-titles'>Product Categories</h2>
         <div className="category-grid">
-         {formdata.map((item,index)=>(
+         {currentCategories.map((item,index)=>(
           <div key={index} className='category-card' onClick={()=>handleClick(item)}>
             <div className="image-containers">
               <img 
@@ -96,13 +107,20 @@ const Home = () => {
                         className="category-images" 
               />
              <div className="category-names">{item}</div>
-              {/* <div className="hover-overlay">
-                    <span>Click Me</span>
-                </div> */}
+             
         </div> 
           </div>
          ))}
+          
         </div>
+        <div className="category-grid-controls">
+    <button onClick={handlePrev} disabled={startIndex === 0}>
+      Previous
+    </button>
+    <button onClick={handleNext} disabled={startIndex + 3 >= formdata.length}>
+      Next
+    </button>
+  </div>
       </div>
       
     </div>
