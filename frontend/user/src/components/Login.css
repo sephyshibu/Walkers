@@ -41,8 +41,9 @@
   .logo-container, .logo-container1 {
     position: absolute;
     width: 60%;
-    top: 100px;
+    top: 10px;
     left: 50%;
+    margin-top: 8px;
     transform: translateX(-50%);
     animation: fadeInTop 1.5s ease-in-out;
 }

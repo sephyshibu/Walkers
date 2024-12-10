@@ -123,9 +123,18 @@ const login=()=>{
                 console.log(email)
                 const response=await axiosInstanceuser.post('/auth/google',{email,sub,name})
                 console.log(response)
+                const userId=sub
+                console.log(userId)
+                localStorage.setItem('userId',userId)
                 navigate('/')
-            } catch (error) {
-                console.log('error in google login',error.message)
+            } catch (err) {
+                if (err.response && err.response.data && err.response.data.message) {
+                    seterror(err.response.data.message); // Server's custom message
+                } else {
+                    seterror('Something went wrong. Please try again.');
+                }
+                setmsg('');
+              
             }
         }
     }

@@ -9,6 +9,7 @@ import axiosInstanceuser from '../axios';
 import { useNavigate } from 'react-router';
 import pic1 from '../images/pic1.jpg'
 import pic5 from '../images/pic5.jpeg'
+import pic6 from '../images/pic6.jpeg'
 import pic4 from '../images/pic4.jpg'
 import banner1 from '../images/Business.png'
 import banner2 from '../images/Business 1.png'
@@ -74,6 +75,7 @@ const Home = () => {
     "Solar Panels": pic1,
     "Fencing Accessories": pic4,
     "Battery Chargers": pic5,
+    "Solar Lights":pic6
    
     
 };

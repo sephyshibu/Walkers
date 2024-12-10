@@ -96,7 +96,7 @@
   padding: 15px;
   text-align: center;
   width: 100%; /* Ensures cards take the full width available */
-  max-width: 250px; /* Set a maximum width for uniformity */
+  max-width: 350px; /* Set a maximum width for uniformity */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;

@@ -105,6 +105,10 @@ const Products = () => {
 
   const handleAddProduct = async () => {
     const { title, price, category, sku, description, stockStatus, availableQuantity } = formData;
+    if (!title.trim() || !price.trim() || !category.trim() || !sku.trim() || !description.trim() || !availableQuantity.trim() || !stockStatus.trim()) {
+      setError('All fields cannot be empty.');
+      return;
+    }
 
     if (!title || !price || !category || !sku || !description || !availableQuantity || !stockStatus) {
       setError('All fields are required.');

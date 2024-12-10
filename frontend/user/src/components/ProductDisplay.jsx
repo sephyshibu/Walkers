@@ -114,8 +114,8 @@ const ProductDisplay = () => {
           <div className="product-right">
             <h1 className="product-title">{formdata.title}</h1>
             <div className="price-section">
-              <p className="product-prev-price">${formdata.price * 1.2}</p>
-              <p className="product-price">${formdata.price}</p>
+              <p className="product-prev-price">Rs.{formdata.price * 1.2}</p>
+              <p className="product-price">Rs.{formdata.price}</p>
             </div>
             <div className="product-rating">
               <span>⭐⭐⭐⭐☆</span> <span className="reviews-count">(120 reviews)</span>
@@ -160,7 +160,7 @@ const ProductDisplay = () => {
                     onClick={()=>handleDisplay(product._id)}
                   />
                   <h3 className="recommendation-title">{product.title}</h3>
-                  <p className="recommendation-price">${product.price}</p>
+                  <p className="recommendation-price">Rs.{product.price}</p>
                 </div>
               ))}
             </div>

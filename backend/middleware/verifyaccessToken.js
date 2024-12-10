@@ -15,7 +15,7 @@ const verifyAccessToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid or expired token' });
     }
-    req.user = user; // Store user info for further use
+    req.user = user; 
     next();
   });
 

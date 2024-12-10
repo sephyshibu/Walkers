@@ -46,7 +46,7 @@ const Otp = () => {
             const verifyotp=await axiosInstanceuser.post('/verifyotp',otp)
             setmsg(verifyotp.data.message)
             seterror('')
-            navigate('/')
+            navigate('/login')
         }
         catch(err)
         {
