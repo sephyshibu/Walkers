@@ -1,6 +1,8 @@
 import axios from 'axios';
 import store from '../../user/src/app/store'
-import { loginuser } from './features/userSlice';
+// import { loginuser } from './features/userSlice';
+import { addtoken } from './features/tokenSlice';
+
 
 // Axios instance
 const axiosInstanceuser = axios.create({
@@ -11,7 +13,7 @@ const axiosInstanceuser = axios.create({
 axiosInstanceuser.interceptors.request.use(
   (config)=>{
     const state=store.getState()
-    const token=state.user?.token
+    const token=state.token?.token
   console.log("axiios",token)
   console.log("state",state)
   if (typeof token !== 'string') {
@@ -58,8 +60,9 @@ axiosInstanceuser.interceptors.response.use(
         );
         
         const {token } = response.data;
+        
         console.log("response axios ", token)
-        store.dispatch(loginuser({ token })); // Updateeeeeeeee Redux with new token
+        store.dispatch(addtoken({ token })); // Updateeeeeeeee Redux with new token
 
         
         axiosInstanceuser.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -70,7 +73,7 @@ axiosInstanceuser.interceptors.response.use(
       
       catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        store.dispatch(logoutuser()); 
+        // store.dispatch(logoutuser()); 
         return Promise.reject(refreshError);
       }
     }

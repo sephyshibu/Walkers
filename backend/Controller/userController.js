@@ -111,20 +111,24 @@ const login=async(req,res)=>{
     console.log("Access Token", token)
     console.log("refresh token", refresh)
 
-    let options = {
-        maxAge: 1000 * 60 * 15, // expire after 15 minutes
-        httpOnly: true, // Cookie will not be exposed to client side code
-        sameSite: "none", // If client and server origins are different
-        secure: true // use with HTTPS only
-    }
+    // let options = {
+    //     maxAge: 1000 * 60 * 15, // expire after 15 minutes
+    //     httpOnly: true, // Cookie will not be exposed to client side code
+    //     sameSite: "none", // If client and server origins are different
+    //     secure: true // use with HTTPS only
+    // }
 
    console.log("refresh token created during login",refresh)
     // Set the cookie
-   res.cookie("refreshtokenUser", refresh, options);
+   res.cookie("refreshtokenUser", refresh,{
+    httpOnly:true,
+    secure:false,
+    maxAge:7*24*60*60*1000
+   });
 
-    res.status(200).json({message:"Login Successfully",id: user._id,username: user.username, token})
-    console.log("backend Admin",  token);
-     return; // Prevent further execution
+    return res.status(200).json({message:"Login Successfully",id: user._id,username: user.username, token})
+    // console.log("backend Admin",  token);
+  // Prevent further execution
 }
 
 catch(error){
@@ -134,7 +138,7 @@ catch(error){
 }
 
 const refreshToken = async(req, res) => {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.cookies?.refreshtokenUser;
     console.log("refreshhhh",refreshToken)
   
     if (!refreshToken) { 
@@ -232,9 +236,12 @@ const googleLogin=async(req,res)=>{
                 {
                     return res.status(403).json({message:"User is Blocked by admin"})
                 }
-        
+                const token=jwt.sign({email:email}, process.env.JWT_SECRET,{expiresIn:'2m'})
+                const refresh=jwt.sign({email:email},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
+                console.log("Access Token", token)
+                console.log("refresh token", refresh)
 
-           return res.status(200).json({message:"googele lgoin successfull"}) 
+           return res.status(200).json({message:"googele lgoin successfull",token}) 
         }
         else{
             const newuser = new Users({
@@ -244,7 +251,11 @@ const googleLogin=async(req,res)=>{
               });
         
               await newuser.save();
-             return res.status(200).json({ message: 'Google login successful', newuser });
+              const token=jwt.sign({email:newuser.email}, process.env.JWT_SECRET,{expiresIn:'2m'})
+              const refresh=jwt.sign({email:newuser.email},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
+              console.log("Access Token", token)
+              console.log("refresh token", refresh)
+             return res.status(200).json({ message: 'Google login successful', newuser,token });
         }
       
         // if (!olduser) {

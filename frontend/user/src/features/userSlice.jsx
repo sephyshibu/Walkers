@@ -5,18 +5,19 @@ const userSlice=createSlice({
     name:"user",
     initialState:{
         username:"",
-        token:""
+       
     },
     reducers:{
         loginuser:(state,action)=>{
-            state.username=action.payload.username
-            state.token=action.payload.token
+            state.username=action.payload
+            
 
-            console.log("user slice token", state.token)
+            // console.log("user slice token", state.token)
         },
+       
         logoutuser:(state)=>{
             state.username=""
-            state.token=""
+          
         }
     }
 })

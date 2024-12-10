@@ -13,5 +13,5 @@ router.post('/auth/google',googleLogin)
 router.get('/getproducts',verifyAccessToken,getProducts)
 router.get('/products/display/:id',verifyAccessToken,fetchproductdetails)
 router.get('/products/recommendations/:category',verifyAccessToken,fetchrecom)
-router.get('/fetchcategory',verifyAccessToken,categoryname)
+router.get('/fetchcategory',categoryname)
 module.exports=router

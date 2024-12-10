@@ -44,8 +44,8 @@ function App() {
 <Routes>
   <Route path="/" element={<Login />}/>
 {/* <Route element={<ProtectedRoute />}> */}
-  <Route path="/edit/:id" element={<EditCategory />} />
-  <Route path='/updateproduct/:id' element={<EditProduct/>}/>
+  <Route path="/edit/:id" element={<ProtectedRoute><EditCategory /></ProtectedRoute>} />
+  <Route path='/updateproduct/:id' element={<ProtectedRoute><EditProduct/></ProtectedRoute>}/>
   <Route path="/admindashboard" element={<Layout />}>
     <Route index element={<ProtectedRoute> 
       <DashboardPage />

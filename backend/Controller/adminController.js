@@ -18,29 +18,35 @@ const loginAdmin=async(req,res)=>{
                console.log("JWT_SECRET:", process.env.JWT_SECRET);
                 const token=jwt.sign({email}, process.env.JWT_SECRET,{expiresIn:"2m"})
                 const refresh=jwt.sign({email}, process.env.JWT_REFRESH_SECRET,{expiresIn:"15m"})
-                let options = {
-                    maxAge: 1000 * 60 * 15, // expire after 15 minutes
-                    httpOnly: true, // Cookie will not be exposed to client side code
-                    sameSite: "none", // If client and server origins are different
-                    secure: true // use with HTTPS only
-                }
+                // let options = {
+                //     maxAge: 1000 * 60 * 15, // expire after 15 minutes
+                //     httpOnly: true, // Cookie will not be exposed to client side code
+                //     sameSite: "none", // If client and server origins are different
+                //     secure: true // use with HTTPS only
+                // }
             
                console.log("refresh token created during login",refresh)
                 // Set the cookie
-            res.cookie("refreshtokenAdmin", refresh, options);
-            console.log("Admin login successful"); // Log success
+            res.cookie("refreshtokenAdmin", refresh, {
+                httpOnly:true,
+                secure:false,
+                maxAge:7*24*60*60*1000
+            });
 
+            console.log("Admin login successful"); // Log success
+            console.log(res.cookie.refreshtokenAdmin)
             // Send JSON response and return
-            return res.status(200).json({
+          return res.status(200).json({
                 message: "Admin Login Successfully",
                 token,
             });
+            
             // console.log("backend Admin",  token);
          // Prevent further execution
             }
     
     // If isAdmin or credentials are invalid
-   return res.status(401).json({ message: "Invalid credentials or not an admin" });
+        return res.status(400).json({ message: "Invalid credentials or not an admin" });
 }
 catch(error){
     console.log(error)
@@ -51,7 +57,7 @@ catch(error){
 
 
 const refreshToken = async(req, res) => {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = req.cookies?.refreshtokenAdmin;
     console.log("refreshhhh",refreshToken)
   
     if (!refreshToken) { 

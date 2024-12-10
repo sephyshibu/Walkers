@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import {gapi} from 'gapi-script'
 import {loginuser} from '../features/userSlice'
+import {addtoken} from '../features/tokenSlice'
 import {useDispatch} from 'react-redux'
 import walkerslogo from '../images/Walkers-logo.png'
 import walker from '../images/Walkers.png'
@@ -64,7 +65,8 @@ const login=()=>{
 
             const backresponse=await axiosInstanceuser.post('/login',formdata)
             console.log("user Backend data login",backresponse)
-            dispatch(loginuser({username: backresponse.data.username,token:backresponse.data.token}))
+            dispatch(loginuser(backresponse.data.username))
+            dispatch(addtoken(backresponse.data.token))
             setmsg(backresponse.data.message)
             console.log("user login store token in slice")
             const userId=backresponse.data.id
@@ -123,6 +125,8 @@ const login=()=>{
                 console.log(email)
                 const response=await axiosInstanceuser.post('/auth/google',{email,sub,name})
                 console.log(response)
+                dispatch(addtoken(response.data.token))
+
                 const userId=sub
                 console.log(userId)
                 localStorage.setItem('userId',userId)
