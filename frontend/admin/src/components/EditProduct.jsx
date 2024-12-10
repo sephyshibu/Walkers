@@ -28,7 +28,7 @@ const EditProduct = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(true);
     const [cropper, setCropper] = useState(null); // For the cropper instance
-
+    const [variants, setVariants] = useState([]);
     useEffect(() => {
         const fetchProductEdit = async () => {
             try {
@@ -46,6 +46,7 @@ const EditProduct = () => {
                     availableQuantity: fetchedProduct.availableQuantity || '',
                 });
                 setExistingImages(fetchedProduct.images || []); // Existing images from database
+                setVariants(fetchedProduct.variants || []);
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching product:', err);
@@ -78,7 +79,7 @@ const EditProduct = () => {
         console.log("all images product", allImages);
         
         // Create updated product object
-        const updatedProduct = { ...formData, images: allImages };
+        const updatedProduct = { ...formData, images: allImages ,variants};
         console.log("save product", updatedProduct);
 
         try {
@@ -227,6 +228,51 @@ const EditProduct = () => {
                     </div>
                 )}
             </div>
+
+
+            <div className="variants-section">
+            <h3>Variants</h3>
+            {variants.map((variant, index) => (
+                <div key={index} className="variant-item">
+                    <input
+                        type="text"
+                        value={variant.name}
+                        onChange={(e) => {
+                            const updatedVariants = [...variants];
+                            updatedVariants[index].name = e.target.value;
+                            setVariants(updatedVariants);
+                        }}
+                        placeholder="Variant Name"
+                    />
+                    <input
+                        type="number"
+                        value={variant.price}
+                        onChange={(e) => {
+                            const updatedVariants = [...variants];
+                            updatedVariants[index].price = e.target.value;
+                            setVariants(updatedVariants);
+                        }}
+                        placeholder="Variant Price"
+                    />
+                    <button
+                        onClick={() => {
+                            setVariants(variants.filter((_, i) => i !== index));
+                        }}
+                    >
+                        Delete
+                    </button>
+                </div>
+                ))}
+                <button
+                    onClick={() => {
+                        setVariants([...variants, { name: '', price: '' }]);
+                    }}
+                >
+                    Add Variant
+                </button>
+            </div>
+
+
             <div className="button-container">
                 <button type="button" className="save-button" onClick={handleSaveProduct}>
                     Save

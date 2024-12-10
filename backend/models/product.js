@@ -19,7 +19,19 @@ const ProductSchema= new mongoose.Schema({
         type:Boolean,
         required:true,
         default:true
-    }
+    },  
+    variants:[
+        {
+            name:{type:String, required:true},
+            price:{type:Number, required:true},
+            stockStatus:{type:String, required:true},
+            status:{
+                type:Boolean,
+                required:true,
+                default:true
+            }
+        }
+    ]
 
 });
  

@@ -192,7 +192,7 @@ const softdeletecategory=async(req,res)=>{
 
 const softdeleteproduct=async(req,res)=>{
     const{id}=req.params
-    // const { status } = req.body;
+  
     console.log("backend productid",id)
 
     try{
@@ -202,8 +202,19 @@ const softdeleteproduct=async(req,res)=>{
             return res.status(404).json("product not found")
         }
         product.status=!product.status
+
+        product.variants.forEach(variant => {
+            variant.status = product.status; // Assuming each variant also has a 'status' field
+        });
+        console.log("Before save:", product);
+        console.log("Variants:", product.variants);
+
         await product.save()
+
+        console.log("After save:", product);
+        console.log("Product after update:", product);
         res.status(200).json(product)
+      
     }
     catch(err)
     {
@@ -265,7 +276,8 @@ const fetchproduct=async(req,res)=>{
 }
 
 const addProduct = async (req, res) => {
-    const { title, price, category, sku, description, stockStatus, availableQuantity, images } = req.body;
+    console.log("adding")
+    const { title, price, category, sku, description, stockStatus, availableQuantity, images, variants} = req.body;
     console.log("Request Body:", req.body);
 
     // Validation
@@ -283,6 +295,7 @@ const addProduct = async (req, res) => {
             stockStatus,
             availableQuantity,
             images,
+            variants,
         });
 
         const savedProduct = await newProduct.save();
@@ -295,7 +308,7 @@ const addProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
 
-    const { title, price, category, sku, description, stockStatus, availableQuantity, images } = req.body;
+    const { title, price, category, sku, description, stockStatus, availableQuantity, images ,variants} = req.body;
     console.log("backend update product", req.body)
     try {
         const updatedProduct = await Productdb.findByIdAndUpdate(
@@ -309,6 +322,7 @@ const updateProduct = async (req, res) => {
                 stockStatus,
                 availableQuantity,
                 images,
+                variants,
             },
             { new: true }
         );

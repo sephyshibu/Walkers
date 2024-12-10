@@ -24,8 +24,10 @@ const Products = () => {
   const [croppedImages, setCroppedImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [previewUrls, setPreviewUrls] = useState([]);
-  const [error, setError] = useState('');
+  const [error, setError] = useState({});
   const [cropper, setCropper] = useState(null);
+  const[variants,setvariants]=useState([])
+
 
   const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ const Products = () => {
         setProducts(response.data);
       } catch (err) {
         console.error('Error fetching products:', err);
-        setError('Failed to fetch products.');
+        setError({global:'Failed to fetch products.'});
       }
     };
   
@@ -63,7 +65,59 @@ const Products = () => {
      }
    };
 
+   const validateForm=(data,files)=>{
+    const errors={}
+    
+    if (!data.title.trim() ){
+      errors.title="title cant empty"
+      
+    }
+    if (!data.price.trim()){
+      errors.price="price cant empty"
+      
+    }
+    else if(data.price<0)
+    {
+      errors.price="price cant be negative"
+    }
 
+    if (!data.category.trim() ){
+      errors.category="category cant empty"
+      
+    }
+
+    if (!data.sku.trim() ){
+      errors.sku="sku cant empty"
+      
+    }
+    if (!data.description.trim() ){
+      errors.description="description cant empty"
+      
+    }
+    if (!data.stockStatus.trim() ){
+      errors.stockStatus="stockStatus cant empty"
+      
+    }
+    if (!data.availableQuantity.trim() ){
+      errors.availableQuantity="availableQuantity cant empty"
+      
+    }
+    else if(data.availableQuantity<=0){
+      errors.availableQuantity="Values must be greater than 0"
+
+    }
+
+    if(files.length===0){
+      errors.files="images cant empty"
+    }
+    setError(errors)
+    return Object.keys(errors).length === 0
+      // Stop execution if there are validation errors
+   }
+
+
+
+  
   const handleFileChange = (event) => {
     const files = Array.from(event.target.files);
     const validExtentions=['image/jpg','image/png','image/jpeg']
@@ -88,6 +142,11 @@ const Products = () => {
       ...prevForm,
       [name]: value,
     }));
+    setError((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
+  
   };
 
   const handleCrop = () => {
@@ -104,27 +163,9 @@ const Products = () => {
   };
 
   const handleAddProduct = async () => {
-    const { title, price, category, sku, description, stockStatus, availableQuantity } = formData;
-    if (!title.trim() || !price.trim() || !category.trim() || !sku.trim() || !description.trim() || !availableQuantity.trim() || !stockStatus.trim()) {
-      setError('All fields cannot be empty.');
-      return;
-    }
-
-    if (!title || !price || !category || !sku || !description || !availableQuantity || !stockStatus) {
-      setError('All fields are required.');
-      return;
-    }
-    if (price <= 0 || availableQuantity <= 0) {
-      setError('Price and available quantity must be positive.');
-      return;
-    }
-    if (!croppedImages.length) {
-      setError('Image is required.');
-      return;
-    }
-
+    if(!validateForm(formData,imageFiles)) return
     try {
-      setError('');
+      setError({});
       const uploadedImageUrls = [];
 
       for (const base64Image of croppedImages) {
@@ -144,11 +185,12 @@ const Products = () => {
       const newProduct = {
         ...formData,
         images: uploadedImageUrls,
+        variants,
       };
-
+     
       const response = await axiosInstanceadmin.post('/products', newProduct);
       setProducts((prev) => [...prev, response.data]);
-
+      console.log(response.data)
       setFormData({
         title: '',
         price: '',
@@ -158,13 +200,16 @@ const Products = () => {
         stockStatus: 'Available',
         availableQuantity: '',
         images: [],
+        variants:[],
+        
       });
       setImageFiles([]);
       setPreviewUrls([]);
       setCroppedImages([]);
+      setvariants([])
     } catch (err) {
       console.error('Error adding product:', err);
-      setError('Failed to add product.');
+      setError({global:'Failed to add product.'});
     }
   };
   const handleEditProduct=(id)=>{
@@ -190,13 +235,31 @@ const handleDeleteProduct=async(id,currentStatus)=>{
         setError("Failed to update the status");
     }
 }
+const handleAddVariant=()=>{
+  setvariants((prevvariants)=>[
+    ...prevvariants,
+    {name:" ", price:" ", stockStatus:" "},
+  ])
+}
+
+const handleVariantChange = (index, field, value) => {
+  setvariants((prevVariants) =>
+      prevVariants.map((variant, i) =>
+          i === index ? { ...variant, [field]: value } : variant
+      )
+  );
+};
+
+
 
   return (
     <div className="products-dashboard-container">
       <h1 className="dashboard-title">Products Dashboard</h1>
       <div>
-      {error && <p className="error-messages">{error}</p>}
+      {/* {error && <p className="error-messages">{error}</p>} */}
       <form className="product-form">
+        <label>Title: </label>
+        <br></br>
         <input
           type="text"
           name="title"
@@ -205,6 +268,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.title}
           onChange={handleInputChange}
         />
+         {error.title && <p className="error-messages">{error.title}</p>}
+        <label>Price: </label>
         <input
           type="number"
           name="price"
@@ -213,6 +278,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.price}
           onChange={handleInputChange}
         />
+          {error.price && <p className="error-messages">{error.price}</p>}
+         <label>Category: </label>
         <input
           type="text"
           name="category"
@@ -221,6 +288,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.category}
           onChange={handleInputChange}
         />
+          {error.category && <p className="error-messages">{error.category}</p>}
+         <label>SKU: </label>
         <input
           type="text"
           name="sku"
@@ -229,6 +298,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.sku}
           onChange={handleInputChange}
         />
+          {error.sku && <p className="error-messages">{error.sku}</p>}
+         <label>Description: </label>
         <textarea
           name="description"
           placeholder="Description"
@@ -236,7 +307,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.description}
           onChange={handleInputChange}
         />
-     
+          {error.description && <p className="error-messages">{error.description}</p>}
+         <label>Quantity: </label>
         <input
           type="number"
           name="availableQuantity"
@@ -245,7 +317,8 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           value={formData.availableQuantity}
           onChange={handleInputChange}
         />
-
+          {error.availableQuantity && <p className="error-messages">{error.availableQuantity}</p>}
+           <label>Stock Status: </label>
             <input type='text' 
                 name="stockStatus"
                 className="input-groupss"
@@ -254,9 +327,9 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                 onChange={handleInputChange}>
                     
                 </input>
-
-        <input type="file" accept="image/jpg, image.png, image.jpeg" onChange={handleFileChange} className="input-file" />
-
+                {error.stockStatus && <p className="error-messages">{error.stockStatus}</p>}
+        <input type="file" name="files" accept="image/jpg, image.png, image.jpeg" onChange={handleFileChange} className="input-file" />
+        {error.files && <p className="error-messages">{error.files}</p>}
         {previewUrls.length > 0 && currentImageIndex < previewUrls.length && (
           <div className="cropper-container">
             <Cropper
@@ -280,6 +353,34 @@ const handleDeleteProduct=async(id,currentStatus)=>{
           </div>
         )}
 
+        {variants.map((item,index)=>(
+          <div key={index}>
+            <label>Name</label>
+            <input 
+                type='text'
+                name='name'
+                placeholder='enter the name of variant'
+                value={item.name}
+                onChange={(e)=>handleVariantChange(index,'name', e.target.value)}/>
+
+            <label>Price</label>
+            <input 
+                type='number'
+                name='price'
+                placeholder='enter the price of variant'
+                value={item.price}
+                onChange={(e)=>handleVariantChange(index,'price', e.target.value)}/>
+
+            <label>Stock Status</label>
+            <input 
+                type='text'
+                name='name'
+                placeholder='enter the name of variant'
+                value={item.stockStatus}
+                onChange={(e)=>handleVariantChange(index,'stockStatus', e.target.value)}/>
+          </div>
+        ))}
+      <button type="button" onClick={handleAddVariant}>Add Variant</button>
         <button type="button" onClick={handleAddProduct} className="add-product-button">
           Add Product
         </button>
@@ -312,6 +413,19 @@ const handleDeleteProduct=async(id,currentStatus)=>{
                                 {product.images.map((img, index) => (
                                     <img key={index} src={img} className="product-image" alt={`${product.title} ${index}`} width="100" />
                                 ))}
+                            </td>
+                            <td>
+                              {product.variants && product.variants.length>0?(
+                                product.variants.map((item,index)=>(
+                                  <div key={index}>
+                                    <p>Name:{item.name}</p>
+                                    <p>Price:{item.price}</p>
+                                    <p>Stock Status:{item.stockStatus}</p>
+                                  </div>
+                                ))
+                              ):(
+                                <p>No varients are availble in this product</p>
+                              )}
                             </td>
                             <td>
                                 <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
