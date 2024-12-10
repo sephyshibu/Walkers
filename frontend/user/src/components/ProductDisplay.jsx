@@ -11,10 +11,13 @@ const ProductDisplay = () => {
   const { id } = useParams();
   const [error, setError] = useState("");
   const [existingImages, setExistingImages] = useState([]);
+  const[variantslist,setvariantslist]=useState([])
+  const [selectedVariant, setSelectedVariant] = useState(null); // Track selected variant
   const [products, setProducts] = useState(null);
   const [isZoomed, setIsZoomed] = useState(false)
   const [mainImage, setMainImage] = useState(""); // State for the main image
   const [recommendations, setRecommendations] = useState([]); // Recommendations state
+  const [initialProductState, setInitialProductState] = useState(null); // Track initial product state
   const [formdata, setFormdata] = useState({
     title: "",
     price: "",
@@ -22,20 +25,40 @@ const ProductDisplay = () => {
     stockStatus: "",
   });
   const navigate=useNavigate()
+
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
+
+        // setSelectedVariant(null);
+
         const response = await axiosInstanceuser.get(`/products/display/${id}`);
         const fetchdetails = response.data;
+
         setProducts(fetchdetails);
+
+
+        const initialState = {
+          title: fetchdetails.title,
+          price: fetchdetails.price,
+          stockStatus: fetchdetails.stockStatus,
+          image: fetchdetails.images[0], // First image
+        };
+
+        setInitialProductState(initialState);
+
         setFormdata({
           title: fetchdetails.title,
           price: fetchdetails.price,
           category: fetchdetails.category,
           description: fetchdetails.description,
           stockStatus: fetchdetails.stockStatus,
+          
         });
+
         setExistingImages(fetchdetails.images);
+        setvariantslist(fetchdetails.variants)
         if (fetchdetails.images && fetchdetails.images.length > 0) {
             setMainImage(fetchdetails.images[0]); // Initialize with the first image
           }
@@ -50,8 +73,25 @@ const ProductDisplay = () => {
         setError("Failed to fetch product details.");
       }
     };
+    
     fetchProduct();
   }, [id]);
+
+
+
+  // useEffect(() => {
+  //   // Reset to main product details if no variant is selected
+  //   if (!selectedVariant && initialProductState) {
+  //     setFormdata({
+  //       title: initialProductState.title,
+  //       price: initialProductState.price,
+  //       stockStatus: initialProductState.stockStatus,
+  //     });
+  //     setMainImage(initialProductState.image);
+  //   }
+  // }, [selectedVariant, initialProductState]);
+
+
 
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -67,17 +107,33 @@ const ProductDisplay = () => {
     setMainImage(image); // Update the main image when a thumbnail is clicked
   };
 
+
+  const handleVariantClick = (variant) => {
+    setSelectedVariant(variant); // Set the selected variant
+    // setMainImage(variant.image);
+    setFormdata({
+      title: variant.title,
+      price: variant.price,
+      stockStatus: variant.stockStatus,
+    });
+    setMainImage(existingImages[0]); // Revert to main image
+  };
+
+ 
+
+
   const handleDisplay=(id)=>{
     console.log("entered")
     navigate(`/products/display/${id}`)
   }
   return (
-    <div className="product-display">
+    <div className="product-display-page">
       <Navbar/>
+    <div className="product-display-container">
       {error && <p className="error-message">{error}</p>}
       {!error && (
         <>
-        <div className="product-top">
+        <div className="product-main">
           <div className="product-left">
             <div className="main-image-container">
             <TransformWrapper>
@@ -108,6 +164,29 @@ const ProductDisplay = () => {
                 />
               ))}
             </div>
+
+
+             {/* Variants display */}
+             <div className="variants-section">
+                <h2>Variants</h2>
+                <div className="variants-list">
+                  {variantslist.map((variant, index) => (
+                    <div
+                      key={index}
+                      className={`variant-card ${selectedVariant === variant ? "active" : ""}`}
+                      onClick={() => handleVariantClick(variant)} // Handle variant selection
+                    >
+                     
+                      <h3 className="variant-title">{variant.name}</h3>
+                      <p className="variant-price">Rs.{variant.price}</p>
+                      <p className={`variant-status ${variant.stockStatus}`}>
+                        {variant.stockStatus}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                </div>
+                
           </div>
         </div>   
 
@@ -130,8 +209,10 @@ const ProductDisplay = () => {
             >
               {formdata.stockStatus}
             </p>
-            <button className="add-to-cart">Add to Cart</button>
-            <button className="buy-now">Buy Now</button>
+            <div className="product-actions">
+              <button className="add-to-cart">Add to Cart</button>
+              <button className="buy-now">Buy Now</button>
+            </div>
           </div>
 
 
@@ -167,6 +248,7 @@ const ProductDisplay = () => {
             </div>
         </>
       )}
+      </div>
      
     </div>
   );

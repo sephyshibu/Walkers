@@ -1,200 +1,151 @@
-/* Product.css */
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4; /* Light gray background */
-  margin: 0;
-  padding: 0;
-}
-
+\`\`\`css
 .products-dashboard-container {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 1rem;
-  background: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: 'Arial', sans-serif;
 }
 
 .dashboard-title {
+  font-size: 2.5rem;
+  color: #2c3e50;
   text-align: center;
-  font-size: 2rem;
-  color: #333333;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
-
-.error-messages {
-  color: #ff4d4f;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-
 
 .product-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 2rem;
 }
 
 .input-groupss {
-  flex: 1 1 calc(50% - 1rem);
-  padding: 0.5rem;
-  border: 1px solid #d9d9d9;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
-  transition: border 0.3s ease;
-}
-
-.input-groupss:focus {
-  border: 1px solid #40a9ff;
-  outline: none;
+  font-size: 1rem;
 }
 
 .input-file {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-messages {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.cropper-container {
+  margin-bottom: 1rem;
 }
 
 .crop-button,
-.add-product-button {
-  padding: 0.5rem 1.5rem;
+.add-product-button,
+.show-list-button,
+.edit-button,
+.delete-button,
+.pagination-button {
+  background-color: #3498db;
+  color: #ffffff;
   border: none;
+  padding: 0.75rem 1.5rem;
   border-radius: 4px;
-  background-color: #1890ff;
-  color: white;
   cursor: pointer;
+  font-size: 1rem;
   transition: background-color 0.3s ease;
 }
 
 .crop-button:hover,
-.add-product-button:hover {
-  background-color: #40a9ff;
+.add-product-button:hover,
+.show-list-button:hover,
+.edit-button:hover,
+.delete-button:hover,
+.pagination-button:hover {
+  background-color: #2980b9;
+}
+
+.cropped-images-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.cropped-images-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .product-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 2rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow to table */
-  border-radius: 8px; /* Rounded corners for table */
 }
 
 .table-header {
-  background-color: #3498db; /* Blue header */
-  color: white;
-  font-weight: bold;
-  text-align: left; /* Align header text to the left */
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.table-header th {
+  padding: 1rem;
+  text-align: left;
 }
 
 .table-row {
-  transition: background-color 0.3s ease;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .table-row:nth-child(even) {
-  background-color: #f9f9f9; /* Alternate row color */
-}
-
-.table-row:hover {
-  background-color: #e0f2f7; /* Light blue hover color */
+  background-color: #f8f9fa;
 }
 
 .table-row td {
-  padding: 1rem; /* Increase padding for better readability */
-  border-bottom: 1px solid #ddd; /* Light gray border */
-  vertical-align: middle; /* Vertically center cell content */
+  padding: 1rem;
 }
 
 .product-image {
-  width: 80px;
-  height: 80px;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.product-image:hover {
-  transform: scale(1.05);
-}
-
-.edit-button,
-.delete-button {
-  padding: 0.5rem 1rem;
-  border: none;
   border-radius: 4px;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  transition: background-color 0.3s ease;
 }
 
-.edit-button {
-  background-color: #52c41a;
-  color: white;
-}
-
-.edit-button:hover {
-  background-color: #73d13d;
-}
-
-.delete-button {
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  color: white;
-  transition: background-color 0.3s ease;
-}
-
-.delete-active {
-  background-color: red;
-}
-
-.undo-active {
-  background-color: rgb(4, 62, 129);
-}
-
-.delete-button:hover {
-  
-  opacity: 0.9;
-}
 .pagination-controls {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  margin-top: 1rem;
-  gap: 1rem;
+  margin-top: 2rem;
 }
 
-.pagination-button {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  cursor: pointer;
-  background-color: white;
-  color: #333;
-  transition: all 0.3s ease;
+.delete-button.delete-active {
+  background-color: #e74c3c;
 }
 
-.pagination-button:hover {
-  background-color: #f0f2f5;
+.delete-button.undo-active {
+  background-color: #f39c12;
 }
 
-@keyframes slideIn {
-  from {
-    transform: translateY(10px);
-    opacity: 0;
+@media (max-width: 768px) {
+  .products-dashboard-container {
+    padding: 1rem;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+  .product-form {
+    padding: 1rem;
+  }
+
+  .table-header th,
+  .table-row td {
+    padding: 0.5rem;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}

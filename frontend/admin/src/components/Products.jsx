@@ -27,7 +27,7 @@ const Products = () => {
   const [error, setError] = useState({});
   const [cropper, setCropper] = useState(null);
   const[variants,setvariants]=useState([])
-
+  const [showList, setShowList] = useState(false); // State for controlling table visibility
 
   const navigate = useNavigate();
 
@@ -46,7 +46,10 @@ const Products = () => {
     fetchProducts();
   }, []); // Ensure the dependency array is empty to run only on mount.
   
-
+  const handleShowListClick = () => {
+    setShowList((prevState) => !prevState); // Toggle table visibility
+  };
+  
    // Calculate products to display for the current page
    const startIndex = (currentPage - 1) * itemsPerPage;
    const endIndex = startIndex + itemsPerPage;
@@ -255,7 +258,7 @@ const handleVariantChange = (index, field, value) => {
   return (
     <div className="products-dashboard-container">
       <h1 className="dashboard-title">Products Dashboard</h1>
-      <div>
+      
       {/* {error && <p className="error-messages">{error}</p>} */}
       <form className="product-form">
         <label>Title: </label>
@@ -385,17 +388,26 @@ const handleVariantChange = (index, field, value) => {
           Add Product
         </button>
       </form>
+
+
+     
+      <button className="show-list-button" onClick={handleShowListClick}>
+        {showList ? 'Hide List' : 'Show List'}
+      </button>
+
+      {showList && (
       <table className="product-table">
                 <thead>
                     <tr className="table-header">
                         <th>Title</th>
                         <th>Price</th>
                         <th>Category</th>
-                        <th>SKU</th>
-                        <th>Description</th>
+                        {/* <th>SKU</th> */}
+                        {/* <th>Description</th> */}
                         <th>Stock Status</th>
                         <th>Available Quantity</th>
                         <th>Images</th>
+
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -405,8 +417,8 @@ const handleVariantChange = (index, field, value) => {
                             <td>{product.title}</td>
                             <td>{product.price}</td>
                             <td>{product.category}</td>
-                            <td>{product.sku}</td>
-                            <td>{product.description}</td>
+                            {/* <td>{product.sku}</td> */}
+                            {/* <td>{product.description}</td> */}
                             <td>{product.stockStatus}</td>
                             <td>{product.availableQuantity}</td>
                             <td>
@@ -414,7 +426,7 @@ const handleVariantChange = (index, field, value) => {
                                     <img key={index} src={img} className="product-image" alt={`${product.title} ${index}`} width="100" />
                                 ))}
                             </td>
-                            <td>
+                            {/* <td>
                               {product.variants && product.variants.length>0?(
                                 product.variants.map((item,index)=>(
                                   <div key={index}>
@@ -426,7 +438,7 @@ const handleVariantChange = (index, field, value) => {
                               ):(
                                 <p>No varients are availble in this product</p>
                               )}
-                            </td>
+                            </td> */}
                             <td>
                                 <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
                                 <button  className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id,product.status)}>
@@ -437,30 +449,35 @@ const handleVariantChange = (index, field, value) => {
                     ))}
                 </tbody>
             </table>
+              )}
+              {showList &&(
             <div className="pagination-controls">
-        <button
-          className="pagination-button"
-          onClick={handlePrevious}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span>
-          Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
-        </span>
-        <button
-          className="pagination-button"
-          onClick={handleNext}
-          disabled={endIndex >= products.length}
-        >
-          Next
-        </button>
-      </div>
+              <button
+                className="pagination-button"
+                onClick={handlePrevious}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
+              </span>
+              <button
+                className="pagination-button"
+                onClick={handleNext}
+                disabled={endIndex >= products.length}
+              >
+                Next
+              </button>
+            </div>
+            )}
+              
   
 
 
-        </div>
+        
     </div>
+
   );
 };
 
