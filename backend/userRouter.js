@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
+const {updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 
@@ -15,4 +15,7 @@ router.get('/products/display/:id',verifyAccessToken,fetchproductdetails)
 router.get('/products/recommendations/:category',verifyAccessToken,fetchrecom)
 router.get('/fetchcategory',categoryname)
 router.post('/addcart',verifyAccessToken,addcart)
+router.get('/fetchcart/:userId',verifyAccessToken,fetchcart)
+router.put('/updatecartminus/:userId',verifyAccessToken,updatecartminus)
+router.put('/updatecartplus/:userId',verifyAccessToken,updatecartplus)
 module.exports=router

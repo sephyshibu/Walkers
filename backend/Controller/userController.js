@@ -305,6 +305,90 @@ const getProducts=async(req,res)=>{
 
 }
 
+const fetchcart=async(req,res)=>{
+    const{userId}=req.params
+    
+    try{
+        const cart = await cartdb.findOne({ userId })
+        
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+          }
+
+          const cartData = {
+            items: cart.items.map((item) => ({
+              productId: item.productId._id,
+              title: item.title,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+            totalprice: cart.totalprice,
+          };
+      
+          
+        return res.status(200).json(cartData)
+    }
+    catch(error)
+    {
+        console.error("an error occured during get cart ",error)
+        res.status(500).json({message:"internal server error"})
+    }
+}
+
+// const fetchcart = async (req, res) => {
+//     const { userId } = req.params;
+//     console.log(userId);
+//     try {
+//       const cart = await cartdb.findOne({ userId });
+  
+//       if (!cart) {
+//         return res.status(404).json({ message: "Cart not found" });
+//       }
+  
+//       const populatedItems = await Promise.all(
+//         cart.items.map(async (item) => {
+//           let product;
+//           try {
+//             product = await Productdb.findById(item.productId); // Try fetching as main product
+//             if (!product) {
+//               product = await Productdb.findOne({ "variants._id": item.productId }); // Try fetching as variant
+//             }
+//           } catch (err) {
+//             console.error("Error populating product:", err);
+//             // Handle error, e.g., return a default or skip the item
+//             return null;
+//           }
+  
+//           if (product) {
+//             return {
+//               productId: product._id || product.variants._id, // Or product.variants._id if it's a variant
+//               title: product.title || product.variants.find(variant => variant._id.toString() === item.productId.toString()).title,
+//               quantity: item.quantity,
+//               price: product.price || product.variants.find(variant => variant._id.toString() === item.productId.toString()).price,
+//               availableQuantity: product.availableQuantity|| product.variants.find(variant => variant._id.toString() === item.productId.toString()).availableQuantity,
+//             };
+//           } else {
+//             // Handle case where product is not found
+//             return null;
+//           }
+//         })
+//       );
+  
+//       const filteredItems = populatedItems.filter(item => item !== null);
+  
+//       const cartData = {
+//         items: filteredItems,
+//         totalprice: cart.totalprice,
+//       };
+  
+//       return res.status(200).json(cartData);
+//     } catch (error) {
+//       console.error("An error occurred during get cart ", error);
+//       res.status(500).json({ message: "Internal server error" });
+//     }
+//   };
+  
+
 const fetchproductdetails=async(req,res)=>{
     console.log("entered")
     const{id}=req.params
@@ -353,46 +437,211 @@ const categoryname=async(req,res)=>{
 
 const addcart=async(req,res)=>{
 
-       const{userId,title, productId,quantity,availableQuantity,price}=req.body
-       console.log(title)
-       try{
-       let cart=await cartdb.findOne({userId})
+    const{userId,title, productId,quantity,availableQuantity,price}=req.body
+    console.log("backend title",req.body)
+    try{
+     //first product quantity updater akenam
+
+     let product = await Productdb.findById(productId)
+
+     if (!product) {
+         product = await Productdb.findOne({ "variants._id": productId });
+       }
+
        
-       if(!cart)
-       {
-        cart= new cartdb({
-            userId,
-        items: [
-          { productId,title,quantity, price, availableQuantity },
-        ],
-        totalprice: quantity * price // Calculate initial total price
-      
-        })
-        // console.log("items", cart)
-       }
-       else{
-        const productIndex=cart.items.findIndex((item)=>item.productId.toString()===productId)
-        if (productIndex > -1) {
-            // Update quantity and price if the product exists
-            cart.items[productIndex].quantity += quantity;
-            cart.items[productIndex].price += price * quantity;
-            
-          } else {
-            // Add new product to the cart
-            cart.items.push({ productId, title,quantity, price, availableQuantity });
-          
-        }
-        cart.totalprice = cart.items.reduce((total, item) => {
-            return total + item.price;
-        }, 0);
-       }
-       await cart.save();
-       console.log(cart)
-        res.status(200).json({ message: 'Product added to cart', cart });
+     if (!product) {
+     return res.status(404).json({ message: 'Product not found' });
+     }
+     
+     if (product.availableQuantity < quantity) {
+     return res.status(400).json({ message: 'Not enough stock available' });
+     }
+     
+    //  product.availableQuantity -= quantity;
+     await product.save();
+
+
+    let cart=await cartdb.findOne({userId})
+    
+    if(!cart)
+    {
+     cart= new cartdb({
+         userId,
+     items: [
+       { productId,title,quantity, price, availableQuantity },
+     ],
+     totalprice: quantity * price // Calculate initial total price
+   
+     })
+     // console.log("items", cart)
     }
-    catch(error){
-        console.error('Error adding to cart:', error);
-        res.status(500).json({ message: 'Failed to add product to cart' });
+    else{
+     const productIndex=cart.items.findIndex((item)=>item.productId.toString()===productId)
+     if (productIndex > -1) {
+         // Update quantity and price if the product exists
+         cart.items[productIndex].quantity += quantity;
+         cart.items[productIndex].price += price * quantity;
+         cart.items[productIndex].availableQuantity=availableQuantity
+       } else {
+         // Add new product to the cart
+         cart.items.push({ productId, title,quantity, price, availableQuantity});
+       
+     }
+     cart.totalprice = cart.items.reduce((total, item) => {
+         return total + item.price;
+     }, 0);
     }
+    await cart.save();
+    console.log(cart)
+     res.status(200).json({ message: 'Product added to cart', cart ,updatedProductQuantity: availableQuantity});
+ }
+ catch(error){
+     console.error('Error adding to cart:', error);
+     res.status(500).json({ message: 'Failed to add product to cart' });
+ }
 }
-module.exports={addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+
+const updatecartplus=async(req,res)=>{
+    const{userId}=req.params
+    const{productId,quantity}=req.body
+    console.log("backend updatecart",productId)
+    const cart= await cartdb.findOne({userId})
+
+    if(!cart)
+    {
+        return res.status(404).json({message:"cart is not available"})
+
+    }
+
+    let cartitem=cart.items.find(item=>item.productId.toString()===productId)
+    if(!cartitem)
+    {
+        cartitem=cart.items.findIndex(item=>item.productId.toString()===productId)
+    }
+    // if(!cartitem){
+    //     return res.status(404).json({success:false , message:"product not found in cart"})
+    // }
+    if(cartitem.quantity>5)
+    {
+        return res.status(400).json({success:false,message:"Not allowed to add a single product more than 5"})
+    }
+
+    const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
+   
+
+    if(quantity>product.availableQuantity)
+    {
+        return res.status(400).json({success:false, message:"quantity is exceeded than original quantity"})
+    }
+
+    cartitem.quantity = quantity;
+    cartitem.availableQuantity-=1
+
+    product.availableQuantity-=1 
+    await product.save()
+    cart.totalprice = cart.items.reduce((total, item) => {
+        return total + (item.price * item.quantity);
+      }, 0);
+
+      await cart.save()
+
+      res.json({ success: true, message: 'Cart updated successfully', cart });
+}
+
+
+// const updatecartminus=async(req,res)=>{
+//     const{userId}=req.params
+//     const{productId,quantity}=req.body
+//     console.log("backend updatecart",userId)
+  
+//     const cart= await cartdb.findOne({userId})
+
+//     if(!cart)
+//     {
+//         return res.status(404).json({message:"cart is not available"})
+
+//     }
+
+//     const cartitem=cart.items.find(item=>item.productId.toString()===productId)
+
+//     if(!cartitem){
+//         return res.status(404).json({success:false , message:"product not found in cart"})
+//     }
+
+//     if(cartitem.quantity>5)
+//     {
+//         return res.status(400).json({success:false,message:"Not allowed to add a single product more than 5"})
+//     }
+
+//     // const product=await Productdb.findById(productId)
+//     let product = await Productdb.findById(productId) || await Productdb.findOne({ "variants._id": productId });
+//     console.log("here",product)
+//     if(quantity>product.availableQuantity)
+//     {
+//         return res.status(400).json({success:false, message:"quantity is exceeded than original quantity"})
+//     }
+
+//     cartitem.quantity = quantity;
+//     cartitem.availableQuantity+=1
+
+//     product.availableQuantity+=1
+//     await product.save()
+//     cart.totalprice = cart.items.reduce((total, item) => {
+//         return total + (item.price * item.quantity);
+//       }, 0);
+
+//       await cart.save()
+
+//       res.json({ success: true, message: 'Cart updated successfully', cart });
+   
+// }
+
+const updatecartminus=async(req,res)=>{
+    const{userId}=req.params
+    const{productId,quantity}=req.body
+    console.log("backend updatecart",productId)
+    const cart= await cartdb.findOne({userId})
+
+    if(!cart)
+    {
+        return res.status(404).json({message:"cart is not available"})
+
+    }
+
+    let cartitem=cart.items.find(item=>item.productId.toString()===productId)
+    if(!cartitem)
+    {
+        cartitem=cart.items.findIndex(item=>item.productId.toString()===productId)
+    }
+    // if(!cartitem){
+    //     return res.status(404).json({success:false , message:"product not found in cart"})
+    // }
+    // if(cartitem.quantity>5)
+    // {
+    //     return res.status(400).json({success:false,message:"Not allowed to add a single product more than 5"})
+    // }
+
+    const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
+   
+
+    if(quantity>product.availableQuantity)
+    {
+        return res.status(400).json({success:false, message:"quantity is exceeded than original quantity"})
+    }
+
+    cartitem.quantity = quantity;
+    cartitem.availableQuantity+=1
+
+    product.availableQuantity+=1
+    await product.save()
+    cart.totalprice = cart.items.reduce((total, item) => {
+        return total + (item.price * item.quantity);
+      }, 0);
+
+      await cart.save()
+
+      res.json({ success: true, message: 'Cart updated successfully', cart });
+}
+
+
+module.exports={updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

@@ -113,23 +113,16 @@ const ProductDisplay = () => {
   };
 
   const handleAddToCart = async () => {
-    // console.log(formdata.title)
-    // console.log("Request payload:", {
-    //   userId,
-    //   productId: formdata.id,
-    //   title: formdata.title,
-    //   availableQuantity: formdata.availableQuantity,
-    //   quantity,
-    //   price: formdata.price,
-    // });
+   
     try{
+      console.log("varient title",formdata.availableQuantity)
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
-        productId:formdata.id,
-        title:formdata.title || products.title,
-        availableQuantity:formdata.availableQuantity|| products.availableQuantity,
+        productId:formdata.id||selectedVariant._id,
+        title:formdata.title||selectedVariant.name,
+        availableQuantity:formdata.availableQuantity|| selectedVariant.stockStatus,
         quantity,
-        price:formdata.price||products.price,
+        price:formdata.price||selectedVariant.price,
         
       })
       console.log("add to cart response in product display page ",response.data)

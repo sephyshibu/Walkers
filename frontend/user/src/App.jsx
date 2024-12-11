@@ -10,6 +10,7 @@ import AboutUs from './components/AboutUs'
 import ProtectedRouter from './components/ProtectedRouter'
 import ScrollToTop from './components/ScrollToTop'
 import Breadcrumbs from './components/Breadcrumbs'
+import CartPage from './components/CartPage'
 function App() {
   
  return(
@@ -23,7 +24,7 @@ function App() {
         <Route path='/' element={<Home/>}/>
         <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
         <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
-        
+        <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>
       </Routes>
     </Router>
  )
