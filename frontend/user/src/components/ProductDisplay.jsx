@@ -28,6 +28,7 @@ const ProductDisplay = () => {
     price: "",
     description: "",
     stockStatus: "",
+    availableQuantity:""
   });
   const navigate=useNavigate()
 
@@ -49,17 +50,19 @@ const ProductDisplay = () => {
           title: fetchdetails.title,
           price: fetchdetails.price,
           stockStatus: fetchdetails.stockStatus,
+          availableQuantity:fetchdetails.availableQuantity,
           image: fetchdetails.images[0], // First image
         };
 
         setInitialProductState(initialState);
 
         setFormdata({
-         
+         id:fetchdetails._id,
           title: fetchdetails.title,
           price: fetchdetails.price,
           category: fetchdetails.category,
           description: fetchdetails.description,
+          availableQuantity:fetchdetails.availableQuantity,
           stockStatus: fetchdetails.stockStatus,
           
         });
@@ -86,29 +89,10 @@ const ProductDisplay = () => {
 
 
 
-  // useEffect(() => {
-  //   // Reset to main product details if no variant is selected
-  //   if (!selectedVariant && initialProductState) {
-  //     setFormdata({
-  //       title: initialProductState.title,
-  //       price: initialProductState.price,
-  //       stockStatus: initialProductState.stockStatus,
-  //     });
-  //     setMainImage(initialProductState.image);
-  //   }
-  // }, [selectedVariant, initialProductState]);
-
-
 
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
-    // return (
-    //   <>
-    //     <button onClick={() => zoomIn()}>Zoom In</button>
-    //     <button onClick={() => zoomOut()}>Zoom Out</button>
-    //     <button onClick={() => resetTransform()}>Reset</button>
-    //   </>
-    // );
+   
   };
   const handleThumbnailClick = (image) => {
     setMainImage(image); // Update the main image when a thumbnail is clicked
@@ -119,7 +103,7 @@ const ProductDisplay = () => {
     setSelectedVariant(variant); // Set the selected variant
     // setMainImage(variant.image);
     setFormdata({
-     
+      id: variant._id,
       title: variant.title,
       price: variant.price,
       stockStatus: variant.stockStatus,
@@ -128,13 +112,26 @@ const ProductDisplay = () => {
   };
 
   const handleAddToCart = async () => {
+    console.log(formdata.title)
+    console.log("Request payload:", {
+      userId,
+      productId: formdata.id,
+      title: formdata.title,
+      availableQuantity: formdata.availableQuantity,
+      quantity,
+      price: formdata.price,
+    });
     try{
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
-        productId:formdata._id,
+        productId:formdata.id,
+        title:formdata.title,
+        availableQuantity:formdata.availableQuantity,
         quantity,
+        price:formdata.price,
+        
       })
-      console.log(response)
+      console.log("add to cart response in product display page ",response.data)
       alert("Product added to cart!");
     }
     catch(err){
@@ -217,6 +214,7 @@ const ProductDisplay = () => {
             <div className="price-section">
               <p className="product-prev-price">Rs.{formdata.price * 1.2}</p>
               <p className="product-price">Rs.{formdata.price}</p>
+              <p className="product-price">Quantity: {formdata.availableQuantity}</p>
             </div>
             <div className="product-rating">
               <span>⭐⭐⭐⭐☆</span> <span className="reviews-count">(120 reviews)</span>

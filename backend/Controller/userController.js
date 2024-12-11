@@ -6,7 +6,8 @@ const nodemailer= require('nodemailer')
 const {OAuth2Client}= require('google-auth-library')
 const Productdb=require('../models/product')
 const Categorydb= require('../models/category')
-
+const product = require('../models/product')
+const cartdb=require('../models/cart')
 
 function generateOTP(){
     return Math.floor(1000 * Math.random()*9000).toString()
@@ -348,4 +349,43 @@ const categoryname=async(req,res)=>{
         res.status(500).json({ message: "Failed to fetch category names" });
     }
 }
-module.exports={refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+
+
+const addcart=async(req,res)=>{
+
+       const{userId,productId,title,quantity,availableQuantity,price}=req.body
+       console.log(title)
+       try{
+       let cart=await cartdb.findOne({userId})
+       if(!cart)
+       {
+        cart= new cartdb({
+            userId,
+        items: [
+          { productId,title,quantity, price, availableQuantity },
+        ],
+      
+        })
+       }
+       else{
+        const productIndex=cart.items.findIndex((item)=>item.productId.toString()===productId)
+        if (productIndex > -1) {
+            // Update quantity and price if the product exists
+            cart.items[productIndex].quantity += quantity;
+            cart.items[productIndex].price += price * quantity;
+          } else {
+            // Add new product to the cart
+            cart.items.push({ productId, title, quantity, price, availableQuantity });
+          
+        }
+       }
+       await cart.save();
+       console.log(cart)
+        res.status(200).json({ message: 'Product added to cart', cart });
+    }
+    catch(error){
+        console.error('Error adding to cart:', error);
+        res.status(500).json({ message: 'Failed to add product to cart' });
+    }
+}
+module.exports={addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
