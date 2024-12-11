@@ -107,28 +107,29 @@ const ProductDisplay = () => {
       title: variant.title,
       price: variant.price,
       stockStatus: variant.stockStatus,
+      availableQuantity:variant.availableQuantity
     });
     setMainImage(existingImages[0]); // Revert to main image
   };
 
   const handleAddToCart = async () => {
-    console.log(formdata.title)
-    console.log("Request payload:", {
-      userId,
-      productId: formdata.id,
-      title: formdata.title,
-      availableQuantity: formdata.availableQuantity,
-      quantity,
-      price: formdata.price,
-    });
+    // console.log(formdata.title)
+    // console.log("Request payload:", {
+    //   userId,
+    //   productId: formdata.id,
+    //   title: formdata.title,
+    //   availableQuantity: formdata.availableQuantity,
+    //   quantity,
+    //   price: formdata.price,
+    // });
     try{
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
         productId:formdata.id,
-        title:formdata.title,
-        availableQuantity:formdata.availableQuantity,
+        title:formdata.title || products.title,
+        availableQuantity:formdata.availableQuantity|| products.availableQuantity,
         quantity,
-        price:formdata.price,
+        price:formdata.price||products.price,
         
       })
       console.log("add to cart response in product display page ",response.data)
@@ -199,7 +200,12 @@ const ProductDisplay = () => {
                       <h3 className="variant-title">{variant.name}</h3>
                       <p className="variant-price">Rs.{variant.price}</p>
                       <p className={`variant-status ${variant.stockStatus}`}>
+
                         {variant.stockStatus}
+                      </p>
+                      <p className={`variant-status ${variant.availableQuantity}`}>
+                      
+                        {variant.availableQuantity}
                       </p>
                     </div>
                   ))}

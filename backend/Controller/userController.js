@@ -353,10 +353,11 @@ const categoryname=async(req,res)=>{
 
 const addcart=async(req,res)=>{
 
-       const{userId,productId,title,quantity,availableQuantity,price}=req.body
+       const{userId,title, productId,quantity,availableQuantity,price}=req.body
        console.log(title)
        try{
        let cart=await cartdb.findOne({userId})
+       
        if(!cart)
        {
         cart= new cartdb({
@@ -364,8 +365,10 @@ const addcart=async(req,res)=>{
         items: [
           { productId,title,quantity, price, availableQuantity },
         ],
+        totalprice: quantity * price // Calculate initial total price
       
         })
+        // console.log("items", cart)
        }
        else{
         const productIndex=cart.items.findIndex((item)=>item.productId.toString()===productId)
@@ -373,11 +376,15 @@ const addcart=async(req,res)=>{
             // Update quantity and price if the product exists
             cart.items[productIndex].quantity += quantity;
             cart.items[productIndex].price += price * quantity;
+            
           } else {
             // Add new product to the cart
-            cart.items.push({ productId, title, quantity, price, availableQuantity });
+            cart.items.push({ productId, title,quantity, price, availableQuantity });
           
         }
+        cart.totalprice = cart.items.reduce((total, item) => {
+            return total + item.price;
+        }, 0);
        }
        await cart.save();
        console.log(cart)
