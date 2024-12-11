@@ -65,11 +65,12 @@ const login=()=>{
 
             const backresponse=await axiosInstanceuser.post('/login',formdata)
             console.log("user Backend data login",backresponse)
-            dispatch(loginuser(backresponse.data.username))
+            dispatch(loginuser(backresponse.data.user))
             dispatch(addtoken(backresponse.data.token))
+            
             setmsg(backresponse.data.message)
             console.log("user login store token in slice")
-            const userId=backresponse.data.id
+            const userId=backresponse.data.user._id
             console.log(userId)
             localStorage.setItem('userId',userId)
             

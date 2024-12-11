@@ -125,8 +125,8 @@ const login=async(req,res)=>{
     secure:false,
     maxAge:7*24*60*60*1000
    });
-
-    return res.status(200).json({message:"Login Successfully",id: user._id,username: user.username, token})
+   console.log(user)
+    return res.status(200).json({message:"Login Successfully",user, token})
     // console.log("backend Admin",  token);
   // Prevent further execution
 }

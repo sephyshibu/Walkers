@@ -6,8 +6,11 @@ import { TransformWrapper, TransformComponent, useControls } from "react-zoom-pa
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
+import { useSelector } from "react-redux";
+
 
 const ProductDisplay = () => {
+  const userId=useSelector((state)=>state.user.user._id)
   const { id } = useParams();
   const [error, setError] = useState("");
   const [existingImages, setExistingImages] = useState([]);
@@ -18,7 +21,9 @@ const ProductDisplay = () => {
   const [mainImage, setMainImage] = useState(""); // State for the main image
   const [recommendations, setRecommendations] = useState([]); // Recommendations state
   const [initialProductState, setInitialProductState] = useState(null); // Track initial product state
+  const [quantity, setQuantity] = useState(1);
   const [formdata, setFormdata] = useState({
+    id:" ",
     title: "",
     price: "",
     description: "",
@@ -40,6 +45,7 @@ const ProductDisplay = () => {
 
 
         const initialState = {
+          
           title: fetchdetails.title,
           price: fetchdetails.price,
           stockStatus: fetchdetails.stockStatus,
@@ -49,6 +55,7 @@ const ProductDisplay = () => {
         setInitialProductState(initialState);
 
         setFormdata({
+         
           title: fetchdetails.title,
           price: fetchdetails.price,
           category: fetchdetails.category,
@@ -112,6 +119,7 @@ const ProductDisplay = () => {
     setSelectedVariant(variant); // Set the selected variant
     // setMainImage(variant.image);
     setFormdata({
+     
       title: variant.title,
       price: variant.price,
       stockStatus: variant.stockStatus,
@@ -119,7 +127,21 @@ const ProductDisplay = () => {
     setMainImage(existingImages[0]); // Revert to main image
   };
 
- 
+  const handleAddToCart = async () => {
+    try{
+      const response=await axiosInstanceuser.post('/addcart',{
+        userId,
+        productId:formdata._id,
+        quantity,
+      })
+      console.log(response)
+      alert("Product added to cart!");
+    }
+    catch(err){
+      console.log("error in adding cart",err)
+      setError("failed to add cart")
+    }
+  };
 
 
   const handleDisplay=(id)=>{
@@ -210,7 +232,7 @@ const ProductDisplay = () => {
               {formdata.stockStatus}
             </p>
             <div className="product-actions">
-              <button className="add-to-cart">Add to Cart</button>
+              <button className="add-to-cart" onClick={handleAddToCart}>Add to Cart</button>
               <button className="buy-now">Buy Now</button>
             </div>
           </div>

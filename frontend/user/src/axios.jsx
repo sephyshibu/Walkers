@@ -1,5 +1,5 @@
 import axios from 'axios';
-import store from '../../user/src/app/store'
+import {store} from '../../user/src/app/store'
 // import { loginuser } from './features/userSlice';
 import { addtoken } from './features/tokenSlice';
 
