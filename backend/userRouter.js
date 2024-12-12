@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
+const {deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 
@@ -20,4 +20,7 @@ router.put('/updatecartminus/:userId',verifyAccessToken,updatecartminus)
 router.put('/updatecartplus/:userId',verifyAccessToken,updatecartplus)
 router.post('/addaddress',verifyAccessToken,addaddress)
 router.get('/fetchaddress/:userId', verifyAccessToken,fetchaddress)
+router.get('/fetechspecificaddress/:id',verifyAccessToken,fetechspecificaddress)
+router.put('/updateaddress/:id',verifyAccessToken,updateaddress)
+router.delete('/deleteaddress/:id',verifyAccessToken,deleteaddress)
 module.exports=router

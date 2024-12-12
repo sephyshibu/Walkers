@@ -305,6 +305,74 @@ const getProducts=async(req,res)=>{
 
 
 }
+
+// const updateaddress=async(req,res)=>{
+//     const{id}=req.params
+//     console.log("update address id; ", id)
+//     const{addressname, streetAddress, pincode, state, phonenumber}= req.body
+
+//     try{
+//         const updateaddress= await addressdb.findByIdAndUpdate(
+//             {"address._id":id,{
+
+//             addressname,streetAddress,pincode,state,phonenumber}
+//         })
+//     }
+// }
+
+const updateaddress = async (req, res) => {
+    const { id } = req.params;
+    const { addressname, streetAddress, pincode, state, phonenumber } = req.body;
+
+    try {
+       
+        const addressDoc = await addressdb.findOne({ "address._id": id });
+        console.log("addressdoc",addressDoc)
+        if (!addressDoc) {
+            return res.status(404).json({ message: "Address not found" });
+        }
+
+       
+        const addressToUpdate = addressDoc.address.find((addr) => addr._id.toString() === id);
+
+        if (addressToUpdate) {
+            
+            addressToUpdate.addressname = addressname;
+            addressToUpdate.streetAddress = streetAddress;
+            addressToUpdate.pincode = pincode;
+            addressToUpdate.state = state;
+            addressToUpdate.phonenumber = phonenumber;
+
+            await addressDoc.save();
+            res.status(200).json({ message: "Address updated successfully" });
+        } else {
+            res.status(404).json({ message: "Address not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating address" });
+    }
+};
+
+
+const deleteaddress=async(req,res)=>{
+    const{id}=req.params
+    try {
+        const addressDoc = await addressdb.findOne({ "address._id": id });
+        console.log("addressdoc",addressDoc)
+        if (!addressDoc) {
+            return res.status(404).json({ message: "Address not found" });
+        }
+
+      addressDoc.address =addressDoc.address.filter((addr)=>addr._id.toString()!==id)
+       await addressDoc.save()
+       res.status(200).json({ message: "Address deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting address" });
+        
+    }
+}
 const fetchaddress=async(req,res)=>{
     const{userId}=req.params
     console.log(userId)
@@ -317,6 +385,7 @@ const fetchaddress=async(req,res)=>{
 
         const addressdata={
             address:address.address.map((item)=>({
+                _id: item._id,
                 addressname:item.addressname,
                 streetAddress:item.streetAddress,
                 pincode:item.pincode,
@@ -415,6 +484,29 @@ const fetchcart=async(req,res)=>{
 //     }
 //   };
   
+
+const fetechspecificaddress=async(req,res)=>{
+    const{id}=req.params
+    try{
+        const address=await addressdb.findOne({"address._id":id})
+        if(!address)
+        {
+            return res.status(400).json({message:"address not found"})
+
+        }
+
+        const addresstoedit=address.address.find(item=>item._id.toString()===id)
+        if (!addresstoedit) {
+            return res.status(404).json({ message: "Address not found in the array" });
+        }
+        return res.status(200).json(addresstoedit)
+
+    }
+    catch (error) {
+        console.error("Error fetching address for edit:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 const fetchproductdetails=async(req,res)=>{
     console.log("entered")
@@ -700,4 +792,4 @@ const updatecartminus=async(req,res)=>{
 }
 
 
-module.exports={fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

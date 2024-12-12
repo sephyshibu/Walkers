@@ -13,6 +13,7 @@ import Breadcrumbs from './components/Breadcrumbs'
 import CartPage from './components/CartPage'
 import Address from './components/Address'
 import AddressPage from './components/AddressPage'
+import EditAddress from './components/EditAddress'
 function App() {
   
  return(
@@ -29,6 +30,7 @@ function App() {
         <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>
         <Route path='/account/address/add' element={<ProtectedRouter><Address/></ProtectedRouter>}/>
         <Route path='/account/addresspage' element={<ProtectedRouter><AddressPage/></ProtectedRouter>}/>
+        <Route path='/edit/:id' element={<ProtectedRouter><EditAddress/></ProtectedRouter>}/>
       </Routes>
     </Router>
  )
