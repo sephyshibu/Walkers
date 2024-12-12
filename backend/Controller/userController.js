@@ -8,6 +8,7 @@ const Productdb=require('../models/product')
 const Categorydb= require('../models/category')
 const product = require('../models/product')
 const cartdb=require('../models/cart')
+const addressdb=require('../models/address')
 
 function generateOTP(){
     return Math.floor(1000 * Math.random()*9000).toString()
@@ -304,7 +305,33 @@ const getProducts=async(req,res)=>{
 
 
 }
+const fetchaddress=async(req,res)=>{
+    const{userId}=req.params
+    console.log(userId)
+    try {
+        const address=await addressdb.findOne({userId})
+        if(!address)
+        {
+            return res.status(404).json({message:"address not found"})
+        }
 
+        const addressdata={
+            address:address.address.map((item)=>({
+                addressname:item.addressname,
+                streetAddress:item.streetAddress,
+                pincode:item.pincode,
+                state:item.state,
+                phonenumber:item.phonenumber
+            }))
+        }
+
+        return res.status(200).json(addressdata)
+    }catch(error)
+    {
+        console.error("an error occured during get address ",error)
+        res.status(500).json({message:"internal server error"})
+    }
+}
 const fetchcart=async(req,res)=>{
     const{userId}=req.params
     
@@ -433,7 +460,36 @@ const categoryname=async(req,res)=>{
         res.status(500).json({ message: "Failed to fetch category names" });
     }
 }
+const addaddress=async(req,res)=>{
+    const{userId,address}=req.body
+    console.log("req body",req.body)
 
+    try{
+        if (!userId || !address || !Array.isArray(address)) {
+            return res.status(400).json({ message: "Invalid data format" });
+          }
+
+          let addressadd=await addressdb.findOne({userId})
+          if(!addressadd)
+          {
+            addressadd=new addressdb({
+                userId,
+                address
+            })
+          }
+          else{
+            address.forEach((addr)=>addressadd.address.push(addr))
+          }
+          await addressadd.save()
+          console.log("addressadd",addressadd)
+          res.status(200).json({message:"address added succesfully"})
+
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error adding address" });
+      }
+}
 
 const addcart=async(req,res)=>{
 
@@ -644,4 +700,4 @@ const updatecartminus=async(req,res)=>{
 }
 
 
-module.exports={updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

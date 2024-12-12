@@ -1,0 +1,31 @@
+.address-container {
+    padding: 20px;
+  }
+  
+  .address-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .address-card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    background: #f9f9f9;
+    transition: transform 0.2s;
+  }
+  
+  .address-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .address-card h3 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .address-card p {
+    margin: 5px 0;
+  }
+  

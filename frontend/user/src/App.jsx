@@ -11,6 +11,8 @@ import ProtectedRouter from './components/ProtectedRouter'
 import ScrollToTop from './components/ScrollToTop'
 import Breadcrumbs from './components/Breadcrumbs'
 import CartPage from './components/CartPage'
+import Address from './components/Address'
+import AddressPage from './components/AddressPage'
 function App() {
   
  return(
@@ -25,6 +27,8 @@ function App() {
         <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
         <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
         <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>
+        <Route path='/account/address/add' element={<ProtectedRouter><Address/></ProtectedRouter>}/>
+        <Route path='/account/addresspage' element={<ProtectedRouter><AddressPage/></ProtectedRouter>}/>
       </Routes>
     </Router>
  )
