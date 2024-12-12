@@ -278,31 +278,48 @@ const googleLogin=async(req,res)=>{
       }
     };
 
-const getProducts=async(req,res)=>{
+    // come the product based on category
+// const getProducts=async(req,res)=>{
     
+//     try{
+//     const categories=await Categorydb.find({status:true})
+//     console.log("categories list", categories)
+
+//     const groupProducts={}
+
+//     for(const category of categories)
+//     {
+//         const products= await Productdb.find({category:category.categoryname, status:true})
+//         console.log("Products",products)
+//         if(products.length>0)
+//         {
+//             groupProducts[category.categoryname]=products
+//         }
+//         console.log("the length pf products based on category",products.length)
+//     }
+//     res.status(200).json({groupProducts})
+//     }catch(error)
+//     {
+//         console.error("an error occured during get product based on category",error)
+//         res.status(500).json({message:"internal server error"})
+//     }
+
+
+// }
+
+
+
+//fetch all product without any filter
+const getProducts=async(req,res)=>{
     try{
-    const categories=await Categorydb.find({status:true})
-    console.log("categories list", categories)
-
-    const groupProducts={}
-
-    for(const category of categories)
-    {
-        const products= await Productdb.find({category:category.categoryname, status:true})
-        console.log("Products",products)
-        if(products.length>0)
-        {
-            groupProducts[category.categoryname]=products
-        }
-        console.log("the length pf products based on category",products.length)
+        const products=await Productdb.find({status:true})
+        return res.status(200).json({products})
     }
-    res.status(200).json({groupProducts})
-    }catch(error)
+    catch(error)
     {
         console.error("an error occured during get product based on category",error)
         res.status(500).json({message:"internal server error"})
     }
-
 
 }
 

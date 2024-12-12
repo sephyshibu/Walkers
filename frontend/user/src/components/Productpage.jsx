@@ -1,48 +1,75 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstanceuser from '../axios';
 import './Productpage.css';
-import { useNavigate ,useLocation} from 'react-router';
+import { useNavigate } from 'react-router';
 import Navbar from './Navbar';
-import banner1 from '../images/Business.png'
+import banner1 from '../images/Business.png';
 import Footer from './Footer';
+
 const Productpage = () => {
-    const [groupProducts, setGroupProducts] = useState({});
-    const [selectedCategory, setSelectedCategory] = useState('ALL PRODUCTS'); // Track selected category
+    const [products, setProducts] = useState([]); // Store all products
+    const [sortoptions,setsortoptions]=useState('')
+    const[filteredproduct,setfilteredproduct]=useState([])
+    const[category,setcategory]=useState('ALL PRODUCTS')
+    const[minprice,setminprice]=useState('')
+    const[maxprice,setmaxprice]=useState('')
+
     const navigate = useNavigate();
-    const location=useLocation()
+
     useEffect(() => {
-        const fetchProduct = async () => {
+        const fetchProducts = async () => {
             try {
                 const response = await axiosInstanceuser.get('/getproducts');
-                setGroupProducts(response.data.groupProducts);
-
-                // to get parameter from search url
-                const params=new URLSearchParams(location.search)
-                const categoryFromQuery = params.get('category');
-                if (categoryFromQuery) {
-                    setSelectedCategory(categoryFromQuery);
-                }
-                
+                setProducts(response.data.products); // Save products in state
+                setfilteredproduct(response.data.products)
             } catch (error) {
-                console.log('Error in fetching products');
+                console.log('Error in fetching products', error);
             }
         };
-        fetchProduct();
+        fetchProducts();
     }, []);
+
+
+    useEffect(()=>{
+        let filtered=[...products]
+
+        if(category && category!=='ALL PRODUCTS')
+        {
+            filtered=filtered.filter(product=>product.category ===category)
+        }
+
+        if(minprice){
+            filtered= filtered.filter(product=>product.price>=Number(minprice))
+        }
+
+        if(maxprice){
+            filtered= filtered.filter(product=>product.price<=Number(maxprice))
+        }
+
+        // Sorting logic
+        if (sortoptions === 'priceLowToHigh') {
+            filtered.sort((a, b) => a.price - b.price);
+        } else if (sortoptions === 'priceHighToLow') {
+            filtered.sort((a, b) => b.price - a.price);
+        } else if (sortoptions === 'alphabeticalAsc') {
+            filtered.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (sortoptions === 'alphabeticalDesc') {
+            filtered.sort((a, b) => b.title.localeCompare(a.title));
+        }
+
+        setfilteredproduct(filtered)
+    },[category,minprice,maxprice,sortoptions,products])
+
+
+
+
 
     const handleDisplay = (id) => {
         navigate(`/products/display/${id}`);
     };
 
-    const handleFilter = (event) => {
-        setSelectedCategory(event.target.value); // Update the selected category
-    };
+    
 
-    // Filter products based on the selected category
-    const filteredProducts =
-        selectedCategory === 'ALL PRODUCTS'
-            ? groupProducts
-            : { [selectedCategory]: groupProducts[selectedCategory] };
 
     return (
         <div className="products-user-page">
@@ -52,68 +79,75 @@ const Productpage = () => {
             </div>
             <header className="page-header">
                 <h1 className="page-title">Our Exclusive Products</h1>
-                <p className="page-subtitle">Explore categories tailored for your needs</p>
+                <p className="page-subtitle">Explore our collection of premium products</p>
             </header>
 
-
-            {/* <div className="banner"> */}
-            {/* <video 
-                className="banner-video"
-                src="../videos/banner.mp4" // Replace with the actual path to your video
-                autoPlay
-                loop
-                muted
-            >
-                Your browser does not support the video tag.
-            </video>
-            </div> */}
-
-
-            <h1 className="page-title">Our Products</h1>
-
-            {/* Filter Buttons */}
-            <section className="filter-dropdown">
-                <label htmlFor="category-select">Filter by Category: </label>
-                <select
-                    id="category-select"
-                    value={selectedCategory}
-                    className="filter-select"
-                    onChange={handleFilter}
-                >
+            <div className="filters">
+            <label>
+                Category:
+                <select value={category} onChange={(e) => setcategory(e.target.value)}>
                     <option value="ALL PRODUCTS">All Products</option>
-                    {Object.keys(groupProducts).map((category) => (
-                        <option key={category} value={category}>
-                            {category}
-                        </option>
-                    ))}
+                    <option value="Solar Panels">Solar Panels</option>
+                    <option value="Battery Chargers">Battery Chargers</option>
+                    <option value="Bushes">Bushes</option>
+                    <option value="Fencing accessories">Fencing accessories</option>
+                   
                 </select>
-            </section>
+            </label>
 
-            {/* Display Products */}
-            {Object.keys(filteredProducts).map((category) => (
-                <div key={category} className="category-section">
-                    <h2 className="category-title">{category}</h2>
-                    <div className="products-grid">
-                        {filteredProducts[category]?.map((product) => (
-                            <div key={product._id} className="product-card">
-                                <img
-                                    src={product.images[0]}
-                                    alt={product.title}
-                                    className="product-image"
-                                    onClick={() => handleDisplay(product._id)}
-                                />
-                                <h3 className="product-title">{product.title}</h3>
-                                <p className="product-price">Price: Rs.{product.price}</p>
-                            </div>
-                        ))}
-                    </div>
-                    
-                </div>
-            ))}
-            
-              <Footer/>
+            <label>
+                Min Price:
+                <input
+                    type="number"
+                    value={minprice}
+                    onChange={(e) => setminprice(e.target.value)}
+                    placeholder="Min Price"
+                />
+            </label>
+
+            <label>
+                Max Price:
+                <input
+                    type="number"
+                    value={maxprice}
+                    onChange={(e) => setmaxprice(e.target.value)}
+                    placeholder="Max Price"
+                />
+            </label>
+
+            <label>
+                Sort By:
+                <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
+                    <option value="">Default</option>
+                    <option value="priceLowToHigh">Price: Low to High</option>
+                    <option value="priceHighToLow">Price: High to Low</option>
+                    <option value="alphabeticalAsc">Alphabetical: A-Z</option>
+                    <option value="alphabeticalDesc">Alphabetical: Z-A</option>
+                </select>
+            </label>
         </div>
-      
+
+        <div className="products-grid">
+            {filteredproduct.length > 0 ? (
+                filteredproduct.map((product) => (
+                    <div key={product._id} className="product-card">
+                        <img
+                            src={product.images[0]}
+                            alt={product.title}
+                            className="product-image"
+                            onClick={() => handleDisplay(product._id)}
+                        />
+                        <h3 className="product-title">{product.title}</h3>
+                        <p className="product-price">Price: Rs.{product.price}</p>
+                    </div>
+                ))
+            ) : (
+                <p>No products match your filters.</p>
+            )}
+        </div>
+
+            <Footer />
+        </div>
     );
 };
 
