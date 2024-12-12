@@ -3,6 +3,7 @@ import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './AddressPage.css'
 import { useNavigate } from 'react-router'
+import Address from './Address'
 // import address from '../../../../backend/models/address';
 const AddressPage = () => {
     const userId=useSelector((state)=>state.user.user._id)
@@ -29,7 +30,9 @@ const handleEdit = (id) => {
     console.log("handleedit",id)
     navigate(`/edit/${id}`); 
 };
-
+const handleAddAddress=()=>{
+    navigate('/account/address/add')
+}
 const handleDelete=async(id)=>{
     try{
         const response=await axiosInstanceuser.delete(`/deleteaddress/${id}`)
@@ -106,6 +109,7 @@ const handleDelete=async(id)=>{
     ) : (
         <p>No addresses found.</p>
     )}
+    <button onClick={handleAddAddress}>Add Address</button>
 </div>
 
     </div>
