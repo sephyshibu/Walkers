@@ -49,8 +49,8 @@ const handleDelete=async(id)=>{
 }
 
   return (
-    <div className="address-container" style={{ padding: "20px" }}>
-      <h2>User Addresses</h2>
+    <div className="address-page-container" style={{ padding: "20px" }}>
+      <h2  className="address-page-title">User Addresses</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div className="address-grid" style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>
     {Array.isArray(addressshow) && addressshow.length > 0 ? (
@@ -58,14 +58,10 @@ const handleDelete=async(id)=>{
             <div
                 key={index}
                 className="address-card"
-                style={{
-                    border: "1px solid #ddd",
-                    borderRadius: "10px",
-                    padding: "20px",
-                    background: "#f9f9f9",
-                }}
+                
             >
-                <h3 style={{ marginBottom: "10px", color: "#333" }}>
+                 {addr.status && <span className="default-badge">Default</span>}
+                <h3>
                     {addr.addressname}
                 </h3>
                 <p><strong>Street Address:</strong> {addr.streetAddress}</p>
@@ -75,41 +71,30 @@ const handleDelete=async(id)=>{
                 <p><strong>Status:</strong> {addr.status ? "default address" : "Not default Address"}</p>
 
                 {/* Add Edit Button */}
-                <button
-                    style={{
-                        marginTop: "10px",
-                        padding: "10px 20px",
-                        backgroundColor: "#007bff",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                    }}
-                    onClick={() => handleEdit(addr._id)}
-                >
-                    Edit
-                </button>
+                <div className="address-actions">
+                    <button
+                        className='button'
+                        onClick={() => handleEdit(addr._id)}
+                    >
+                        Edit
+                    </button>
 
-                <button
-                    style={{
-                        marginTop: "10px",
-                        padding: "10px 20px",
-                        backgroundColor: "#007bff",
-                        color: "#fff",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                    }}
-                    onClick={() => handleDelete(addr._id)}
-                >
-                    Delete
-                </button>
+                    <button
+                        className='button button-delete'
+                        onClick={() => handleDelete(addr._id)}
+                    >
+                        Delete
+                    </button>
+                </div>
             </div>
         ))
     ) : (
         <p>No addresses found.</p>
     )}
-    <button onClick={handleAddAddress}>Add Address</button>
+    <div className="add-address-card" onClick={handleAddAddress}>
+        <div className="icon">+</div>
+        <div className="text">Add Address</div>
+      </div>
 </div>
 
     </div>

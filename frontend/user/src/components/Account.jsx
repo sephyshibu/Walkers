@@ -1,20 +1,20 @@
 import React, { useState } from 'react'
 import './Account.css'
 import AddressPage from './AddressPage'
+import ChangePassword from './ChangePassword'
 const Account = () => {
-    const[activesection,setactivesection]=useState('profile')
+    const[activesection,setactivesection]=useState('address')
 
 
     const renderContent=()=>{
         switch(activesection){
-            // case "profile":
-            //     return <Profile/>
+           
 
             case "address":
                 return<AddressPage/>
 
-            // case "changepassword":
-            //     return<Changepassword/>
+            case "changepassword":
+                return<ChangePassword/>
 
             // case "wishlist":
             //     return<Wishlist/>
@@ -30,12 +30,7 @@ const Account = () => {
         <div className='sidebar'>
             <h2>Account Menu</h2>
             <ul>
-                <li 
-                className={activesection==="profile"?"active":""}
-                onClick={()=>setactivesection("profile")}>
-                    My Profile
-
-                </li>
+                
 
                 <li 
                 className={activesection==="address"?"active":""}

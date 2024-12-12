@@ -391,7 +391,29 @@ const deleteaddress=async(req,res)=>{
     }
 }
 
+const changepassword=async(req,res)=>{
+    const{id}=req.params
+    const{password}=req.body
 
+
+    try{
+        const hashpassword=await bcrypt.hash(password,10)
+        const userdoc=await Users.findByIdAndUpdate(id,{
+            password:hashpassword
+        })
+        await userdoc.save()
+
+        if(!userdoc)
+        {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+        return res.status(200).json({ message: 'Password upated Successfully' });
+    }
+    catch (err) {
+        console.error('Error updating password:', err);
+        res.status(500).json({ message: 'Failed to update password.' });
+    }
+}
 const updateStatus=async(req,res)=>{
     const{id}=req.params
     const{status}=req.body
@@ -840,4 +862,4 @@ const updatecartminus=async(req,res)=>{
 }
 
 
-module.exports={updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
