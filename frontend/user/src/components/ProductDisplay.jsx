@@ -115,7 +115,7 @@ const ProductDisplay = () => {
   const handleAddToCart = async () => {
    
     try{
-      console.log("varient title",formdata._id)
+      console.log("varient title",formdata.availableQuantity)
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
         productId:formdata.id||selectedVariant._id,
@@ -182,6 +182,7 @@ const ProductDisplay = () => {
              {/* Variants display */}
              <div className="variants-section">
                 <h2>Variants</h2>
+
                 <div className="variants-list">
                   {variantslist.map((variant, index) => (
                     <div

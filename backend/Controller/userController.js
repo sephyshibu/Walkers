@@ -653,15 +653,14 @@ const addaddress=async(req,res)=>{
       }
 }
 
-const addcart=async(req,res)=>{
+ const addcart=async(req,res)=>{
 
     const{userId,title, productId,quantity,availableQuantity,price}=req.body
-    console.log("backend title",productId)
+    console.log("backend title",req.body)
     try{
      //first product quantity updater akenam
 
      let product = await Productdb.findById(productId)
-     console.log(product)
 
      if (!product) {
          product = await Productdb.findOne({ "variants._id": productId });
@@ -678,7 +677,6 @@ const addcart=async(req,res)=>{
      
     //  product.availableQuantity -= quantity;
      await product.save();
-
 
     let cart=await cartdb.findOne({userId})
     
@@ -719,6 +717,7 @@ const addcart=async(req,res)=>{
      res.status(500).json({ message: 'Failed to add product to cart' });
  }
 }
+
 
 const updatecartplus=async(req,res)=>{
     const{userId}=req.params
