@@ -10,7 +10,7 @@ const AddressSchema = new mongoose.Schema({
             pincode: { type: Number, required: true },
             state: { type: String, required: true },
             phonenumber:{type: Number, required:true},
-            status:{type:Boolean, default:true}
+            status:{type:Boolean, default:false}
             // image: { type: String, required: true }, 
         },
         

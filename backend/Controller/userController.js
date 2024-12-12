@@ -373,6 +373,36 @@ const deleteaddress=async(req,res)=>{
         
     }
 }
+
+
+const updateStatus=async(req,res)=>{
+    const{id}=req.params
+    const{status}=req.body
+
+    try{
+        const addressDoc=await addressdb.findOne({'address._id':id})
+
+        if(!addressDoc)
+        {
+            return res.status(400).json({messgae:"not founded"})
+        }
+        const addressstatusupdate=addressDoc.address.find((addr)=>addr._id.toString()===id)
+        if(addressstatusupdate)
+        {
+            addressstatusupdate.status=status
+            await addressDoc.save();
+            res.status(200).json({ message: "Address updated status successfully" });
+        } else {
+            res.status(404).json({ message: "Address not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error updating address" });
+    }
+}
+
+
+
 const fetchaddress=async(req,res)=>{
     const{userId}=req.params
     console.log(userId)
@@ -390,7 +420,8 @@ const fetchaddress=async(req,res)=>{
                 streetAddress:item.streetAddress,
                 pincode:item.pincode,
                 state:item.state,
-                phonenumber:item.phonenumber
+                phonenumber:item.phonenumber,
+                status:item.status
             }))
         }
 
@@ -792,4 +823,4 @@ const updatecartminus=async(req,res)=>{
 }
 
 
-module.exports={deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

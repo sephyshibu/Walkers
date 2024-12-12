@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
+const {updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 
@@ -23,4 +23,5 @@ router.get('/fetchaddress/:userId', verifyAccessToken,fetchaddress)
 router.get('/fetechspecificaddress/:id',verifyAccessToken,fetechspecificaddress)
 router.put('/updateaddress/:id',verifyAccessToken,updateaddress)
 router.delete('/deleteaddress/:id',verifyAccessToken,deleteaddress)
+router.put('/updatestatus/:id', verifyAccessToken, updateStatus)
 module.exports=router

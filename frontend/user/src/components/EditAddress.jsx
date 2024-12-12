@@ -11,7 +11,8 @@ const EditAddress = () => {
         streetAddress:"",
         pincode:"",
         state:"",
-        phonenumber:""
+        phonenumber:"",
+      
 
     })
     const[error,seterror]=useState('')
@@ -31,6 +32,24 @@ const EditAddress = () => {
 
     const handleChange=(e)=>{
         setaddress({...address,[e.target.name]:e.target.value})
+    }
+
+    const handleStatus=async(id,currentstatus)=>{
+        console.log("default address id",id)
+        console.log("default status",currentstatus)
+        try{
+            const response=await axiosInstanceuser.put(`/updatestatus/${id}`,{
+                status:!currentstatus
+            })
+
+            console.log("defualt setted",response.data)
+            //The address is a single object in this case, not an array
+           
+            setaddress({...address,status:!currentstatus});
+        } catch (err) {
+            console.error("Failed to update status:", err);
+            seterror("Failed to update status");
+        }
     }
 
     const handleSubmit=async(e)=>{
@@ -98,6 +117,15 @@ const EditAddress = () => {
                 onChange={handleChange}
             />
         </label>
+        <label>
+                    Status:
+                    <input
+                        type="checkbox"
+                        checked={address.status}
+                        onChange={() => handleStatus(address._id, address.status)}
+                    />
+                </label>
+
         <br />
         <button type="submit">Save Changes</button>
     </form>
