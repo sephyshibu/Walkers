@@ -15,12 +15,14 @@ const ProductSchema= new mongoose.Schema({
         validate: { validator: value => value > 0, message: "Quantity must be greater than 0" }
     },
     images: { type: [String], required: true }, // Cloudinary URLs
+    
+    
     status:{
         type:Boolean,
         required:true,
         default:true
-    },  
-    variants:[
+        },
+            variants:[
         {
             name:{type:String, required:true},
             price:{type:Number, required:true},

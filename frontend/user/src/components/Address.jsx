@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router'
 const Address = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const navigate=useNavigate()
+    const[msg,setmsg]=useState('')
     const [error,seterror]=useState({})
     const[address, setaddress]=useState({
         
@@ -31,8 +32,70 @@ const Address = () => {
 
     const handleAddAddress=async(e)=>{
         e.preventDefault()
+
+        let formErrors = {};
+        let isValid = true;
+
+        if (!address.addressname) {
+          formErrors.addressname = 'address is required.';
+          isValid = false;
+      } else if (!/^[A-Za-z]+$/.test(address.addressname)) {
+          formErrors.addressname = 'Address must only contain letters.';
+          isValid = false;
+      }
+      
+      
+      if (!address.streetAddress) {
+        formErrors.streetAddress = ' Street address is required.';
+        isValid = false;
+    } else if (!/^[A-Za-z]+$/.test(address.streetAddress)) {
+        formErrors.streetAddress = ' Street Address must only contain letters.';
+        isValid = false;
+    }
+
+    
+    if (!address.pincode) {
+      formErrors.pincode = 'pincode is required.';
+      isValid = false;
+    } else if (address.pincode.length!=6) {
+      formErrors.pincode = 'Pincode length must be 6';
+      isValid = false;
+    }else if (!/^[0-9]+$/.test(address.pincode)) {
+    formErrors.pincode = ' pincode must only contain numbers.';
+    isValid = false;
+    }
+
+
+  
+    if (!address.state) {
+      formErrors.state = 'state is required.';
+      isValid = false;
+  } else if (!/^[A-Za-z]+$/.test(address.state)) {
+      formErrors.state = 'State must only contain letters.';
+      isValid = false;
+  }
+
+
+  if (!address.phonenumber) {
+    formErrors.phonenumber = 'phone number is required.';
+    isValid = false;
+  } else if (!/^[0-9]+$/.test(address.phonenumber)) {
+    formErrors.phonenumber = 'phone number must only contain numbers.';
+    isValid = false;
+  }else if (address.phonenumber.length!=10) {
+    formErrors.phonenumber = 'phone number length must be 10';
+    isValid = false;
+  }
+
+   // If any validation fails, set error messages
+   seterror(formErrors);
+
+   // If any validation fails, return early
+   if (!isValid) {
+      return
+   }
         try{
-            seterror({})
+            
             const response=await axiosInstanceuser.post('/addaddress',
                 {
                     userId:userId,
@@ -40,12 +103,25 @@ const Address = () => {
 
                 }
             )
+            setmsg(response.data.message)
+            seterror({
+              addressname:"",
+              streetAddress:"",
+              pincode:"",
+              state:"",
+              phonenumber:""
+            })
             navigate('/account')
             console.log("added addess is: ",response.data)   
         }
-        catch(err){
-            console.error('Error adding address:', err);
-            seterror({global:'Failed to add address.'});
+        catch(err)
+        {
+            if (err.response && err.response.data && err.response.data.message) {
+                seterror({ general: err.response.data.message }); // Server's custom message
+            } else {
+                seterror({ general: 'Something went wrong. Please try again.' });
+            }
+            setmsg('');
         }
     }
 
@@ -67,6 +143,7 @@ const Address = () => {
             value={address.addressname}
             onChange={handleInputChange}
           />
+          {error.addressname && <p className="error">{error.addressname}</p>}
 
           <label>Street Address</label>
           <input
@@ -77,6 +154,8 @@ const Address = () => {
             value={address.streetAddress}
             onChange={handleInputChange}
           />
+          {error.streetAddress && <p className="error">{error.streetAddress}</p>}
+
 
           <label>Pincode</label>
           <input
@@ -87,6 +166,7 @@ const Address = () => {
             value={address.pincode}
             onChange={handleInputChange}
           />
+        {error.pincode && <p className="error">{error.pincode}</p>}
 
           <label>State</label>
           <input
@@ -97,7 +177,7 @@ const Address = () => {
             value={address.state}
             onChange={handleInputChange}
           />
-
+          {error.state && <p className="error">{error.state}</p>}
           <label>Phone Number</label>
           <input
             type="text"
@@ -107,6 +187,7 @@ const Address = () => {
             value={address.phonenumber}
             onChange={handleInputChange}
           />
+          {error.phonenumber && <p className="error">{error.phonenumber}</p>}
           <button type='button' onClick={handleAddAddress} className='address-button'>
               Add Address
           </button>

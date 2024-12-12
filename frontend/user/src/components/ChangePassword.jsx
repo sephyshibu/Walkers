@@ -5,7 +5,7 @@ import './ChangePassword.css'
 const ChangePassword = () => {
     const[password, setpassword]=useState('')
     const[confirm,setConfirm]=useState('')
-    const [error, setError] = useState('');
+    const [error, setError] = useState({});
     const [successMessage, setSuccessMessage] = useState('');
 
     const userId=useSelector((state)=>state.user.user._id)
@@ -27,6 +27,24 @@ const ChangePassword = () => {
     const handlechangepassword=async(e)=>{
         e.preventDefault()
 
+        let formErrors = {};
+        let isValid = true;
+
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+        if (!password) {
+            formErrors.password = 'Password is required.';
+            isValid = false;
+        } else if (!passwordPattern.test(password)) {
+            formErrors.password = 'Password must be at least 6 characters long and include one uppercase letter, one lowercase letter, and one special character.';
+            isValid = false;
+        }
+        setError(formErrors);
+
+        // If any validation fails, return early
+        if (!isValid) {
+           return
+        }
+
         if(password!==confirm)
         {
             setError({global:"password does not match"})
@@ -46,8 +64,12 @@ const ChangePassword = () => {
             console.log('Password changed:', response.data);
         }
         catch(err){
-            console.error('Error changing password:', err);
-            setError({global:'Failed to change password.'});
+            if (err.response && err.response.data && err.response.data.message) {
+                setError({ general: err.response.data.message }); // Server's custom message
+            } else {
+                setError({ general: 'Something went wrong. Please try again.' });
+            }
+         
         }
         
     }
@@ -66,6 +88,7 @@ const ChangePassword = () => {
         value={password}
         onChange={handleInputChange}
       />
+       {error.password && <p className="error">{error.password}</p>}
        <label>Confirm Password</label>
         <input
         type="password"

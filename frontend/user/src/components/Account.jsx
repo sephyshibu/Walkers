@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import './Account.css'
 import AddressPage from './AddressPage'
 import ChangePassword from './ChangePassword'
+import Navbar from './Navbar'
 const Account = () => {
     const[activesection,setactivesection]=useState('address')
 
@@ -26,7 +27,10 @@ const Account = () => {
 
 
   return (
+    <>
+    <Navbar/>
     <div className='account-container'>
+
         <div className='sidebar'>
             <h2>Account Menu</h2>
             <ul>
@@ -68,6 +72,7 @@ const Account = () => {
         </div>
       
     </div>
+    </>
   )
 }
 

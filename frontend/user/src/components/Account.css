@@ -1,18 +1,23 @@
 .account-container {
     display: flex;
-    height: 100vh;
+    flex-direction: row;
+    margin-top: 145px; /* Adjust based on the navbar height */
+    height: calc(100vh - 60px); /* Subtract navbar height */
     font-family: Arial, sans-serif;
+
   }
   
   .sidebar {
-    width: 250px;
-    background-color: #2c3e50;
-    color: white;
+    flex: 0 0 250px; /* Fixed width for the sidebar */
+    background-color: #f5f5f5;
     padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100%; /* Full height for the sidebar */
   }
   
-  .sidebar h3 {
-    margin-bottom: 20px;
+  .sidebar h2 {
+    font-size: 28px;
+  margin-bottom: 60px;
   }
   
   .sidebar ul {
@@ -21,20 +26,24 @@
   }
   
   .sidebar ul li {
-    padding: 10px;
+    padding: 20px 25px;
+    margin-bottom: 20px;
     cursor: pointer;
-    color: #ecf0f1;
+    color: #34495e;
+    transition: background-color 0.3s;
   }
   
   .sidebar ul li:hover, .sidebar ul li.active {
     background-color: #34495e;
+    color: white;
     border-radius: 4px;
   }
   
   .content-container {
-    flex: 1;
+    flex: 1; /* Take up the remaining space */
     padding: 20px;
-    background-color: #ecf0f1;
-    overflow-y: auto;
+    /* overflow-y: auto;  */
+    background-color: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   }
   

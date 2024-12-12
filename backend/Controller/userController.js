@@ -656,11 +656,12 @@ const addaddress=async(req,res)=>{
 const addcart=async(req,res)=>{
 
     const{userId,title, productId,quantity,availableQuantity,price}=req.body
-    console.log("backend title",req.body)
+    console.log("backend title",productId)
     try{
      //first product quantity updater akenam
 
      let product = await Productdb.findById(productId)
+     console.log(product)
 
      if (!product) {
          product = await Productdb.findOne({ "variants._id": productId });

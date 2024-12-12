@@ -68,7 +68,7 @@ const ProductDisplay = () => {
         });
 
         setExistingImages(fetchdetails.images);
-        setvariantslist(fetchdetails.variants)
+        setvariantslist([initialState, ...fetchdetails.variants]);
         if (fetchdetails.images && fetchdetails.images.length > 0) {
             setMainImage(fetchdetails.images[0]); // Initialize with the first image
           }
@@ -115,7 +115,7 @@ const ProductDisplay = () => {
   const handleAddToCart = async () => {
    
     try{
-      console.log("varient title",formdata.availableQuantity)
+      console.log("varient title",formdata._id)
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
         productId:formdata.id||selectedVariant._id,
@@ -200,8 +200,11 @@ const ProductDisplay = () => {
                       
                         {variant.availableQuantity}
                       </p>
+                   
                     </div>
+                    
                   ))}
+                 
                 </div>
                 </div>
                 
