@@ -15,7 +15,7 @@ import Address from './components/Address'
 import AddressPage from './components/AddressPage'
 import EditAddress from './components/EditAddress'
 import Account from './components/Account'
-import PlaceOrder from './components/PlaceOrder'
+import PlaceOrder from './components/CheckOut'
 function App() {
   
  return(

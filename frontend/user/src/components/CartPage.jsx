@@ -127,7 +127,7 @@ const CartPage = () => {
           ))}
           <hr />
           <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
-          <button type='button' onClick={handlePlaceorder}>Place Order</button>
+          <button type='button' onClick={handlePlaceorder}>CheckOut</button>
         </div>
         
       </div>
