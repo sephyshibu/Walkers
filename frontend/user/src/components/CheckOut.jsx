@@ -76,7 +76,7 @@ const CheckOut = () => {
           <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
           <button type='button'
           
-            className="place-order-button">Place Order</button>
+            className="place-order-button">Procced to paymenr</button>
         </div>
 
         </div>  
