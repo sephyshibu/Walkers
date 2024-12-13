@@ -254,6 +254,17 @@ const EditProduct = () => {
                         }}
                         placeholder="Variant Price"
                     />
+
+                    <input
+                        type="number"
+                        value={variant.stockStatus}
+                        onChange={(e) => {
+                            const updatedVariants = [...variants];
+                            updatedVariants[index].stockStatus = e.target.value;
+                            setVariants(updatedVariants);
+                        }}
+                        placeholder="Variant Stock status"
+                    />
                     <button
                         onClick={() => {
                             setVariants(variants.filter((_, i) => i !== index));

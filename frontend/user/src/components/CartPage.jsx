@@ -3,9 +3,11 @@ import axiosInstanceuser from '../axios'
 import './CartPage.css'
 import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
+import { useNavigate } from 'react-router-dom'
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[error,seterror]=useState('')
+    const navigate=useNavigate()
     const userId=useSelector((state)=>state.user.user._id)
     console.log("userId",userId)
     const fetchCart = useCallback(async () => {
@@ -77,6 +79,13 @@ const CartPage = () => {
             }
         }
     };
+
+    const handlePlaceorder=()=>{
+        if(cart.length>=0){
+            console.log("cart is notempty")
+        }
+           navigate('/placeorder')
+    }
   return (
   
     <div className="cart-page">
@@ -118,7 +127,9 @@ const CartPage = () => {
           ))}
           <hr />
           <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
+          <button type='button' onClick={handlePlaceorder}>Place Order</button>
         </div>
+        
       </div>
     </div>
   )

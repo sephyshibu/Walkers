@@ -282,7 +282,7 @@ const addProduct = async (req, res) => {
 
     // Validation
     // if (price <= 0) return res.status(400).json({ message: 'Price must be greater than 0' });
-    if (availableQuantity <= 0) return res.status(400).json({ message: 'Available quantity must be greater than 0' });
+    // if (availableQuantity <= 0) return res.status(400).json({ message: 'Available quantity must be greater than 0' });
     if (images.length === 0) return res.status(400).json({ message: 'At least one image is required' });
 
     try {

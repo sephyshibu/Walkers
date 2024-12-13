@@ -15,6 +15,7 @@ import Address from './components/Address'
 import AddressPage from './components/AddressPage'
 import EditAddress from './components/EditAddress'
 import Account from './components/Account'
+import PlaceOrder from './components/PlaceOrder'
 function App() {
   
  return(
@@ -33,6 +34,7 @@ function App() {
         <Route path='/account/addresspage' element={<ProtectedRouter><AddressPage/></ProtectedRouter>}/>
         <Route path='/edit/:id' element={<ProtectedRouter><EditAddress/></ProtectedRouter>}/>
         <Route path='/account'element={<ProtectedRouter><Account/></ProtectedRouter>}/>
+        <Route path='/placeorder' element={<ProtectedRouter><PlaceOrder/></ProtectedRouter>}/>
       </Routes>
     </Router>
  )

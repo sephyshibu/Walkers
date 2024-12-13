@@ -41,7 +41,7 @@ const ProductDisplay = () => {
 
         const response = await axiosInstanceuser.get(`/products/display/${id}`);
         const fetchdetails = response.data;
-
+        console.log("frontend fetch product",fetchdetails)
         setProducts(fetchdetails);
 
 
@@ -100,27 +100,39 @@ const ProductDisplay = () => {
 
 
   const handleVariantClick = (variant) => {
-    setSelectedVariant(variant); // Set the selected variant
-    // setMainImage(variant.image);
-    setFormdata({
+    console.log("handleadd variant",variant)
+    const updatedFormdata = {
       id: variant._id,
-      title: variant.title,
+      title: variant.name,
       price: variant.price,
-      stockStatus: variant.stockStatus,
-      availableQuantity:variant.availableQuantity
-    });
+      availableQuantity: variant.stockStatus,
+  };
+  
+    setSelectedVariant(updatedFormdata); // Set the selected variant
+    
+    // setMainImage(variant.image);
+  //   const updatedFormdata = {
+  //     id: variant._id,
+  //     title: variant.name,
+  //     price: variant.price,
+  //     stockStatus: variant.stockStatus,
+  // };
+  
+    setFormdata(updatedFormdata);
+    // console.log("setformdata from handlevariantclick",formdata)
     setMainImage(existingImages[0]); // Revert to main image
   };
 
+
   const handleAddToCart = async () => {
-   
+   console.log("selected variant", selectedVariant)
     try{
-      console.log("varient title",formdata.availableQuantity)
+      // console.log("varient title",selectedVariant.availableQuantity)
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
         productId:formdata.id||selectedVariant._id,
         title:formdata.title||selectedVariant.name,
-        availableQuantity:formdata.availableQuantity|| selectedVariant.stockStatus,
+        availableQuantity:formdata.availableQuantity|| selectedVariant.availableQuantity,
         quantity,
         price:formdata.price||selectedVariant.price,
         
@@ -197,10 +209,7 @@ const ProductDisplay = () => {
 
                         {variant.stockStatus}
                       </p>
-                      <p className={`variant-status ${variant.availableQuantity}`}>
                       
-                        {variant.availableQuantity}
-                      </p>
                    
                     </div>
                     

@@ -10,9 +10,9 @@ const ProductSchema= new mongoose.Schema({
     description: { type: String, required: true },
     stockStatus: { type: String, required: true },
     availableQuantity: { 
-        type: Number, 
-        required: true, 
-        validate: { validator: value => value > 0, message: "Quantity must be greater than 0" }
+        type: Number
+        // required: true, 
+        // validate: { validator: value => value > 0, message: "Quantity must be greater than 0" }
     },
     images: { type: [String], required: true }, // Cloudinary URLs
     

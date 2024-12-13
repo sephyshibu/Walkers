@@ -9,6 +9,7 @@ const Categorydb= require('../models/category')
 const product = require('../models/product')
 const cartdb=require('../models/cart')
 const addressdb=require('../models/address')
+const address = require('../models/address')
 
 function generateOTP(){
     return Math.floor(1000 * Math.random()*9000).toString()
@@ -417,14 +418,18 @@ const changepassword=async(req,res)=>{
 const updateStatus=async(req,res)=>{
     const{id}=req.params
     const{status}=req.body
-
+   
     try{
+     
         const addressDoc=await addressdb.findOne({'address._id':id})
+        console.log(addressDoc)
 
         if(!addressDoc)
         {
             return res.status(400).json({messgae:"not founded"})
         }
+        addressDoc.address.forEach(addr=>addr.status=addr._id.toString()===id?status:false)
+        await addressDoc.save()
         const addressstatusupdate=addressDoc.address.find((addr)=>addr._id.toString()===id)
         if(addressstatusupdate)
         {
@@ -440,7 +445,31 @@ const updateStatus=async(req,res)=>{
     }
 }
 
+const fetchdefaultaddress=async(req,res)=>{
+    console.log("backend placeorder")
+    const{userId}=req.params
+    console.log(userId)
 
+    try {
+        const addressdoc=await addressdb.findOne({userId})
+        console.log("address doc: ",addressdoc)
+        if(!addressdoc)
+        {
+            return res.status(404).json({message:"address not found"})
+        }
+        const defaultaddress= addressdoc.address.find(item => item.status===true) 
+        console.log("default address",defaultaddress)
+        if(!defaultaddress)
+        {
+            return res.status(404).json({message:"Not default address found"})
+        }
+
+        return res.status(200).json({address:defaultaddress})
+    } catch (error) {
+        console.error("an error occured during get  default address ",error)
+        res.status(500).json({message:"internal server error"})
+    }
+}
 
 const fetchaddress=async(req,res)=>{
     const{userId}=req.params
@@ -581,12 +610,13 @@ const fetechspecificaddress=async(req,res)=>{
 const fetchproductdetails=async(req,res)=>{
     console.log("entered")
     const{id}=req.params
-    console.log("product display etail",id)
+    console.log("product display detail",id)
 
     try{
         const productdetails=await Productdb.findById(id)
         console.log("details",productdetails)
         const productdata=productdetails.toObject()
+        console.log("fetchproduct", productdata)
         res.status(200).json(productdata)   
      }
      catch (err) {
@@ -661,17 +691,20 @@ const addaddress=async(req,res)=>{
      //first product quantity updater akenam
 
      let product = await Productdb.findById(productId)
+     
 
      if (!product) {
          product = await Productdb.findOne({ "variants._id": productId });
+        //  if(product.variants.)
+        
        }
-
+       console.log(product)
        
      if (!product) {
      return res.status(404).json({ message: 'Product not found' });
      }
      
-     if (product.availableQuantity < quantity) {
+     if (availableQuantity < quantity) {
      return res.status(400).json({ message: 'Not enough stock available' });
      }
      
@@ -745,18 +778,42 @@ const updatecartplus=async(req,res)=>{
     }
 
     const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
-   
+   console.log("product", product)
 
-    if(quantity>product.availableQuantity)
-    {
-        return res.status(400).json({success:false, message:"quantity is exceeded than original quantity"})
+
+
+   let selectedproduct={}
+
+   if (product._id.toString() === productId) {
+    // Main product selected: decrement `availableQuantity`
+    product.availableQuantity -= 1;
+    if (product.availableQuantity < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Insufficient stock for the main product",
+        });
+    }
+    await product.save(); // Save changes to the database
+    console.log("Updated main product stock status:", product.availableQuantity);
+} else {
+    // Variant selected: decrement `stockStatus` of the variant
+    const variant = product.variants.find(variant => variant._id.toString() === productId);
+    if (!variant) {
+        return res.status(404).json({ message: "Variant not found" });
     }
 
+    variant.stockStatus -= 1; // Decrement the stock status
+    if (variant.stockStatus < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Insufficient stock for the selected variant",
+        });
+    }
+    await product.save(); // Save changes to the database for the parent document
+    console.log("Updated variant stock status:", variant.stockStatus);
+}
     cartitem.quantity = quantity;
     cartitem.availableQuantity-=1
-
-    product.availableQuantity-=1 
-    await product.save()
     cart.totalprice = cart.items.reduce((total, item) => {
         return total + (item.price * item.quantity);
       }, 0);
@@ -834,24 +891,44 @@ const updatecartminus=async(req,res)=>{
     // if(!cartitem){
     //     return res.status(404).json({success:false , message:"product not found in cart"})
     // }
-    // if(cartitem.quantity>5)
-    // {
-    //     return res.status(400).json({success:false,message:"Not allowed to add a single product more than 5"})
-    // }
-
+    
     const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
-   
+   console.log("product", product)
 
-    if(quantity>product.availableQuantity)
-    {
-        return res.status(400).json({success:false, message:"quantity is exceeded than original quantity"})
+
+
+   let selectedproduct={}
+
+   if (product._id.toString() === productId) {
+    // Main product selected: decrement `availableQuantity`
+    product.availableQuantity += 1;
+    if (product.availableQuantity < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Insufficient stock for the main product",
+        });
+    }
+    await product.save(); // Save changes to the database
+    console.log("Updated main product stock status:", product.availableQuantity);
+} else {
+    // Variant selected: decrement `stockStatus` of the variant
+    const variant = product.variants.find(variant => variant._id.toString() === productId);
+    if (!variant) {
+        return res.status(404).json({ message: "Variant not found" });
     }
 
+    variant.stockStatus += 1; // Decrement the stock status
+    if (variant.stockStatus < 0) {
+        return res.status(400).json({
+            success: false,
+            message: "Insufficient stock for the selected variant",
+        });
+    }
+    await product.save(); // Save changes to the database for the parent document
+    console.log("Updated variant stock status:", variant.stockStatus);
+}
     cartitem.quantity = quantity;
     cartitem.availableQuantity+=1
-
-    product.availableQuantity+=1
-    await product.save()
     cart.totalprice = cart.items.reduce((total, item) => {
         return total + (item.price * item.quantity);
       }, 0);
@@ -862,4 +939,6 @@ const updatecartminus=async(req,res)=>{
 }
 
 
-module.exports={changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+
+
+module.exports={fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

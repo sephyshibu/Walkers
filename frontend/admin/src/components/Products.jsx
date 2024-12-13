@@ -25,6 +25,7 @@ const Products = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [previewUrls, setPreviewUrls] = useState([]);
   const [isPriceDisabled, setIsPriceDisabled] = useState(false); // New state to disable price field
+  const[isquantitydisabled, setquantitydisabled]=useState(false)
   const [error, setError] = useState({});
   const [cropper, setCropper] = useState(null);
   const[variants,setvariants]=useState([])
@@ -102,11 +103,11 @@ const Products = () => {
       errors.stockStatus="stockStatus cant empty"
       
     }
-    if (!data.availableQuantity.trim() ){
+    if (!data.availableQuantity.trim() && isquantitydisabled===false ){
       errors.availableQuantity="availableQuantity cant empty"
       
     }
-    else if(data.availableQuantity<=0){
+    else if(data.availableQuantity<=0 && isquantitydisabled===false ){
       errors.availableQuantity="Values must be greater than 0"
 
     }
@@ -241,6 +242,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
 }
 const handleAddVariant=()=>{
   setIsPriceDisabled(true)
+  setquantitydisabled(true)
   setvariants((prevvariants)=>[
     ...prevvariants,
     {name:" ", price:" ", stockStatus:" "},
@@ -321,6 +323,7 @@ const handleVariantChange = (index, field, value) => {
           placeholder="Available Quantity"
           className="input-groupss"
           value={formData.availableQuantity}
+          disabled={isquantitydisabled}
           onChange={handleInputChange}
         />
           {error.availableQuantity && <p className="error-messages">{error.availableQuantity}</p>}
