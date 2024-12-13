@@ -68,7 +68,7 @@ const ProductDisplay = () => {
         });
 
         setExistingImages(fetchdetails.images);
-        setvariantslist([initialState, ...fetchdetails.variants]);
+        setvariantslist(fetchdetails.variants);
         if (fetchdetails.images && fetchdetails.images.length > 0) {
             setMainImage(fetchdetails.images[0]); // Initialize with the first image
           }

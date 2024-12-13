@@ -4,7 +4,7 @@ const mongoose=require('mongoose')
 
 const ProductSchema= new mongoose.Schema({
     title: { type: String, required: true },
-    price: { type: Number, required: true, validate: { validator: value => value >= 0, message: "Price cannot be negative" } },
+    price: { type: Number },
     category: { type: String, required: true },
     sku: { type: String, required: true, unique: true },
     description: { type: String, required: true },

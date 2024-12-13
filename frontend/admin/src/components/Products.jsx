@@ -24,6 +24,7 @@ const Products = () => {
   const [croppedImages, setCroppedImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [previewUrls, setPreviewUrls] = useState([]);
+  const [isPriceDisabled, setIsPriceDisabled] = useState(false); // New state to disable price field
   const [error, setError] = useState({});
   const [cropper, setCropper] = useState(null);
   const[variants,setvariants]=useState([])
@@ -75,7 +76,7 @@ const Products = () => {
       errors.title="title cant empty"
       
     }
-    if (!data.price.trim()){
+    if (!data.price.trim() && isPriceDisabled===false){
       errors.price="price cant empty"
       
     }
@@ -239,6 +240,7 @@ const handleDeleteProduct=async(id,currentStatus)=>{
     }
 }
 const handleAddVariant=()=>{
+  setIsPriceDisabled(true)
   setvariants((prevvariants)=>[
     ...prevvariants,
     {name:" ", price:" ", stockStatus:" "},
@@ -279,6 +281,7 @@ const handleVariantChange = (index, field, value) => {
           placeholder="Price"
           className="input-groupss"
           value={formData.price}
+          disabled={isPriceDisabled} // Disable conditionally
           onChange={handleInputChange}
         />
           {error.price && <p className="error-messages">{error.price}</p>}

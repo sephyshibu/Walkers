@@ -138,7 +138,8 @@ const Productpage = () => {
                             onClick={() => handleDisplay(product._id)}
                         />
                         <h3 className="product-title">{product.title}</h3>
-                        <p className="product-price">Price: Rs.{product.price}</p>
+                        {product.price &&
+                        <p className="product-price">Price: Rs.{product.price}</p>}
                     </div>
                 ))
             ) : (

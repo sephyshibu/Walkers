@@ -31,6 +31,10 @@
   width: 120px; /* Adjust as needed */
   height: auto; /* Maintain aspect ratio */
 }
+.trolley{
+  width:20px;
+  height: auto;
+}
 
 /* Navbar Links Styling */
 .navbar-links {

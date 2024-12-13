@@ -3,6 +3,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import {Link,useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css'; // Add this CSS file for styling
 import walker from '../images/walkers-logo.png'
+import trolley from '../images/trolley.png'
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -61,6 +62,9 @@ const Navbar = () => {
           </li>
           <li className={location.pathname === "/account" ? "active-link" : ""}>
             <Link to="/account">My Account</Link>
+          </li>
+          <li className={location.pathname === "/cart" ? "active-link" : ""}>
+            <Link to="/cart"><img className="trolley" src={trolley}/></Link>
           </li>
           <li>
             <button className="auth-button" onClick={handleLoginLogout}>
