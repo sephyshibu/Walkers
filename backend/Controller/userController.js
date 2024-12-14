@@ -109,8 +109,8 @@ const login=async(req,res)=>{
  
     //generate token
 
-    const token=jwt.sign({username:user.username}, process.env.JWT_SECRET,{expiresIn:'2m'})
-    const refresh=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
+    const token=jwt.sign({username:user.username}, process.env.JWT_SECRET,{expiresIn:'15m'})
+    const refresh=jwt.sign({username:user.username},process.env.JWT_REFRESH_SECRET,{expiresIn:'7d'})
     console.log("Access Token", token)
     console.log("refresh token", refresh)
 
@@ -320,6 +320,32 @@ const getProducts=async(req,res)=>{
     {
         console.error("an error occured during get product based on category",error)
         res.status(500).json({message:"internal server error"})
+    }
+
+}
+
+const checkout=async(req,res)=>{
+    const{userId}=req.body
+
+    try{
+        const cart=await cartdb.findOne({userId}).populate({
+            path:"items.productId" ,
+            select:"title status"
+        })
+        console.log("cart ", cart)
+        if (!cart) {
+            return res.status(404).json({ message: "Cart not found" });
+        }
+        const unavailableproduct=cart.items.filter((item)=>item.productId.status===false)
+        if(unavailableproduct.length>0)
+        {
+            return res.status(400).json({message:"Unavailable oprodutc now", products:unavailableproduct.map((item)=>item.productId.title)})
+        }
+        return res.status(200).json({ message: "Checkout successful" });
+    }
+    catch (error) {
+        console.error("Error during checkout:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 
 }
@@ -974,4 +1000,4 @@ const updatecartminus=async(req,res)=>{
 
 
 
-module.exports={placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

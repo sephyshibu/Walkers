@@ -1,7 +1,8 @@
 const express=require('express')
 const router=express.Router()
-const {refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
+const {updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
 const verifyAccessToken =require('./middleware/verifyaccessToken')
+const { verify } = require('jsonwebtoken')
 
 router.post('/',loginAdmin)
 
@@ -22,5 +23,8 @@ router.get('/products',verifyAccessToken,fetchproduct)
 router.post('/products',verifyAccessToken,addProduct)
 router.put('/updateproduct/:id',verifyAccessToken,updateProduct)
 
+router.get('/fetchorder',verifyAccessToken,fetchorder)
+router.get('/fetchorder/:id',verifyAccessToken,fetchparticularorder)
+router.put('/updateorder/:id',verifyAccessToken,updatepaymentstatus)
 
 module.exports=router

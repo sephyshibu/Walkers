@@ -84,11 +84,30 @@ const CartPage = () => {
         }
     };
 
-    const handlePlaceorder=()=>{
-        if(cart.length>=0){
-            console.log("cart is notempty")
+    const handlePlaceorder=async ()=>{
+
+       
+        try {
+            const response = await axiosInstanceuser.post("/checkout", { userId });
+            if (response.status === 200) {
+                alert(response.data.message);
+                navigate('/checkout');
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                alert(
+                    `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
+                );
+                
+            } else {
+                console.error("Checkout error:", error);
+                alert("An error occurred during checkout.");
+                
+            }
         }
-           navigate('/checkout')
+        
+        
+          
     }
   return (
   

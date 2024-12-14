@@ -3,7 +3,8 @@ const jwt= require('jsonwebtoken')
 const Users=require('../mongodb')
 const Categorydb =require('../models/category')
 const Productdb=require('../models/product')
-
+const Orderdb=require('../models/order')
+const addressdb=require('../models/address')
 const loginAdmin=async(req,res)=>{
     
     const{email, password}=req.body
@@ -16,8 +17,8 @@ const loginAdmin=async(req,res)=>{
                //generate token
                console.log("hii")
                console.log("JWT_SECRET:", process.env.JWT_SECRET);
-                const token=jwt.sign({email}, process.env.JWT_SECRET,{expiresIn:"2m"})
-                const refresh=jwt.sign({email}, process.env.JWT_REFRESH_SECRET,{expiresIn:"15m"})
+                const token=jwt.sign({email}, process.env.JWT_SECRET,{expiresIn:"15m"})
+                const refresh=jwt.sign({email}, process.env.JWT_REFRESH_SECRET,{expiresIn:"7d"})
                 // let options = {
                 //     maxAge: 1000 * 60 * 15, // expire after 15 minutes
                 //     httpOnly: true, // Cookie will not be exposed to client side code
@@ -135,6 +136,11 @@ const updateCategory=async(req,res)=>{
         res.status(500).json({ message: "Error updating category" });
     }
 
+}
+const fetchparticularorder=async(req,res)=>{
+    const{id}=req.params
+    const order=await Orderdb.findById(id).populate('userId')
+    res.json(order)
 }
 
 const fetcheditproduct = async (req, res) => {
@@ -265,6 +271,45 @@ const categoryfetch=async(req,res)=>{
     }
 }
 
+const fetchorder = async (req, res) => {
+    try {
+        // Fetch all orders
+        const orders = await Orderdb.find()
+            .populate('userId', 'username email'); // Populate user details
+        
+        // Enrich orders with address details manually
+        const enrichedOrders = await Promise.all(
+            orders.map(async (order) => {
+                let addressname = 'Address not found';
+
+                // Fetch the address details for the given addressId
+                if (order.addressId) {
+                    const addressDoc = await addressdb.findOne(
+                        { "address._id": order.addressId }, // Match the nested address ID
+                        { "address.$": 1 } // Retrieve only the matching address in the array
+                    );
+
+                    if (addressDoc && addressDoc.address.length > 0) {
+                        addressname = addressDoc.address[0].addressname; // Extract the addressname
+                    }
+                }
+
+                return {
+                    ...order._doc, // Spread existing order fields
+                    addressname, // Add addressname
+                };
+            })
+        );
+
+        console.log("Backend enriched orders", enrichedOrders);
+
+        res.status(200).json(enrichedOrders);
+    } catch (err) {
+        console.error("Error in fetchorder:", err);
+        res.status(500).json({ message: 'Failed to fetch orders' });
+    }
+};
+
 const fetchproduct=async(req,res)=>{
     try {
         const products = await Productdb.find(); // Fetch all products
@@ -306,6 +351,13 @@ const addProduct = async (req, res) => {
     }
 };
 
+const updatepaymentstatus=async(req,res)=>{
+    const{id}=req.params
+    const{paymentstatus}=req.body
+
+    await Orderdb.findByIdAndUpdate(id,{paymentstatus})
+    res.json({ message: 'Order updated successfully' });
+}
 const updateProduct = async (req, res) => {
 
     const { title, price, category, sku, description, stockStatus, availableQuantity, images ,variants} = req.body;
@@ -335,5 +387,5 @@ const updateProduct = async (req, res) => {
 };
 
 
-module.exports={refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 
