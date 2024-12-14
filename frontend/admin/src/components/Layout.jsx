@@ -63,6 +63,19 @@ const Layout = () => {
             <Link to="/admindashboard/products">Product</Link>
           </li>
 
+
+          <li
+            className={
+              location.pathname === "/admindashboard/orders"
+                ? "active-link"
+                : ""
+            }
+          >
+            <Link to="/admindashboard/orders">Orders</Link>
+          </li>
+
+
+
         </ul>
       </aside>
       <main className="content">

@@ -16,7 +16,7 @@ const CartPage = () => {
     const fetchCart = useCallback(async () => {
         try {
             const response = await axiosInstanceuser.get(`/fetchcart/${userId}`);
-            console.log(response.data);
+            console.log("fetchhhhhhc cart",response.data);
             setCart(response.data);
             dispatch(cartitems(response.data))
             seterror('');

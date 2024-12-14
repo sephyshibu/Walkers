@@ -12,6 +12,7 @@ import Products from './components/Products'
 import { fill } from '@cloudinary/url-gen/actions/resize'; // Import the fill method
 import EditProduct from './components/EditProduct';
 import ProtectedRoute from './components/ProtectedRoute';
+import Orders from './components/Orders';
 function App() {
 
   
@@ -54,6 +55,7 @@ function App() {
     <Route path="customers" element={<ProtectedRoute> <Customers /></ProtectedRoute>} />
     <Route path="category" element={<ProtectedRoute><Category /></ProtectedRoute>} />
     <Route path="products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+    <Route path="orders" element={<ProtectedRoute><Orders/></ProtectedRoute>} />
 {/* </Route>   */}
   </Route>
 </Routes>

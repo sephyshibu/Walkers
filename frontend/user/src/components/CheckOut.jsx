@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import './Checkout.css'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { defaultaddr } from '../features/DefaultAddressSlice'
 // import { defaultaddress } from '../features/DefaultAddressSlice'
 const CheckOut = () => {
     const userId=useSelector((state)=>state.user.user._id)
@@ -24,7 +25,7 @@ const CheckOut = () => {
                 console.log('response from fetch default address', response.data.address)
                 console.log("response from fetch cart",responsecart.data)
                 setdefaultaddress(response.data.address)
-                dispatch((response.data))
+                dispatch(defaultaddr(response.data))
 
                 setcart(responsecart.data)
                 // dispatch(proceed(responsecart.data))
@@ -42,7 +43,7 @@ const CheckOut = () => {
             fetchdefaultaddress();
         }
         
-    },[userId])
+    },[userId,dispatch])
     console.log('this is default ',defaultaddress)
 
     const handleAddress=()=>{

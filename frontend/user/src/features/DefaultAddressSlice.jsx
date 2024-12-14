@@ -14,7 +14,7 @@ const defaultAddressSlice=createSlice({
 
         //     // console.log("user slice token", state.token)
         // },
-        defaultaddress:(state,action)=>{
+        defaultaddr:(state,action)=>{
             state.address=action.payload;
         }
        
@@ -26,5 +26,5 @@ const defaultAddressSlice=createSlice({
     }
 })
 
-export const{defaultaddress}=defaultAddressSlice.actions
+export const{defaultaddr}=defaultAddressSlice.actions
 export default defaultAddressSlice.reducer

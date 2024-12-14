@@ -10,7 +10,7 @@ const product = require('../models/product')
 const cartdb=require('../models/cart')
 const addressdb=require('../models/address')
 const address = require('../models/address')
-
+const orderdb=require('../models/order')
 function generateOTP(){
     return Math.floor(1000 * Math.random()*9000).toString()
 
@@ -521,7 +521,7 @@ const fetchcart=async(req,res)=>{
           };
       
           
-        return res.status(200).json(cartData)
+        return res.status(200).json(cart)
     }
     catch(error)
     {
@@ -529,6 +529,8 @@ const fetchcart=async(req,res)=>{
         res.status(500).json({message:"internal server error"})
     }
 }
+
+
 
 // const fetchcart = async (req, res) => {
 //     const { userId } = req.params;
@@ -683,6 +685,37 @@ const addaddress=async(req,res)=>{
       }
 }
 
+
+const placingorder=async(req,res)=>{
+    const{userId,cartId,addressId,paymentmethod,paymentstatus,items,totalprice}=req.body
+    console.log("request body", req.body)
+   
+      
+
+    try{
+        const neworder=new orderdb({
+            userId,
+            cartId,
+            addressId,
+            paymentmethod,
+            paymentstatus,
+            orderStatus:'Processing',
+            items,
+            tax:totalprice*0.1,
+            shippingfee:5,
+            totalprice
+
+        })
+
+        const saveorder=await neworder.save()
+
+        res.status(201).json({message:"order placed successfully",orderId:saveorder._id})
+    }
+    catch(error){
+        console.error('Error placing order:', error);
+        res.status(500).json({ message: 'Failed to place order' });
+      }
+}
  const addcart=async(req,res)=>{
 
     const{userId,title, productId,quantity,availableQuantity,price}=req.body
@@ -941,4 +974,4 @@ const updatecartminus=async(req,res)=>{
 
 
 
-module.exports={fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
