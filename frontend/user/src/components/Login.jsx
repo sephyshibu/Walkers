@@ -126,11 +126,15 @@ const login=()=>{
                 console.log(email)
                 const response=await axiosInstanceuser.post('/auth/google',{email,sub,name})
                 console.log(response)
+                dispatch(loginuser(response.data.user))
                 dispatch(addtoken(response.data.token))
-
-                const userId=sub
-                console.log(userId)
+                console.log("user login store token in slice")
+                const userId=response.data.user._id
+                console.log("google userId",userId)
                 localStorage.setItem('userId',userId)
+                // const userId=sub
+                // console.log(userId)
+                // localStorage.setItem('userId',userId)
                 navigate('/')
             } catch (err) {
                 if (err.response && err.response.data && err.response.data.message) {

@@ -224,18 +224,18 @@ const googleLogin=async(req,res)=>{
     const {email,sub,name}=req.body
     console.log(email,sub,name)
     try {
-        const olduser = await Users.findOne({
+        const user = await Users.findOne({
                 email
         });
-        console.log(olduser)
+        console.log(user)
         // const payload = ticket.getPayload();
         // const { sub: googleId, email, name: username } = payload;
         //  // Check if the user already exists
         // let user = await Users.findOne({ googleId });
         
-        if(olduser)
+        if(user)
         {
-            if(olduser.status===false)
+            if(user.status===false)
                 {
                     return res.status(403).json({message:"User is Blocked by admin"})
                 }
@@ -244,21 +244,21 @@ const googleLogin=async(req,res)=>{
                 console.log("Access Token", token)
                 console.log("refresh token", refresh)
 
-           return res.status(200).json({message:"googele lgoin successfull",token}) 
+           return res.status(200).json({message:"googele lgoin successfull",user,token}) 
         }
         else{
-            const newuser = new Users({
+            const user = new Users({
                 googleId:sub,
                 email:email,
                 username:name,
               });
         
-              await newuser.save();
+              await user.save();
               const token=jwt.sign({email:newuser.email}, process.env.JWT_SECRET,{expiresIn:'2m'})
               const refresh=jwt.sign({email:newuser.email},process.env.JWT_REFRESH_SECRET,{expiresIn:'15m'})
               console.log("Access Token", token)
               console.log("refresh token", refresh)
-             return res.status(200).json({ message: 'Google login successful', newuser,token });
+             return res.status(200).json({ message: 'Google login successful', user,token });
         }
       
         // if (!olduser) {

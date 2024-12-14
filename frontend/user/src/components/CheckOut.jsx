@@ -4,6 +4,8 @@ import axiosInstanceuser from '../axios'
 import Navbar from './Navbar'
 import './Checkout.css'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+// import { defaultaddress } from '../features/DefaultAddressSlice'
 const CheckOut = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const navigate=useNavigate()
@@ -12,7 +14,7 @@ const CheckOut = () => {
     const[cart,setcart]=useState({items:[], totalprice:0})
     const[error,seterror]=useState('')
     const [isLoading, setIsLoading] = useState(true);
-
+    const dispatch=useDispatch()
     useEffect(()=>{
         const fetchdefaultaddress=async()=>{
             try {
@@ -22,7 +24,10 @@ const CheckOut = () => {
                 console.log('response from fetch default address', response.data.address)
                 console.log("response from fetch cart",responsecart.data)
                 setdefaultaddress(response.data.address)
+                dispatch((response.data))
+
                 setcart(responsecart.data)
+                // dispatch(proceed(responsecart.data))
                 // console.log(defaultaddress)
                 seterror('')
 
@@ -42,6 +47,13 @@ const CheckOut = () => {
 
     const handleAddress=()=>{
             navigate('/account/addresspage')
+    }
+
+    const handleproccedtopayment=(e)=>{
+        e.preventDefault()
+        
+        navigate('/checkout/payment')
+        
     }
   return (
     <div className="place-order-page">
@@ -75,8 +87,8 @@ const CheckOut = () => {
           <hr />
           <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
           <button type='button'
-          
-            className="place-order-button">Procced to paymenr</button>
+            onClick={handleproccedtopayment}
+            className="place-order-button">Procced to payment</button>
         </div>
 
         </div>  

@@ -3,10 +3,13 @@ import axiosInstanceuser from '../axios'
 import './CartPage.css'
 import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
+import{cartitems} from '../features/CartSlice'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[error,seterror]=useState('')
+    const dispatch=useDispatch()
     const navigate=useNavigate()
     const userId=useSelector((state)=>state.user.user._id)
     console.log("userId",userId)
@@ -15,6 +18,7 @@ const CartPage = () => {
             const response = await axiosInstanceuser.get(`/fetchcart/${userId}`);
             console.log(response.data);
             setCart(response.data);
+            dispatch(cartitems(response.data))
             seterror('');
         } catch (err) {
             console.log("Error in fetching cart", err);
@@ -84,7 +88,7 @@ const CartPage = () => {
         if(cart.length>=0){
             console.log("cart is notempty")
         }
-           navigate('/placeorder')
+           navigate('/checkout')
     }
   return (
   
