@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[error,seterror]=useState('')
+    const [message, setMessage] = useState('');
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const userId=useSelector((state)=>state.user.user._id)
@@ -17,11 +18,16 @@ const CartPage = () => {
         try {
             const response = await axiosInstanceuser.get(`/fetchcart/${userId}`);
             console.log("fetchhhhhhc cart",response.data);
+            if (response.data.message) {
+                setMessage(response.data.message);
+                setCart({ items: [], totalprice: 0 });
+            } else{
             setCart(response.data);
             dispatch(cartitems(response.data))
+            
+            }
             seterror('');
         } catch (err) {
-            console.log("Error in fetching cart", err);
             seterror("Failed to fetch cart");
         }
     }, [userId]);
@@ -107,7 +113,10 @@ const CartPage = () => {
 
     const handlePlaceorder=async ()=>{
 
-       
+        if (cart.items.length === 0) {
+            seterror("Your cart is empty. Please add items before checking out.");
+            return;
+        }
         // try {
         //     const response = await axiosInstanceuser.post("/checkout", { userId });
             // if (response.status === 200) {
@@ -134,7 +143,7 @@ const CartPage = () => {
   
     <div className="cart-page">
           <Navbar/>
-          {error && <p className='error-messagecart'>{error}</p>}
+          {/* {error && <p className='error-messagecart'>{error}</p>} */}
       <h3>Your Cart</h3>
       <div className="cart-container">
         {/* Cart Items */}

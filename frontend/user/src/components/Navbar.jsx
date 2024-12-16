@@ -3,6 +3,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import {Link,useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css'; // Add this CSS file for styling
 import walker from '../images/walkers-logo.png'
+import { persistor } from '../app/store';
 import trolley from '../images/trolley.png'
 const Navbar = () => {
   const navigate = useNavigate();
@@ -10,10 +11,11 @@ const Navbar = () => {
 
   const userId=localStorage.getItem('userId')
 
-  const handleLoginLogout=()=>{
+  const handleLoginLogout=async()=>{
     if(userId)
     {
       localStorage.removeItem('userId')
+      await persistor.purge(); // Clear persisted Redux state
       navigate('/')
       
     }

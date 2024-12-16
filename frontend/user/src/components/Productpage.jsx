@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import Navbar from './Navbar';
 import banner1 from '../images/Business.png';
 import Footer from './Footer';
-
+import { useSelector } from 'react-redux';
 const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
     const [sortoptions,setsortoptions]=useState('')
@@ -13,17 +13,53 @@ const Productpage = () => {
     const[category,setcategory]=useState('ALL PRODUCTS')
     const[minprice,setminprice]=useState('')
     const[maxprice,setmaxprice]=useState('')
-
+    const userId=useSelector((state)=>state.user.user._id)
     const navigate = useNavigate();
+//       useEffect(() => {
+//     const checkUserStatus = async () => {
+//         try {
+//             const userId = localStorage.getItem('userId'); // Get the userId from local storage
+//             if (!userId) {
+//                 // If no userId is found, redirect to login or another page
+//                 navigate('/login');
+//                 return;
+//             }
 
+//             const response = await axiosInstanceuser.get('/check-user-status', { params: { userId } });
+            
+//             if (response.data.status === 403) {
+//                 // If the user's status is false, log them out and redirect to the product display page
+//                 alert('Your account is inactive.');
+//                 localStorage.removeItem('userId'); // Remove userId from local storage
+//                 navigate('/products/display'); // Redirect to the product display page
+//             }
+//         } catch (error) {
+//             console.error('Error checking user status:', error);
+//             set('Error checking user status');
+//         }
+//     };
+
+//     checkUserStatus();
+// }, [navigate]);
     useEffect(() => {
         const fetchProducts = async () => {
+
             try {
-                const response = await axiosInstanceuser.get('/getproducts');
+                const response = await axiosInstanceuser.get('/getproducts',{
+                    headers: {
+                        'User-Id': userId  // Pass the userId in the headers
+                    }});
                 setProducts(response.data.products); // Save products in state
                 setfilteredproduct(response.data.products)
             } catch (error) {
                 console.log('Error in fetching products', error);
+                if (error.response?.status === 403 && error.response?.data?.action === "logout") {
+                    alert("Your account is inactive. Logging out.");
+                    localStorage.removeItem("userId"); // Clear the local storage
+                    navigate('/login'); // Redirect to the product display page
+                } else {
+                    setError("Failed to add to cart");
+                }
             }
         };
         fetchProducts();

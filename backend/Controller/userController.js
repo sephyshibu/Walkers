@@ -106,6 +106,7 @@ const login=async(req,res)=>{
     {
         return res.status(403).json({message:"User is Blocked by admin"})
     }
+
  
     //generate token
 
@@ -151,7 +152,7 @@ const refreshToken = async(req, res) => {
     try {
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
       const newAccessToken = jwt.sign(
-        { username: decoded.username },
+        {username: decoded.username },
         process.env.JWT_SECRET,
         { expiresIn: '15m' }
       );
@@ -799,6 +800,12 @@ const placingorder=async(req,res)=>{
 
         const saveorder=await neworder.save()
 
+        const cartdoc = await cartdb.findOne({ _id: cartId, userId });
+        if (cartdoc) {
+            await cartdb.deleteOne({ _id: cartId });
+        } else {
+            console.log(`No cart found for userId: ${userId}`);
+        }
         res.status(201).json({message:"order placed successfully",orderId:saveorder._id})
     }
     catch(error){

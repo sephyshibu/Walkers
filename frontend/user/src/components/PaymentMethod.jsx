@@ -1,6 +1,7 @@
 import React,{useState} from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
+import Navbar from './Navbar'
 import './PaymentMethod.css'
 const PaymentMethod = () => {
     const[selectedmethod,setselectedmethod]=useState('')
@@ -47,6 +48,7 @@ const PaymentMethod = () => {
             console.log("after clicking place order",response)
 
             if (response.status === 201) {
+
                 alert('Order placed successfully!');
                 // Redirect to success page or reset state
             }
@@ -59,6 +61,7 @@ const PaymentMethod = () => {
     }
   return (
     <div className='payemnt-page-container'>
+        <Navbar/>
         <h2>Payment Method</h2>
         <div className='payment-method'>
 

@@ -47,7 +47,7 @@ const CheckOut = () => {
     console.log('this is default ',defaultaddress)
 
     const handleAddress=()=>{
-            navigate('/account/addresspage')
+            navigate('/account')
     }
 
     const handleproccedtopayment=(e)=>{
@@ -58,7 +58,7 @@ const CheckOut = () => {
     }
   return (
     <div className="place-order-page">
-        
+        <Navbar/>
         {error && <p className='error-messageplaceorder'>{error}</p>}
     <div className='checkout-container'>
         <div className='shipping-address-section'>

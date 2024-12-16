@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const verifyAccessToken = (req, res, next) => {
- 
+  
   const authHeader = req.headers['authorization'];
   console.log("verify access token authHeader",authHeader)
   const token = authHeader && authHeader.split(' ')[1];
@@ -15,6 +15,8 @@ const verifyAccessToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({ message: 'Invalid or expired token' });
     }
+  //   console.log("Decoded token:", user); // Log the entire decoded token
+  // console.log("userId:", userId); // Check if 'id' exists
     req.user = user; 
     console.log("hii")
     next();

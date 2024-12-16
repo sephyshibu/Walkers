@@ -39,7 +39,10 @@ const ProductDisplay = () => {
 
         // setSelectedVariant(null);
 
-        const response = await axiosInstanceuser.get(`/products/display/${id}`);
+        const response = await axiosInstanceuser.get(`/products/display/${id}`,{
+          headers: {
+              'User-Id': userId  // Pass the userId in the headers
+          }});
         const fetchdetails = response.data;
         console.log("frontend fetch product",fetchdetails)
         setProducts(fetchdetails);
@@ -80,7 +83,15 @@ const ProductDisplay = () => {
       
         } catch (error) {
         console.log("Error occurred during fetching product details");
+        if (error.response?.status === 403 && error.response?.data?.action === "logout") {
+          alert("Your account is inactive. Logging out.");
+          localStorage.removeItem("userId"); // Clear the local storage
+          navigate('/login'); // Redirect to the product display page
+      } else {
+          setError("Failed to add to cart");
+      }
         setError("Failed to fetch product details.");
+
       }
     };
     
@@ -142,7 +153,13 @@ const ProductDisplay = () => {
     }
     catch(err){
       console.log("error in adding cart",err)
-      setError("failed to add cart")
+      if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+        alert("Your account is inactive. Logging out.");
+        localStorage.removeItem("userId"); // Clear the local storage
+        navigate('/login'); // Redirect to the product display page
+    } else {
+        setError("Failed to add to cart");
+    }
     }
   };
 
