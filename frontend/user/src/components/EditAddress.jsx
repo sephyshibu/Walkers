@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
+import './EditAddress.css'
 const EditAddress = () => {
     const{id}=useParams()
     console.log("userid for fetch address to edit",id)
@@ -58,16 +59,16 @@ const EditAddress = () => {
         try {
             const response=await axiosInstanceuser.put(`/updateaddress/${id}`,address)
             console.log(response.data)
-            navigate('/account/addresspage')
+            navigate('/account')
         } catch (error) {
             seterror("Failed to update address");
         }
     }
     return (
-    <div style={{ padding: "20px" }}>
+    <div className="edit-address-page">
     <h2>Edit Address</h2>
-    {error && <p style={{ color: "red" }}>{error}</p>}
-    <form onSubmit={handleSubmit}>
+    {error && <p className="error-messageadd">{error}</p>}
+    <form onSubmit={handleSubmit} className="edit-address-form">
         <label>
             Address Name:
             <input
@@ -117,7 +118,7 @@ const EditAddress = () => {
                 onChange={handleChange}
             />
         </label>
-        <label>
+        <label className='status-label'>
                     Status:
                     <input
                         type="checkbox"
@@ -127,7 +128,7 @@ const EditAddress = () => {
                 </label>
 
         <br />
-        <button type="submit">Save Changes</button>
+        <button type="submit" className="save-button">Save Changes</button>
     </form>
 </div>
   )

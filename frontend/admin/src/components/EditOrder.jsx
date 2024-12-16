@@ -3,6 +3,7 @@ import axiosInstanceadmin from '../axios'
 import { useParams } from 'react-router'
 import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router'
+import './EditOrder.css'
 const EditOrder = () => {
     const{id}=useParams()
 
@@ -31,6 +32,7 @@ const EditOrder = () => {
             orderstatus:orderstatus
 
         })
+        navigate('/admindashboard/orders')
         alert('order updated successfullyy')
     }
     catch (error) {
@@ -46,7 +48,7 @@ const EditOrder = () => {
   <div className="edit-order-page">
         <div className='edit-order-container'>
             <h2 className='edit-order-title'>Edit Order</h2>
-            {error && <p className='error-message'>{error}</p>}
+            {error && <p className='error-messageorder'>{error}</p>}
             <div className='order-details'>
             <p><strong>Username:</strong> {order.userId.username}</p>
                 <p><strong>Email:</strong> {order.userId.email}</p>

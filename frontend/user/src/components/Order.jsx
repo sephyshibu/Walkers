@@ -68,50 +68,47 @@ const openoverlay=(orderid)=>{
     // const { orderid,deliverydate, orderStatus, orderdata, totalprice } = orders;
 
     return (
-
-        <div className="order-page">
-        <h1>Your Orders</h1>
-        {error && <div className="error-messages">{error}</div>}
-        <div className="orders-list">
-            {orders.length > 0 ? (
-                orders.map((order) => (
-                    <div key={order.orderId} className="order-card">
-                        <div className="order-header">
-                            <h2>Order ID: {order.orderId}</h2>
-                            <span>Status: {order.orderStatus}</span>
-                        </div>
-                        <button
-                        disabled={order.orderStatus === 'Delivered' || order.orderStatus==="Cancelled"}
+<div className="order-page">
+    <h1>Your Orders</h1>
+    {error && <div className="error-messages">{error}</div>}
+    <div className="orders-list">
+        {orders.length > 0 ? (
+            orders.map((order) => (
+                <div key={order.orderId} className="order-card">
+                    <div className="order-header">
+                        <h2>Order ID: {order.orderId}</h2>
+                        <span>Status: {order.orderStatus}</span>
+                    </div>
+                    <button
+                        disabled={order.orderStatus === 'Delivered' || order.orderStatus === 'Cancelled'}
                         onClick={() => openoverlay(order.orderId)}
                         className="action-button"
                     >
                         Cancel
                     </button>
-                        <div className="order-details">
-                            <div>Order Date: {new Date(order.orderDate).toLocaleDateString()}</div>
-                            <div>Delivery Date: {new Date(order.deliveryDate).toLocaleDateString()}</div>
-                            <div>Total Price: ${order.totalPrice}</div>
-                            <div>Payment Method: {order.paymentMethod}</div>
-                            <div>Payment Status: {order.paymentStatus}</div>
-                        </div>
-                        <div className="items-list">
-                            <h3>Items:</h3>
-                            {order.items.map((item, index) => (
-                                <div key={index} className="item">
-                                    <div className="item-title">{item.title}</div>
-                                    <div>Quantity: {item.quantity}</div>
-                                    <div>Price: ${item.price}</div>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="order-details">
+                        <div>Order Date: {new Date(order.orderDate).toLocaleDateString()}</div>
+                        <div>Delivery Date: {new Date(order.deliveryDate).toLocaleDateString()}</div>
+                        <div>Total Price: ${order.totalPrice}</div>
+                        <div>Payment Method: {order.paymentMethod}</div>
+                        <div>Payment Status: {order.paymentStatus}</div>
                     </div>
-                ))
-            ) : (
-                <p>No orders found.</p>
-            )}
-         
-            
-        </div>
+                    <div className="items-list">
+                        <h3>Items:</h3>
+                        {order.items.map((item, index) => (
+                            <div key={index} className="item">
+                                <div className="item-title">{item.title}</div>
+                                <div>Quantity: {item.quantity}</div>
+                                <div>Price: ${item.price}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))
+        ) : (
+            <p>No orders found.</p>
+        )}
+    </div>
         {showOverlay && (
                 <div className="overlay">
                     <div className="overlay-content">
