@@ -1,0 +1,76 @@
+/* Container for the payment page */
+.payemnt-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f7f7;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  /* Payment method section */
+  .payment-method {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+  }
+  
+  .payement-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    width: 30%;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .payement-card h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  /* Add styles for the selected payment method */
+  .payement-card.selected {
+    border-color: #ff9900;
+    background-color: #fffbf1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .payement-card:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Button for placing the order */
+  button {
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+  }
+  
+  button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background-color: #e68900;
+  }
+  

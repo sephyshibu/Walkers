@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
-
+import './PaymentMethod.css'
 const PaymentMethod = () => {
     const[selectedmethod,setselectedmethod]=useState('')
 

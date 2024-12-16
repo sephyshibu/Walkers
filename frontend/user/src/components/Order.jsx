@@ -81,7 +81,7 @@ const openoverlay=(orderid)=>{
                             <span>Status: {order.orderStatus}</span>
                         </div>
                         <button
-                        disabled={order.orderStatus === 'Delivered'}
+                        disabled={order.orderStatus === 'Delivered' || order.orderStatus==="Cancelled"}
                         onClick={() => openoverlay(order.orderId)}
                         className="action-button"
                     >

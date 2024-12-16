@@ -21,6 +21,15 @@ const Orders = () => {
         fetchOrder();
     }, []);
 
+    const openoverlay=(id)=>{
+        setcurrentorderid(id)
+        setshowoverlay(true)
+    }
+
+    const closeoverlay=()=>{
+        setshowoverlay(false)
+    }
+
     const handleEdit = (id) => {
         navigate(`/editorder/${id}`);
     };
