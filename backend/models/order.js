@@ -13,6 +13,7 @@ const OrderSchema = new mongoose.Schema({
     paymentmethod:{ type: String, enum:['Card', 'PayPal', 'COD'], required:true},
     paymentstatus:{ type: String, enum:['Pending', 'Success', 'Failed'], required:true},
     orderStatus: {type: String,enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],default: 'Processing',},
+    cancelationreason:{type:String, default:null},
     items:[
         {
             productId: { type: mongoose.Schema.Types.ObjectId, ref: "walkersproduct", required: true },

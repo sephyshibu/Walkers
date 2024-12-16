@@ -140,7 +140,8 @@ const updateCategory=async(req,res)=>{
 const fetchparticularorder=async(req,res)=>{
     const{id}=req.params
     const order=await Orderdb.findById(id).populate('userId')
-    res.json(order)
+    console.log(order)
+    res.status(200).json(order)
 }
 
 const fetcheditproduct = async (req, res) => {
@@ -353,9 +354,9 @@ const addProduct = async (req, res) => {
 
 const updatepaymentstatus=async(req,res)=>{
     const{id}=req.params
-    const{paymentstatus}=req.body
+    const{orderstatus}=req.body
 
-    await Orderdb.findByIdAndUpdate(id,{paymentstatus})
+    await Orderdb.findByIdAndUpdate(id,{orderStatus:orderstatus})
     res.json({ message: 'Order updated successfully' });
 }
 const updateProduct = async (req, res) => {

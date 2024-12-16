@@ -84,27 +84,48 @@ const CartPage = () => {
         }
     };
 
+    const handleRemove=async(productId,quantity)=>{
+        console.log("product ID",quantity)
+        try {
+            const response = await axiosInstanceuser.delete(
+                `/deleteitem/${userId}?productId=${productId}&quantity=${quantity}`
+            );
+
+            if (response.data.success) {
+                fetchCart(); // Refresh cart after successful update
+            } else {
+                seterror("Failed to update cart");
+            }
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.message) {
+                seterror(err.response.data.message ); // Server's custom message
+            } else {
+                seterror({ general: 'Something went wrong. Please try again.' });
+            }
+        }
+    }
+
     const handlePlaceorder=async ()=>{
 
        
-        try {
-            const response = await axiosInstanceuser.post("/checkout", { userId });
-            if (response.status === 200) {
-                alert(response.data.message);
+        // try {
+        //     const response = await axiosInstanceuser.post("/checkout", { userId });
+            // if (response.status === 200) {
+            //     alert(response.data.message);
                 navigate('/checkout');
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 400) {
-                alert(
-                    `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
-                );
+            // }
+        // } catch (error) {
+        //     if (error.response && error.response.status === 400) {
+        //         alert(
+        //             `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
+        //         );
                 
-            } else {
-                console.error("Checkout error:", error);
-                alert("An error occurred during checkout.");
+        //     } else {
+        //         console.error("Checkout error:", error);
+        //         alert("An error occurred during checkout.");
                 
-            }
-        }
+        //     }
+        // }
         
         
           
@@ -121,14 +142,17 @@ const CartPage = () => {
         {cart.items && cart.items.length > 0 ? (
             cart.items.map((item) => (
                 <div key={item.productId} className="cart-item">
-                    <h4>{item.title}</h4>
+                    {/* <h1>{item.productId}</h1> */}
+                    <h4 className='producttitlecart'>{item.title}</h4>
                     <p>Price: Rs{item.price.toFixed(2)}</p>
                     <div className="quantity-control">
-                                    <button onClick={() => updateQuantityMinus(item.productId, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
+                                    <button className="minus" onClick={() => updateQuantityMinus(item.productId, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
                                     <span>{item.quantity}</span>
-                                    <button onClick={() => updateQuantityPlus(item.productId, item.quantity + 1)} disabled={item.quantity >= item.availableQuantity}>+</button>
+                                    <button className="plus"onClick={() => updateQuantityPlus(item.productId, item.quantity + 1)} disabled={item.quantity >= item.availableQuantity}>+</button>
                     </div>
-                    <p>Total: ${(item.price * item.quantity).toFixed(2)}</p>
+                    
+                    <button className='deletebtn' onClick={()=>handleRemove(item.productId,item.quantity)}></button>
+                   
                 </div>
             ))
         ) : (
@@ -144,7 +168,7 @@ const CartPage = () => {
           {cart.items.map((item) => (
             <div key={item.productId} className="summary-item">
               <span>{item.title}</span>
-              <span>{item.title} (x{item.quantity})</span>
+              <span>(x{item.quantity})</span>
               <span>${(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}

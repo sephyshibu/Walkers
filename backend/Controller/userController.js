@@ -336,7 +336,9 @@ const checkout=async(req,res)=>{
         if (!cart) {
             return res.status(404).json({ message: "Cart not found" });
         }
-        const unavailableproduct=cart.items.filter((item)=>item.productId.status===false)
+
+        
+        const unavailableproduct=cart.items.filter((item)=>(item.productId.status||item.productId.variants._id.status)===false)
         if(unavailableproduct.length>0)
         {
             return res.status(400).json({message:"Unavailable oprodutc now", products:unavailableproduct.map((item)=>item.productId.title)})
@@ -397,7 +399,29 @@ const updateaddress = async (req, res) => {
         res.status(500).json({ message: "Error updating address" });
     }
 };
+const deleteorder=async(req,res)=>{
+    const{orderid}=req.params
+    const{reason}=req.body
+    console.log("backend reason", reason)
+    try {
+        const orderdoc=await orderdb.findById(orderid)
+        console.log("delete order",orderdoc)
 
+        if(!orderdoc)
+        {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        orderdoc.orderStatus = 'Cancelled';
+        orderdoc.cancelationreason=reason
+        await orderdoc.save();
+
+        res.status(200).json({ message: "Order deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error deleting order" });
+    }
+}
 
 const deleteaddress=async(req,res)=>{
     const{id}=req.params
@@ -417,6 +441,7 @@ const deleteaddress=async(req,res)=>{
         
     }
 }
+
 
 const changepassword=async(req,res)=>{
     const{id}=req.params
@@ -524,6 +549,45 @@ const fetchaddress=async(req,res)=>{
     {
         console.error("an error occured during get address ",error)
         res.status(500).json({message:"internal server error"})
+    }
+}
+
+const fetchorder=async(req,res)=>{
+    const { userId } = req.params;
+
+    try {
+        // Fetch all orders for the given userId
+        const orders = await orderdb.find({ userId }).populate('items.productId', 'name'); // Optional populate
+
+        // If no orders found
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ message: "Orders not found" });
+        }
+
+        // Map over orders to structure the response
+        const ordersData = orders.map((order) => ({
+            orderId: order._id,
+            items: order.items.map((item) => ({
+                productId: item.productId,
+                title: item.title,
+                quantity: item.quantity,
+                price: item.price,
+            })),
+            totalPrice: order.totalprice,
+            orderStatus: order.orderStatus,
+            cancellationReason: order.cancelationreason || null,
+            orderDate: order.orderDate,
+            deliveryDate: order.deliverydate,
+            paymentMethod: order.paymentmethod,
+            paymentStatus: order.paymentstatus,
+            
+        }));
+
+        // Send the response
+        return res.status(200).json({ orders: ordersData });
+    } catch (error) {
+        console.error("An error occurred while fetching orders:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 const fetchcart=async(req,res)=>{
@@ -809,6 +873,63 @@ const placingorder=async(req,res)=>{
      res.status(500).json({ message: 'Failed to add product to cart' });
  }
 }
+const deleteitem=async(req,res)=>{
+    const{userId}=req.params
+    console.log("userId",userId)
+    const{productId,quantity}=req.query
+    console.log("backend updatecart",productId)
+    try {
+        const cartdoc=await cartdb.findOne({userId})
+        console.log("cartdoc",cartdoc)
+        if(!cartdoc)
+            {
+                return res.status(404).json({message:"cart is not available"})
+        
+            }
+
+        let cartitem=cartdoc.items.find((item)=>item.productId.toString()===productId)
+        console.log("cartItem",cartitem)
+
+        const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
+        console.log("product", product)
+     
+
+        if (product._id.toString() === productId) {
+            // Main product selected: decrement `availableQuantity`
+            const quantitytoadd=Number(quantity)
+            product.availableQuantity +=quantitytoadd ;
+            
+            await product.save(); // Save changes to the database
+            console.log("Updated main product stock status:", product.availableQuantity);
+        } else {
+            // Variant selected: decrement `stockStatus` of the variant
+            const variant = product.variants.find(variant => variant._id.toString() === productId);
+            if (!variant) {
+                return res.status(404).json({ message: "Variant not found" });
+            }
+        
+            variant.stockStatus += quantity; // Decrement the stock status
+           
+            await product.save(); // Save changes to the database for the parent document
+            console.log("Updated variant stock status:", variant.stockStatus);
+        }
+
+        
+        let cartitems=cartdoc.items.filter((item=>item!=cartitem))
+        console.log("after remove an item",cartitems)
+
+        cartdoc.items=cartitems
+        await cartdoc.save()
+            
+        res.json({ success: true, message: 'An item deleted successfully', cartdoc });
+        }
+        
+
+        catch(error){
+            console.error('Error delete from  cart:', error);
+            res.status(500).json({ message: 'Failed to delete product from cart' });
+        }
+}
 
 
 const updatecartplus=async(req,res)=>{
@@ -1000,4 +1121,4 @@ const updatecartminus=async(req,res)=>{
 
 
 
-module.exports={checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={deleteitem,deleteorder,fetchorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

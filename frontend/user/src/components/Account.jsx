@@ -3,6 +3,7 @@ import './Account.css'
 import AddressPage from './AddressPage'
 import ChangePassword from './ChangePassword'
 import Navbar from './Navbar'
+import Order from './Order'
 const Account = () => {
     const[activesection,setactivesection]=useState('address')
 
@@ -20,8 +21,8 @@ const Account = () => {
             // case "wishlist":
             //     return<Wishlist/>
 
-            // case "orders":
-            //     return<Orders/>
+            case "orders":
+                return<Order/>
         }
     }
 

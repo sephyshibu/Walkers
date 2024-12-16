@@ -7,7 +7,7 @@ const EditOrder = () => {
     const{id}=useParams()
 
     const[order,setorder]=useState("")
-    const[paymentstatus,setpaymentstatus]=useState(null)
+    const[orderstatus,setorderstatus]=useState(null)
     const[error,seterror]=useState('')
     const navigate=useNavigate()
 
@@ -16,7 +16,7 @@ const EditOrder = () => {
             try {
                 const response=await axiosInstanceadmin.get(`/fetchorder/${id}`)
                 setorder(response.data)
-                setpaymentstatus(response.data.paymentstatus)
+                setorderstatus(response.data.orderStatus)
             } catch (error) {
                 console.log("error",err)
                 seterror('Failed to fetch category')
@@ -25,9 +25,11 @@ const EditOrder = () => {
         fetchedit()
     },[id])
  const handleSave=async()=>{
+    console.log(orderstatus)
     try{
         await axiosInstanceadmin.put(`/updateorder/${id}`,{
-            paymentstatus:paymentstatus
+            orderstatus:orderstatus
+
         })
         alert('order updated successfullyy')
     }
@@ -53,16 +55,17 @@ const EditOrder = () => {
                 <p><strong>Total Price:</strong> {order.totalprice}</p>
                 <p><strong>Order Date:</strong> {new Date(order.orderDate).toLocaleDateString()}</p>
                 <p><strong>Delivery Date:</strong> {new Date(order.deliverydate).toLocaleDateString()}</p>
+                <p><strong>Payment Status:</strong> {order.paymentstatus}</p>
                 <p>
-                    <strong>Payment Status:</strong>
+                    <strong>Order Status:</strong>
                     <select
-                        value={paymentstatus}
-                        onChange={(e) => setpaymentstatus(e.target.value)}
+                        value={orderstatus}
+                        onChange={(e) => setorderstatus(e.target.value)}
                     >
-                        <option value="Processing">Pending</option>
-                        <option value="Shipped">Completed</option>
-                        <option value="Delivered">Failed</option>
-                        <option value="Cancelled">Failed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
                     </select>
                 </p>
                 <button className="save-button" onClick={handleSave}>

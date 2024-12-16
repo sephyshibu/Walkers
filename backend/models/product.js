@@ -22,7 +22,7 @@ const ProductSchema= new mongoose.Schema({
         required:true,
         default:true
         },
-            variants:[
+    variants:[
         {
             name:{type:String, required:true},
             price:{type:Number, required:true},

@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails}=require('./Controller/userController')
+const {deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 
@@ -28,4 +28,7 @@ router.put('/updatepassword/:id',verifyAccessToken,changepassword)
 router.get('/fetchdefaultaddress/:userId',verifyAccessToken,fetchdefaultaddress)
 router.post('/placeorder',verifyAccessToken,placingorder)
 router.post('/checkout',verifyAccessToken,checkout)
+router.get('/fetchorder/:userId',verifyAccessToken,fetchorder)
+router.put('/cancelorder/:orderid',verifyAccessToken,deleteorder)
+router.delete('/deleteitem/:userId',verifyAccessToken,deleteitem)
 module.exports=router

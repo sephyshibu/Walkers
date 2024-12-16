@@ -39,10 +39,12 @@ const Orders = () => {
                             <td>Address</td>
                             <td>Payment Method</td>
                             <td>Payment Status</td>
+                            <td>Order status</td>
                             <td>Products</td>
                             <td>Total Price</td>
                             <td>Order Date</td>
                             <td>Delivery Date</td>
+                            <td>Cancelation Reason</td>
                             <td>Actions</td>
                         </tr>
                     </thead>
@@ -54,6 +56,7 @@ const Orders = () => {
                                 <td>{list.addressname}</td>
                                 <td>{list.paymentmethod}</td>
                                 <td>{list.paymentstatus}</td>
+                                <td>{list.orderStatus}</td>
                                 <td>
                                     {list.items.map((item, index) => (
                                         <div key={index}>
@@ -67,10 +70,12 @@ const Orders = () => {
                                 <td>{list.totalprice}</td>
                                 <td>{new Date(list.orderDate).toLocaleDateString()}</td>
                                 <td>{new Date(list.deliverydate).toLocaleDateString()}</td>
+                                <td>{list.cancelationreason}</td>
                                 <td>
                                     <button
                                         className="action-button"
                                         onClick={() => handleEdit(list._id)}
+                                        disabled={list.orderStatus==="Cancelled"}
                                     >
                                         Action
                                     </button>
