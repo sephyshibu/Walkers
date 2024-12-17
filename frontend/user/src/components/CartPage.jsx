@@ -135,7 +135,7 @@ const CartPage = () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setMessage(
-                    `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
+                    `Checkout failed: ${error.response.data.message}. ${error.response.data.products.join(", ")}`
                 );
                 
             } else {

@@ -448,10 +448,10 @@ const checkout=async(req,res)=>{
         }
 
         
-        const unavailableproduct=cart.items.filter((item)=>item.productId.status||item.variants._id.status===false)
+        const unavailableproduct=cart.items.filter((item)=>item.productId.status===false)
         if(unavailableproduct.length>0)
         {
-            return res.status(400).json({message:"Unavailable produtc now", products:unavailableproduct.map((item)=>item.productId.title)})
+            return res.status(400).json({message:"Unavailable product now", products:unavailableproduct.map((item)=>item.productId.title)})
         }
         return res.status(200).json({ message: "Checkout successful" });
     }
