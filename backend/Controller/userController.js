@@ -434,33 +434,153 @@ const getProducts = async (req, res) => {
     }
 };
 
-const checkout=async(req,res)=>{
-    const{userId}=req.body
+// const checkout = async (req, res) => {
+//     const { userId } = req.body;
 
-    try{
-        const cart=await cartdb.findOne({userId}).populate({
-            path:"items.productId" ,
-            select:"title status"
-        })
-        console.log("cart ", cart)
+//     try {
+//         // Find cart and populate product details
+//         const cart = await cartdb.findOne({ userId }).populate({
+//             path: "items.productId",
+//             select: "title status variants"
+//         });
+
+//         console.log("cart ", cart);
+//         if (!cart) {
+//             return res.status(404).json({ message: "Cart not found" });
+//         }
+
+//         // Find unavailable products (either product status is false or variant status is false)
+//         const unavailableProducts = cart.items.filter((item) => {
+//             // Check if product is unavailable
+//             if (!item.productId || item.productId.status === false) {
+//                 return true; // Product is unavailable
+//             }
+
+//             // Check if any variant is unavailable
+//             // const variantUnavailable = item.productId.variants.some(
+//             //     (variant) => variant._id.toString() === item.variantId?.toString() && variant.status === false
+//             // );
+//             // return variantUnavailable; // Return true if the variant is unavailable
+//         });
+
+//         if (unavailableProducts.length > 0) {
+//             return res.status(400).json({
+//                 message: "Unavailable product now",
+//                 products: unavailableProducts.map((item) => ({
+//                     title: item.productId?.title || "Unknown Product",
+//                     reason: !item.productId
+//                         ? "Product does not exist"
+//                         : item.productId.status === false
+//                         ? "Product is unavailable"
+//                         : "Variant is unavailable"
+//                 }))
+//             });
+//         }
+
+//         return res.status(200).json({ message: "Checkout successful" });
+//     } catch (error) {
+//         console.error("Error during checkout:", error);
+//         return res.status(500).json({ message: "Internal server error" });
+//     }
+// };
+
+const checkout = async (req, res) => {
+    const { userId } = req.body;
+
+    try {
+        // Find cart and populate product details
+        const cart = await cartdb.findOne({ userId }).populate({
+            path: "items.productId",
+            select: "title status variants"
+        });
+
+        console.log("Cart: ", JSON.stringify(cart, null, 2));
+
         if (!cart) {
             return res.status(404).json({ message: "Cart not found" });
         }
 
-        
-        const unavailableproduct=cart.items.filter((item)=>item.productId.status===false)
-        if(unavailableproduct.length>0)
-        {
-            return res.status(400).json({message:"Unavailable product now", products:unavailableproduct.map((item)=>item.productId.title)})
+        const unavailableProducts = [];
+
+        // Loop through cart items to check availability
+        for (const item of cart.items) {
+            const product = item.productId;
+
+            // Skip checking if productId is null
+            if (!product) {
+                continue; // Treat null productId as valid
+            }
+
+            // Check if product status is false
+            if (product.status === false) {
+                unavailableProducts.push({
+                    title: product.title || "Unknown Product",
+                    reason: "Product is unavailable"
+                });
+                continue;
+            }
+
+            // If variantId exists, check variant availability
+            // if (item.variantId) {
+            //     const matchedVariant = product.variants.find(
+            //         (variant) => variant._id.toString() === item.variantId.toString()
+            //     );
+
+            //     if (!matchedVariant || matchedVariant.status === false) {
+            //         unavailableProducts.push({
+            //             title: product.title || "Unknown Product",
+            //             reason: "Variant is unavailable"
+            //         });
+            //     }
+            // }
         }
+
+        // If there are unavailable products, return an error response
+        if (unavailableProducts.length > 0) {
+            return res.status(400).json({
+                message: "Some products are unavailable",
+                unavailableProducts
+            });
+        }
+
+        // If all checks pass
         return res.status(200).json({ message: "Checkout successful" });
-    }
-    catch (error) {
+    } catch (error) {
         console.error("Error during checkout:", error);
         return res.status(500).json({ message: "Internal server error" });
     }
+};
 
-}
+
+
+
+// const checkout=async(req,res)=>{
+//     const{userId}=req.body
+
+//     try{
+//         const cart=await cartdb.findOne({userId}).populate({
+//             path:"items.productId" ,
+//             select:"title status variants"
+//         })
+//         console.log("cart ", cart)
+//         if (!cart) {
+//             return res.status(404).json({ message: "Cart not found" });
+//         }
+
+        
+//         const unavailableproduct=cart.items.filter((item)=>item.productId.status||item.variants===false)
+//         if(unavailableproduct.length>0)
+//         {
+//             return res.status(400).json({message:"Unavailable product now", products:unavailableproduct.map((item)=>item.productId.title)})
+//         }
+//         return res.status(200).json({ message: "Checkout successful" });
+//     }
+//     catch (error) {
+//         console.error("Error during checkout:", error);
+//         return res.status(500).json({ message: "Internal server error" });
+//     }
+
+// }
 
 // const updateaddress=async(req,res)=>{
 //     const{id}=req.params
@@ -1043,8 +1163,8 @@ const deleteitem=async(req,res)=>{
             if (!variant) {
                 return res.status(404).json({ message: "Variant not found" });
             }
-        
-            variant.stockStatus += quantity; // Decrement the stock status
+            const quantitytoaddv=Number(quantity)
+            variant.stockStatus += quantitytoaddv; // Decrement the stock status
            
             await product.save(); // Save changes to the database for the parent document
             console.log("Updated variant stock status:", variant.stockStatus);

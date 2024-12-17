@@ -22,6 +22,7 @@ const CartPage = () => {
             if (response.data.message) {
                 setMessage(response.data.message);
                 setCart({ items: [], totalprice: 0 });
+                
             } else{
             setCart(response.data);
             dispatch(cartitems(response.data))
@@ -34,8 +35,11 @@ const CartPage = () => {
                 localStorage.removeItem("userId"); // Clear the local storage
                  await persistor.purge(); // Clear persisted Redux state
                 navigate('/login'); // Redirect to the product display page
-            } else {
-                setError("Failed to add to cart");
+            }else  if (err.response && err.response.data.message) {
+                seterror(err.response.data.message); // Custom server error message
+            } 
+            else {
+                seterror("Failed to add to cart");
             }
             seterror("Failed to fetch cart");
         }
@@ -67,6 +71,8 @@ const CartPage = () => {
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
                 seterror(err.response.data.message ); // Server's custom message
+            } else  if (err.response && err.response.data.message) {
+                seterror(err.response.data.message); // Custom server error message
             } else {
                 seterror({ general: 'Something went wrong. Please try again.' });
             }
@@ -135,8 +141,7 @@ const CartPage = () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setMessage(
-                    `Checkout failed: ${error.response.data.message}. ${error.response.data.products.join(", ")}`
-                );
+                    `Checkout failed: ${error.response.data.message}`)
                 
             } else {
                 console.error("Checkout error:", error);
