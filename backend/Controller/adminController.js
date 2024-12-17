@@ -229,6 +229,39 @@ const softdeleteproduct=async(req,res)=>{
     }
 }
 
+const softdeletevariant=async(req,res)=>{
+    const{id}=req.params
+    const{variantid,status}=req.body
+  
+    console.log("backend productid",id)
+    console.log("backend vartiantid",variantid)
+    console.log("backend productid",status)
+    try{
+        const product=await Productdb.findById(id)
+        if(!product)
+        {
+            return res.status(404).json("product not found")
+        }
+       console.log(product)
+       const variant=product.variants.id(variantid)
+       variant.status=status
+
+        
+
+        await product.save()
+
+        console.log("After save:", product);
+        console.log("Product after update:", product);
+        res.status(200).json(product)
+      
+    }
+    catch(err)
+    {
+        res.status(500).json("Failed to update the status")
+    }
+}
+
+
 
 
 
@@ -388,5 +421,5 @@ const updateProduct = async (req, res) => {
 };
 
 
-module.exports={updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

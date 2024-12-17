@@ -115,16 +115,17 @@ const EditProduct = () => {
     };
 //newly added function
 
-const handleDeleteVariant=async(id,currentStatus)=>{
-    console.log("dcds",id)
+const handleDeleteVariant=async(variantid,currentStatus)=>{
+    console.log("dcds",variantid)
     console.log("asdaweq",currentStatus)
+    console.log("productId", id)
     try {
-        const response = await axiosInstanceadmin.put(`/deleteproduct/${id}/delete`, {
-            status: !currentStatus
+        const response = await axiosInstanceadmin.put(`/deletevariant/${id}/delete`, {
+            variantid:variantid,status: !currentStatus
         });
         console.log("product delete", response.data)
         const updatedProduct = response.data;
-        setProducts((prevList) => 
+        setProduct((prevList) => 
              prevList.map((list) => 
                 (list._id === updatedProduct._id ? updatedProduct : list)
             )
