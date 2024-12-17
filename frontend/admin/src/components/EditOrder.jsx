@@ -52,7 +52,7 @@ const EditOrder = () => {
             <div className='order-details'>
             <p><strong>Username:</strong> {order.userId.username}</p>
                 <p><strong>Email:</strong> {order.userId.email}</p>
-                <p><strong>Address:</strong> {order.addressname}</p>
+                
                 <p><strong>Payment Method:</strong> {order.paymentmethod}</p>
                 <p><strong>Total Price:</strong> {order.totalprice}</p>
                 <p><strong>Order Date:</strong> {new Date(order.orderDate).toLocaleDateString()}</p>

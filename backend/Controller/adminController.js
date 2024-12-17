@@ -140,6 +140,7 @@ const updateCategory=async(req,res)=>{
 const fetchparticularorder=async(req,res)=>{
     const{id}=req.params
     const order=await Orderdb.findById(id).populate('userId')
+    
     console.log(order)
     res.status(200).json(order)
 }
