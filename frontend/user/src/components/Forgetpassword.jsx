@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
+import './Forgetpassword.css'
 const Forgetpassword = () => {
     const[formdata,setfromdata]=useState({
         email:""
@@ -59,10 +60,10 @@ const Forgetpassword = () => {
 
     }
   return (
-    <div>
-       <form className="login-form">
+    <div className='forgetcontainer'> 
+       <form className="forget-form">
                 <input type='text'
-                    className="form-input"
+                    className="form-inputforget"
                     placeholder='enter the email'
                     name='email'
                     value={formdata.email}
@@ -70,7 +71,7 @@ const Forgetpassword = () => {
 
                 {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
                 {msg && <p style={{ color: 'green' }}>{msg}</p>}
-                <button type='submit'  onClick={handleSubmit}>Submit</button>
+                <button className="forgetbtn" type='submit'  onClick={handleSubmit}>Submit</button>
 
         </form>
                 

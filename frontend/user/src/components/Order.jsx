@@ -7,9 +7,6 @@ const Order = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const[reason,setReason]=useState('')
     const [sortoptions,setsortoptions]=useState('')
-    const [active,setactive]=useState('')
-    const [cancelled,setcancelled]=useState('')
-    const [completed,setcompleted]=useState('')
     const [orders, setorder] = useState([])
     const[error,seterror]=useState('')
     const[currentorderid,setcurrentorderid]=useState(null)
@@ -37,14 +34,14 @@ useEffect(()=>{
     let filtered=[...orders]
 
     if(sortoptions==='Active'){
-        filtered=filtered.filter((order=>order.orderStatus!='Cancelled'))
+        filtered=filtered.filter((order=>order.orderStatus!='Cancelled' && order.orderStatus!='Delivered' ))
     }
     else if(sortoptions==='Cancelled'){
         filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
     }
-    else if(sortoptions==='Completed')
+    else if(sortoptions==='Delivered')
     {
-        filtered=filtered.filter((order=>order.orderStatus!='Completed'))
+        filtered=filtered.filter((order=>order.orderStatus==='Delivered'))
     }
     setfilter(filtered)
 },[sortoptions,orders])
@@ -99,7 +96,7 @@ const openoverlay=(orderid)=>{
             <option value="">Select Status</option>
             <option value="Active">Active</option>
             <option value="Cancelled">Cancelled</option>
-            <option value="Completed">Completed</option>
+            <option value="Delivered">Delivered</option>
         </select>
     </label>
 </div>

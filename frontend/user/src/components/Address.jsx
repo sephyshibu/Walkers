@@ -39,7 +39,7 @@ const Address = () => {
         if (!address.addressname) {
           formErrors.addressname = 'address is required.';
           isValid = false;
-      } else if (!/^[A-Za-z]+$/.test(address.addressname)) {
+      } else if (!/^[A-Za-z\s]+$/.test(address.addressname)) {
           formErrors.addressname = 'Address must only contain letters.';
           isValid = false;
       }

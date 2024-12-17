@@ -136,9 +136,20 @@ const ProductDisplay = () => {
 
 
   const handleAddToCart = async () => {
-   console.log("selected variant", selectedVariant)
+  //  console.log("selected variant", selectedVariant)
+  // if (formdata.availableQuantity === 0 || selectedVariant.availableQuantity === 0){
+  //  alert("the product is out of stock")
+  //   return
+  //  }
     try{
-      // console.log("varient title",selectedVariant.availableQuantity)
+      if (
+        formdata.availableQuantity === 0 || 
+        (selectedVariant && selectedVariant.availableQuantity === 0)
+      ) {
+        alert("The product is out of stock");
+        return;
+      }
+      
       const response=await axiosInstanceuser.post('/addcart',{
         userId,
         productId:formdata.id||selectedVariant._id,
@@ -150,6 +161,7 @@ const ProductDisplay = () => {
       })
       console.log("add to cart response in product display page ",response.data)
       alert("Product added to cart!");
+    
     }
     catch(err){
       console.log("error in adding cart",err)
@@ -173,7 +185,7 @@ const ProductDisplay = () => {
     <div className="product-display-page">
       <Navbar/>
     <div className="product-display-container">
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="error-messagecartadd ">{error}</p>}
       {!error && (
         <>
         <div className="product-main">
@@ -211,7 +223,7 @@ const ProductDisplay = () => {
 
              {/* Variants display */}
              <div className="variants-section">
-                <h2>Variants</h2>
+                
 
                 <div className="variants-list">
                   {variantslist.map((variant, index) => (
@@ -261,7 +273,7 @@ const ProductDisplay = () => {
             </p>
             <div className="product-actions">
               <button className="add-to-cart" onClick={handleAddToCart}>Add to Cart</button>
-              <button className="buy-now">Buy Now</button>
+              {/* <button className="buy-now">Buy Now</button> */}
             </div>
           </div>
 

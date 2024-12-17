@@ -4,7 +4,9 @@ import axiosInstanceadmin from '../axios';
 import './Order.css'
 const Orders = () => {
     const [orders, setOrders] = useState([]);
+    const[filter,setfilter]=useState([])
     const [error, setError] = useState('');
+    const [sortoptions,setsortoptions]=useState('')
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -21,6 +23,20 @@ const Orders = () => {
         fetchOrder();
     }, []);
 
+    useEffect(()=>{
+        let filtered=[...orders]
+        if(sortoptions==='Active'){
+            filtered=filtered.filter((order=>order.orderStatus!='Cancelled'))
+        }
+        else if(sortoptions==='Cancelled')
+            {
+                filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
+            }
+
+        setfilter(filtered)
+
+    },[sortoptions,orders])
+
     const openoverlay=(id)=>{
         setcurrentorderid(id)
         setshowoverlay(true)
@@ -36,9 +52,18 @@ const Orders = () => {
 
     return (
         <div className="order-page">
-            <h1>Manage Orders</h1>
+            <h1 className='orderheadadmin'>Manage Orders</h1>
             {error && <p className="error-messages">{error}</p>}
-
+            <div className="filters">
+                <label>
+                    <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
+                        <option value="">Select Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Cancelled">Cancelled</option>
+                       
+                    </select>
+                </label>
+            </div>
             <div className="orders-list">
                 <table className="order-table">
                     <thead>
@@ -58,7 +83,7 @@ const Orders = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map((list) => (
+                        {filter.map((list) => (
                             <tr key={list._id}>
                                 <td>{list.userId?.username}</td>
                                 <td>{list.userId?.email}</td>

@@ -50,9 +50,12 @@ const Otp = () => {
         }
         catch(err)
         {
-          console.log(err.message);
-          seterror('Something went wrong during otp verification');
-          setmsg('');
+            if (err.response && err.response.data) {
+                seterror(err.response.data.message); // Display backend error message
+            } else {
+                seterror('Something went wrong during OTP verification'); // Fallback message
+            }
+              setmsg('');
         }
     }
 
@@ -76,7 +79,7 @@ const Otp = () => {
             } else {
                 seterror('Something went wrong during OTP verification'); // Fallback message
             }
-          setmsg('');
+              setmsg('');
         }
         
     }
@@ -112,7 +115,7 @@ const Otp = () => {
                 >
                     Resend OTP
                 </button>}
-                 {error  && <p className="error-message">{error}</p>}
+                {error  && <p className="error-message">{error}</p>}
                  {msg && <p className="success-message">{msg}</p>}
         </form>
     </div>

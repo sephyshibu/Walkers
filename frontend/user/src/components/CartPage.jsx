@@ -22,7 +22,7 @@ const CartPage = () => {
             if (response.data.message) {
                 setMessage(response.data.message);
                 setCart({ items: [], totalprice: 0 });
-                
+             
             } else{
             setCart(response.data);
             dispatch(cartitems(response.data))
@@ -41,7 +41,7 @@ const CartPage = () => {
             else {
                 seterror("Failed to add to cart");
             }
-            seterror("Failed to fetch cart");
+            
         }
     }, [userId]);
 
@@ -93,7 +93,8 @@ const CartPage = () => {
             
             if (response.data.success) {
                 fetchCart(); // Refresh cart after successful update
-            } else {
+            } 
+            else {
                 seterror("Failed to update cart");
             }
         } catch (err) {
@@ -113,7 +114,16 @@ const CartPage = () => {
             );
 
             if (response.data.success) {
-                fetchCart(); // Refresh cart after successful update
+                if (response.data.message === "Cart is empty and deleted successfully") {
+                    // If cart is deleted, you can reset the cart state to empty or show a message
+                    setCart({ items: [], totalprice: 0 });
+                    seterror(""); // Clear any error state
+                    alert("Your cart is empty.");
+                    
+                } else {
+                    // Otherwise, re-fetch the cart data if some items remain
+                    fetchCart();
+                }
             } else {
                 seterror("Failed to update cart");
             }
@@ -198,11 +208,12 @@ const CartPage = () => {
             <div key={item.productId} className="summary-item">
               <span>{item.title}</span>
               <span>(x{item.quantity})</span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>Rs.{(item.price * item.quantity).toFixed(2)}</span>
+              
             </div>
           ))}
           <hr />
-          <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
+          <h4>Total Price: Rs.{cart.totalprice.toFixed(2)}</h4>
           <button type='button' onClick={handlePlaceorder}>CheckOut</button>
         </div>
         

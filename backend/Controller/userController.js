@@ -1148,7 +1148,11 @@ const deleteitem=async(req,res)=>{
 
         const product=await Productdb.findById(productId) ||await Productdb.findOne({ "variants._id": productId })
         console.log("product", product)
-     
+        
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
 
         if (product._id.toString() === productId) {
             // Main product selected: decrement `availableQuantity`
@@ -1171,10 +1175,22 @@ const deleteitem=async(req,res)=>{
         }
 
         
-        let cartitems=cartdoc.items.filter((item=>item!=cartitem))
-        console.log("after remove an item",cartitems)
+        cartdoc.items = cartdoc.items.filter(item => item.productId.toString() !== productId.toString());
 
-        cartdoc.items=cartitems
+        console.log("after remove an item",cartdoc.items)
+
+        cartdoc.totalprice = cartdoc.items.reduce((total, item) => total + item.quantity * item.price, 0);
+        // Save the updated cart
+        if (cartdoc.items.length === 0) {
+            // Delete cart if empty
+            await cartdb.findByIdAndDelete(cartdoc._id);
+            return res.json({ success: true, message: "Cart is empty and deleted successfully" });
+        }
+        
+         // If cart becomes empty, delete the cart document
+     
+
+        
         await cartdoc.save()
             
         res.json({ success: true, message: 'An item deleted successfully', cartdoc });

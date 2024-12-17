@@ -190,8 +190,8 @@ const login=()=>{
                 </div>
                 </GoogleOAuthProvider>
               
-               <p className="paragraph">Dont have an account? <a href="/signup">Signup</a></p>
-               <p className="paragraph">Forget password? <a href="/forgetpassword" onClick={handleforget}>Change</a></p>
+               <p className="paragraph">Dont have an account ?  <a href="/signup">Signup</a></p>
+              <a href="/forgetpassword" onClick={handleforget}>Forgot passwrd</a>
                 {error && <p className="error-message">{error}</p>}
                 {msg && <p className="success-message">{msg}</p>}
             </form>
