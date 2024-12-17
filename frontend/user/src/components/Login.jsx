@@ -113,7 +113,9 @@ const login=()=>{
     //       setmsg("");
     //     }
     //   };
-
+    // const handlegenerateotp=async()=>{
+    //     const email=
+    // }
 
     const handleGoogleLogin=async(credentialResponse)=>{
         if(credentialResponse?.credential)
@@ -146,6 +148,10 @@ const login=()=>{
               
             }
         }
+    }
+
+    const handleforget=async()=>{
+            navigate('/forgetpassword')
     }
     return(
         <div className="login-container">
@@ -185,6 +191,7 @@ const login=()=>{
                 </GoogleOAuthProvider>
               
                <p className="paragraph">Dont have an account? <a href="/signup">Signup</a></p>
+               <p className="paragraph">Forget password? <a href="/forgetpassword" onClick={handleforget}>Change</a></p>
                 {error && <p className="error-message">{error}</p>}
                 {msg && <p className="success-message">{msg}</p>}
             </form>

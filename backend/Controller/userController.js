@@ -43,6 +43,40 @@ async function SendVerificationEmail(email,otp) {
     }
     
 }
+
+const checkemail=async(req,res)=>{
+    const{email}=req.body
+    try{
+
+    
+    const user=await Users.findOne({email:email})
+
+    if(!user)
+        {
+            return res.status(404).json({message:"Email doesnot found"})
+        }
+    if(user.status===false)
+        {
+            return res.status(403).json({message:"User is Blocked by admin"})
+        }
+
+        const otp=generateOTP()
+        const emailSent= await SendVerificationEmail(email,otp)
+        if(!emailSent){
+            return res.json(" failed to send email error")
+        }
+
+        req.session.userOTP=otp
+        req.session.userData={email}
+        
+        return res.status(200).json({message:"successful",email})
+
+    }catch (error) {
+        console.error("Error in checkemail:", error);
+        res.status(500).json({ message: "Internal server error. Please try again later." });
+    }
+
+}
 const signup=async(req,res)=>{
     
     const{username,email,password,confirmpassword,phonenumber}=req.body
@@ -82,6 +116,75 @@ const signup=async(req,res)=>{
         res.status(500).json({message:"internal server error"})
     }
 
+}
+const forgetpasswordverifyotp=async (req,res)=>{
+    console.log("verify otp")
+    try {
+        const{otp}=req.body
+        console.log("OTP from frontend",otp)
+        console.log('otp from the backend',req.session.userOTP)
+        console.log(req.session.userData)
+        if(otp===req.session.userOTP)
+        {
+            
+            // console.log("from session deconstruct",user.username,user.email,user.password,user.phonenumber)
+            res.status(200).json({message:"verified Successfully"})
+
+        }else{
+            res.status(400).json({message:"Invalid OTP, Please try again"})
+        }
+    } catch (error) {
+        console.error("error Verifying OTP",error)
+        res.status(500).json({message:"An error occured"})
+    }
+}
+const forgetpasswordresendotp=async (req,res)=>{
+    try {
+        const{email}=req.session.userData
+        if(!email)
+        {
+           return res.status(400).json({message:"email i not found in session"})
+        }
+        const otp=generateOTP()
+        req.session.userOTP=otp
+        const emailsend=await SendVerificationEmail(email,otp)
+        if(emailsend)
+        {
+            console.log("resend otp ",otp)
+            res.status(200).json({message:"OTP Resend Successfully"})
+        }
+        else{
+            res.status(500).json({message:"Failed to resend OTP"})
+        }
+    } catch (error) {
+        console.error("error resending OTP",error)
+        res.status(500).json({message:"An error occured"})
+    }
+}
+const updatepasswordemail=async(req,res)=>{
+    const { email } = req.session.userData; // Access email stored in session
+    const { password } = req.body; // New password from the request body
+
+    try {
+        // Hash the new password
+        const hashPassword = await bcrypt.hash(password, 10);
+
+        // Find the user by email and update the password
+        const updatedUser = await Users.findOneAndUpdate(
+            { email: email }, // Find user by email
+            { password: hashPassword }, // Update password
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        return res.status(200).json({ message: 'Password updated successfully.' });
+    } catch (err) {
+        console.error('Error updating password:', err);
+        return res.status(500).json({ message: 'Failed to update password.' });
+    }
 }
 
 const login=async(req,res)=>{
@@ -366,6 +469,26 @@ const checkout=async(req,res)=>{
 //         })
 //     }
 // }
+
+const updateuserdetail=async(req,res)=>{
+    const{userId}=req.params
+    const{username,email}=req.body
+    try{
+        const userupdate=await Users.findByIdAndUpdate(
+            userId,
+            {username,email},{new:true}
+        )
+        if (userupdate) {
+            res.status(200).json({ success: true, user: userupdate });
+        } else {
+            res.status(404).json({ success: false, message: 'User not found' });
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
 
 const updateaddress = async (req, res) => {
     const { id } = req.params;
@@ -1128,4 +1251,4 @@ const updatecartminus=async(req,res)=>{
 
 
 
-module.exports={deleteitem,deleteorder,fetchorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+module.exports={updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,fetchorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

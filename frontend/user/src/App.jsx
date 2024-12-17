@@ -17,6 +17,9 @@ import EditAddress from './components/EditAddress'
 import Account from './components/Account'
 import CheckOut from './components/CheckOut'
 import PaymentMethod from './components/PaymentMethod'
+import Forgetpassword from './components/Forgetpassword'
+import Forgetpasswordotp from './components/forgetpasswordotp'
+import ForgetChangepassword from './components/ForgetChangepassword'
 function App() {
   
  return(
@@ -28,6 +31,9 @@ function App() {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/otp' element={<Otp/>}/>
         <Route path='/' element={<Home/>}/>
+        <Route path='/forgetpassword' element={<Forgetpassword/>}/>
+        <Route path='/forgetpasswordotp' element={<Forgetpasswordotp/>}/>
+        <Route path='/changepassword' element={<ForgetChangepassword/>}/>
         <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
         <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
         <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>

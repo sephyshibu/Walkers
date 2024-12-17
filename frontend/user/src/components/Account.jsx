@@ -1,12 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Account.css'
 import AddressPage from './AddressPage'
 import ChangePassword from './ChangePassword'
 import Navbar from './Navbar'
 import Order from './Order'
+import AccountDetail from './AccountDetail'
+import axiosInstanceuser from '../axios'
 const Account = () => {
     const[activesection,setactivesection]=useState('address')
 
+
+   
 
     const renderContent=()=>{
         switch(activesection){
@@ -23,6 +27,9 @@ const Account = () => {
 
             case "orders":
                 return<Order/>
+
+            case "accountdetail":
+                return<AccountDetail/>
         }
     }
 
@@ -62,6 +69,13 @@ const Account = () => {
                 className={activesection==="orders"?"active":""}
                 onClick={()=>setactivesection("orders")}>
                     My Orders
+
+                </li>
+
+                <li 
+                className={activesection==="detail"?"active":""}
+                onClick={()=>setactivesection("accountdetail")}>
+                    Account Details
 
                 </li>
 

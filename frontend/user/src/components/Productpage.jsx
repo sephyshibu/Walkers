@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 import banner1 from '../images/Business.png';
 import Footer from './Footer';
 import { useSelector } from 'react-redux';
+import { persistor } from '../app/store';
 const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
     const [sortoptions,setsortoptions]=useState('')
@@ -56,6 +57,7 @@ const Productpage = () => {
                 if (error.response?.status === 403 && error.response?.data?.action === "logout") {
                     alert("Your account is inactive. Logging out.");
                     localStorage.removeItem("userId"); // Clear the local storage
+                    await persistor.purge();
                     navigate('/login'); // Redirect to the product display page
                 } else {
                     setError("Failed to add to cart");

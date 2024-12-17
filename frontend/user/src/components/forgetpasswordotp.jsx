@@ -43,15 +43,19 @@ const Otp = () => {
     const handleSubmit=async(e)=>{
         e.preventDefault()
         try{
-            const verifyotp=await axiosInstanceuser.post('/verifyotp',otp)
+            const verifyotp=await axiosInstanceuser.post('/forgetpasswordverifyotp',otp)
             setmsg(verifyotp.data.message)
             seterror('')
-            navigate('/login')
+            navigate('/changepassword')
         }
         catch(err)
         {
-          console.log(err.message);
-          seterror('Something went wrong during otp verification');
+          
+          if (err.response && err.response.data) {
+            seterror(err.response.data.message); // Display backend error message
+        } else {
+            seterror('Something went wrong during OTP verification'); // Fallback message
+        }
           setmsg('');
         }
     }
@@ -59,7 +63,7 @@ const Otp = () => {
     const handleResend=async(e)=>{
         e.preventDefault()
         try{
-           const resendotp=await axiosInstanceuser.post('/resendotp') 
+           const resendotp=await axiosInstanceuser.post('/forgetpasswordresendotp') 
            setmsg(resendotp.data.message)
            seterror('')
         
@@ -71,11 +75,8 @@ const Otp = () => {
         }
         catch(err)
         {
-            if (err.response && err.response.data) {
-                seterror(err.response.data.message); // Display backend error message
-            } else {
-                seterror('Something went wrong during OTP verification'); // Fallback message
-            }
+          console.error(err);
+          seterror('Something went wrong during otp verification');
           setmsg('');
         }
         

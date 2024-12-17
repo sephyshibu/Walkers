@@ -13,6 +13,9 @@ const userSlice=createSlice({
 
             // console.log("user slice token", state.token)
         },
+        updateuser:(state,action)=>{
+            state.user=action.payload
+        },
        
         logoutuser:(state)=>{
             state.user={}
@@ -22,5 +25,5 @@ const userSlice=createSlice({
     }
 })
 
-export const{loginuser,logoutuser}=userSlice.actions
+export const{loginuser,logoutuser,updateuser}=userSlice.actions
 export default userSlice.reducer

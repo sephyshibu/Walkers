@@ -2,12 +2,12 @@ const User = require('../mongodb'); // Adjust the path to your User model
 
 const checkUserStatus = async (req, res, next) => {
     try {
-        const userId = req.body.userId||req.headers['user-id'];; // or req.params.userId, depending on how it's sent
+        const userId = req.body.userId||req.headers['user-id']|| req.params.userId;
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
-
+        console.log("middleware",userId)
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });

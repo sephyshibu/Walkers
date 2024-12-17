@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
-
+import { persistor } from "../app/store";
 
 const ProductDisplay = () => {
   const userId=useSelector((state)=>state.user.user._id)
@@ -156,6 +156,7 @@ const ProductDisplay = () => {
       if (err.response?.status === 403 && err.response?.data?.action === "logout") {
         alert("Your account is inactive. Logging out.");
         localStorage.removeItem("userId"); // Clear the local storage
+        await persistor.purge();
         navigate('/login'); // Redirect to the product display page
     } else {
         setError("Failed to add to cart");

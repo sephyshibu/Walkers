@@ -6,6 +6,7 @@ import Navbar from './Navbar'
 import{cartitems} from '../features/CartSlice'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { persistor } from '../app/store'
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[error,seterror]=useState('')
@@ -28,6 +29,14 @@ const CartPage = () => {
             }
             seterror('');
         } catch (err) {
+            if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+                alert("Your account is inactive. Logging out.");
+                localStorage.removeItem("userId"); // Clear the local storage
+                 await persistor.purge(); // Clear persisted Redux state
+                navigate('/login'); // Redirect to the product display page
+            } else {
+                setError("Failed to add to cart");
+            }
             seterror("Failed to fetch cart");
         }
     }, [userId]);
