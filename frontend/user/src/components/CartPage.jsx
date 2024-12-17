@@ -129,18 +129,18 @@ const CartPage = () => {
         try {
             const response = await axiosInstanceuser.post("/checkout", { userId });
             if (response.status === 200) {
-                alert(response.data.message);
+                setMessage(response.data.message);
                 navigate('/checkout');
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
-                alert(
+                setMessage(
                     `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
                 );
                 
             } else {
                 console.error("Checkout error:", error);
-                alert("An error occurred during checkout.");
+                setMessage("An error occurred during checkout.");
                 
             }
         }
@@ -152,7 +152,13 @@ const CartPage = () => {
   
     <div className="cart-page">
           <Navbar/>
-          {/* {error && <p className='error-messagecart'>{error}</p>} */}
+          {message && (
+            <p className="messagecart" style={{ color: "green" }}>
+                {message}
+            </p>
+        )}
+    
+          {error && <p className='error-messagecart'>{error}</p>}
       <h3>Your Cart</h3>
       <div className="cart-container">
         {/* Cart Items */}

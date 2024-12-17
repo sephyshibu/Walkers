@@ -414,17 +414,17 @@ const googleLogin=async(req,res)=>{
 
 
 
-//fetch all product without any filter
+
 const getProducts = async (req, res) => {
     try {
-        // Fetch all active categories
+      
         const activeCategories = await Categorydb.find({ status: true }).select('categoryname');
         const activeCategoryNames = activeCategories.map(category => category.categoryname);
 
-        // Fetch only products in active categories and where product status is true
+       
         const products = await Productdb.find({ 
             status: true, 
-            category: { $in: activeCategoryNames } // Only include products from active categories
+            category: { $in: activeCategoryNames } 
         });
 
         return res.status(200).json({ products });
@@ -448,10 +448,10 @@ const checkout=async(req,res)=>{
         }
 
         
-        const unavailableproduct=cart.items.filter((item)=>(item.productId.status||item.productId.variants._id.status)===false)
+        const unavailableproduct=cart.items.filter((item)=>item.productId.status||item.variants._id.status===false)
         if(unavailableproduct.length>0)
         {
-            return res.status(400).json({message:"Unavailable oprodutc now", products:unavailableproduct.map((item)=>item.productId.title)})
+            return res.status(400).json({message:"Unavailable produtc now", products:unavailableproduct.map((item)=>item.productId.title)})
         }
         return res.status(200).json({ message: "Checkout successful" });
     }

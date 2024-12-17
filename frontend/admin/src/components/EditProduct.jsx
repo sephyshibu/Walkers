@@ -113,6 +113,28 @@ const EditProduct = () => {
             }
         }
     };
+//newly added function
+
+const handleDeleteVariant=async(id,currentStatus)=>{
+    console.log("dcds",id)
+    console.log("asdaweq",currentStatus)
+    try {
+        const response = await axiosInstanceadmin.put(`/deleteproduct/${id}/delete`, {
+            status: !currentStatus
+        });
+        console.log("product delete", response.data)
+        const updatedProduct = response.data;
+        setProducts((prevList) => 
+             prevList.map((list) => 
+                (list._id === updatedProduct._id ? updatedProduct : list)
+            )
+        );
+    } catch (err) {
+        console.error("Error:", err);
+        setError("Failed to update the status");
+    }
+}
+
 
     const handleDeleteExistingImage = (imageUrl) => {
         setExistingImages((prev) => prev.filter((img) => img !== imageUrl));
@@ -266,9 +288,9 @@ const EditProduct = () => {
                         placeholder="Variant Stock status"
                     />
                     <button
-                        onClick={() => {
-                            setVariants(variants.filter((_, i) => i !== index));
-                        }}
+                        onClick={() => 
+                            handleDeleteVariant(variant._id,variant.status)
+                        }
                     >
                         Delete
                     </button>

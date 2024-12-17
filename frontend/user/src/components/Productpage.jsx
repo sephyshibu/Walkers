@@ -77,6 +77,7 @@ const Productpage = () => {
         }
 
         if(minprice){
+         
             filtered= filtered.filter(product=>product.price>=Number(minprice))
         }
 
@@ -128,7 +129,7 @@ const Productpage = () => {
                     <option value="Solar Panels">Solar Panels</option>
                     <option value="Battery Chargers">Battery Chargers</option>
                     <option value="Bushes">Bushes</option>
-                    <option value="Fencing accessories">Fencing accessories</option>
+                    <option value="Fencing Accessories">Fencing Accessories</option>
                    
                 </select>
             </label>
