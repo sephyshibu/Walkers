@@ -126,24 +126,24 @@ const CartPage = () => {
             seterror("Your cart is empty. Please add items before checking out.");
             return;
         }
-        // try {
-        //     const response = await axiosInstanceuser.post("/checkout", { userId });
-            // if (response.status === 200) {
-            //     alert(response.data.message);
+        try {
+            const response = await axiosInstanceuser.post("/checkout", { userId });
+            if (response.status === 200) {
+                alert(response.data.message);
                 navigate('/checkout');
-            // }
-        // } catch (error) {
-        //     if (error.response && error.response.status === 400) {
-        //         alert(
-        //             `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
-        //         );
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
+                alert(
+                    `Checkout failed: ${error.response.data.message}. Unavailable products: ${error.response.data.products.join(", ")}`
+                );
                 
-        //     } else {
-        //         console.error("Checkout error:", error);
-        //         alert("An error occurred during checkout.");
+            } else {
+                console.error("Checkout error:", error);
+                alert("An error occurred during checkout.");
                 
-        //     }
-        // }
+            }
+        }
         
         
           

@@ -415,18 +415,24 @@ const googleLogin=async(req,res)=>{
 
 
 //fetch all product without any filter
-const getProducts=async(req,res)=>{
-    try{
-        const products=await Productdb.find({status:true})
-        return res.status(200).json({products})
-    }
-    catch(error)
-    {
-        console.error("an error occured during get product based on category",error)
-        res.status(500).json({message:"internal server error"})
-    }
+const getProducts = async (req, res) => {
+    try {
+        // Fetch all active categories
+        const activeCategories = await Categorydb.find({ status: true }).select('categoryname');
+        const activeCategoryNames = activeCategories.map(category => category.categoryname);
 
-}
+        // Fetch only products in active categories and where product status is true
+        const products = await Productdb.find({ 
+            status: true, 
+            category: { $in: activeCategoryNames } // Only include products from active categories
+        });
+
+        return res.status(200).json({ products });
+    } catch (error) {
+        console.error("An error occurred during get product based on category", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 const checkout=async(req,res)=>{
     const{userId}=req.body
