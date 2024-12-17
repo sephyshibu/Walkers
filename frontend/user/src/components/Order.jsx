@@ -6,9 +6,14 @@ import './Order.css'
 const Order = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const[reason,setReason]=useState('')
+    const [sortoptions,setsortoptions]=useState('')
+    const [active,setactive]=useState('')
+    const [cancelled,setcancelled]=useState('')
+    const [completed,setcompleted]=useState('')
     const [orders, setorder] = useState([])
     const[error,seterror]=useState('')
     const[currentorderid,setcurrentorderid]=useState(null)
+    const[filter,setfilter]=useState([])
     const [showOverlay, setShowOverlay] = useState(false); // Overlay state
     const [feedback, setFeedback] = useState(''); // Feedback message
     useEffect(() => {
@@ -27,6 +32,23 @@ const Order = () => {
             fetchOrders();
         }
     }, [userId]);
+
+useEffect(()=>{
+    let filtered=[...orders]
+
+    if(sortoptions==='Active'){
+        filtered=filtered.filter((order=>order.orderStatus!='Cancelled'))
+    }
+    else if(sortoptions==='Cancelled'){
+        filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
+    }
+    else if(sortoptions==='Completed')
+    {
+        filtered=filtered.filter((order=>order.orderStatus!='Completed'))
+    }
+    setfilter(filtered)
+},[sortoptions,orders])
+
     // if (!orders || !orders.orderdata) {
     //     return <p>Loading order details...</p>;
     // }
@@ -71,9 +93,19 @@ const openoverlay=(orderid)=>{
 <div className="order-page">
     <h1>Your Orders</h1>
     {error && <div className="error-messages">{error}</div>}
+    <div className="filters">
+    <label>
+        <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
+            <option value="">Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </label>
+</div>
     <div className="orders-list">
-        {orders.length > 0 ? (
-            orders.map((order) => (
+        {filter.length > 0 ? (
+            filter.map((order) => (
                 <div key={order.orderId} className="order-card">
                     <div className="order-header">
                         <h2>Order ID: {order.orderId}</h2>

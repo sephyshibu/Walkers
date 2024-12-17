@@ -20,6 +20,7 @@ import PaymentMethod from './components/PaymentMethod'
 import Forgetpassword from './components/Forgetpassword'
 import Forgetpasswordotp from './components/forgetpasswordotp'
 import ForgetChangepassword from './components/ForgetChangepassword'
+import ThankYou from './components/ThankYou'
 function App() {
   
  return(
@@ -43,6 +44,7 @@ function App() {
         <Route path='/account'element={<ProtectedRouter><Account/></ProtectedRouter>}/>
         <Route path='/checkout' element={<ProtectedRouter><CheckOut/></ProtectedRouter>}/>
         <Route path='/checkout/payment' element={<ProtectedRouter><PaymentMethod/></ProtectedRouter>}/>
+        <Route path='/thankyoupage' element={<ProtectedRouter><ThankYou/></ProtectedRouter>}/>
       </Routes>
     </Router>
  )

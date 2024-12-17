@@ -3,9 +3,10 @@ import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
 import './PaymentMethod.css'
+import {useNavigate} from 'react-router-dom'
 const PaymentMethod = () => {
     const[selectedmethod,setselectedmethod]=useState('')
-
+    const navigate=useNavigate()
     const userId=useSelector((state)=>state.user.user._id)
     console.log("payment method userId ", userId)
 
@@ -50,7 +51,7 @@ const PaymentMethod = () => {
             if (response.status === 201) {
 
                 alert('Order placed successfully!');
-                // Redirect to success page or reset state
+                navigate('/thankyoupage')
             }
         } catch (error) {
           console.error('Failed to place order:', error);

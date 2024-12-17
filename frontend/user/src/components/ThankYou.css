@@ -1,0 +1,112 @@
+/* Overall container styles */
+.thank-you-container {
+    background: linear-gradient(135deg, #ab2716, #173f6a); /* Soft gradient background */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    animation: fadeIn 1s ease-out;
+  }
+  
+  /* Centered content section */
+  .thank-you-content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    animation: scaleUp 0.8s ease-in-out;
+  }
+  
+  /* Card Styling */
+  .thank-you-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    text-align: center;
+    animation: slideUp 1s ease-out;
+  }
+  
+  .thank-you-card h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .thank-you-card p {
+    font-size: 18px;
+    color: #555;
+    line-height: 1.6;
+    font-weight: 400;
+    margin-top: 15px;
+  }
+  
+  /* Button Styling */
+  .continue-shopping-btn {
+    background-color: #4caf50;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  }
+  
+  .continue-shopping-btn:hover {
+    background-color: #45a049;
+    transform: translateY(-5px);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .thank-you-card {
+      padding: 30px;
+    }
+  
+    .thank-you-card h1 {
+      font-size: 30px;
+    }
+  
+    .continue-shopping-btn {
+      padding: 12px 35px;
+      font-size: 16px;
+    }
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes scaleUp {
+    0% {
+      transform: scale(0.95);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes slideUp {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  
