@@ -19,7 +19,7 @@ const AddressPage = () => {
             }
             catch (err) {
                 console.log("Error in fetching address", err);
-                seterror("Failed to fetch address");
+                // seterror("Failed to fetch address");
         }
 
     }

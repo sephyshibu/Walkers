@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
+
 import './Otp.css'
 const Otp = () => {
     const[otp,setotp]=useState({
@@ -9,16 +10,28 @@ const Otp = () => {
     const navigate=useNavigate()
     const[error,seterror]=useState('')
     const[msg,setmsg]=useState('')
+    // const[refresh,setrefresh]=useState(false)
     const [minutes, setMinutes] = useState(1);
     const [seconds, setSeconds] = useState(0);
     const [timerActive, setTimerActive] = useState(false);  // State to control the timer
+    
+    // useEffect(()=>{
+    //     if(refresh)
+    //     {
+    //         navigate('/signup')
+    //     }
+    // },[refresh])
+
 
     useEffect(() => {
         let interval;
+        
         if (minutes > 0 || seconds > 0) {
             interval = setInterval(() => {
+                
                 if (seconds > 0) {
                     setSeconds(prevSeconds => prevSeconds - 1);
+                   
                 } else if (minutes > 0) {
                     setMinutes(prevMinutes => prevMinutes - 1);
                     setSeconds(59);
@@ -28,12 +41,13 @@ const Otp = () => {
         }else
             {
                 setTimerActive(true)
+                
             }
 
         return () => clearInterval(interval);
     }, [minutes, seconds]); // This effect runs when minutes or seconds change
 
-      
+  
     const handleChange=(e)=>{
         setotp({
             ...otp,

@@ -21,7 +21,7 @@ const Order = () => {
                 setorder(response.data.orders); // Update state with orders array
             } catch (err) {
                 console.error("Error fetching orders:", err);
-                seterror("Failed to fetch orders");
+                // seterror("Failed to fetch orders");
             }
         };
 
