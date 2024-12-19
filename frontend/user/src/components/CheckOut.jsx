@@ -6,6 +6,7 @@ import './Checkout.css'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { defaultaddr } from '../features/DefaultAddressSlice'
+import { persistor } from "../app/store";
 // import { defaultaddress } from '../features/DefaultAddressSlice'
 const CheckOut = () => {
     const userId=useSelector((state)=>state.user.user._id)
@@ -20,8 +21,14 @@ const CheckOut = () => {
         const fetchdefaultaddress=async()=>{
             try {
                 setIsLoading(true)
-                const response=await axiosInstanceuser.get(`/fetchdefaultaddress/${userId}`)
-                const responsecart= await axiosInstanceuser.get(`/fetchcart/${userId}`)
+                const response=await axiosInstanceuser.get(`/fetchdefaultaddress/${userId}`,{
+                    headers: {
+                        'User-Id': userId  // Pass the userId in the headers
+                    }})
+                const responsecart= await axiosInstanceuser.get(`/fetchcart/${userId}`,{
+                    headers: {
+                        'User-Id': userId  // Pass the userId in the headers
+                    }})
                 console.log('response from fetch default address', response.data.address)
                 console.log("response from fetch cart",responsecart.data)
                 setdefaultaddress(response.data.address)
@@ -33,8 +40,14 @@ const CheckOut = () => {
                 seterror('')
 
             } catch (error) {
-                console.log("Error in fetching default address", error);
-                seterror("Failed to fetch default address");
+                if (error.response?.status === 403 && error.response?.data?.action === "logout") {
+                            alert("Your account is inactive. Logging out.");
+                            localStorage.removeItem("userId"); // Clear the local storage
+                            await persistor.purge(); // Clear persisted Redux state
+                            navigate('/login'); // Redirect to the product display page
+                        }else  if (error.response && error.response.data.message) {
+                                seterror(error.response.data.message); // Custom server error message
+                            } 
             }finally{
                 setIsLoading(false)
             }

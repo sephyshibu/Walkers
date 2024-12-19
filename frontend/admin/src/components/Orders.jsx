@@ -4,10 +4,12 @@ import axiosInstanceadmin from '../axios';
 import './Order.css'
 const Orders = () => {
     const [orders, setOrders] = useState([]);
+    const [notifications, setNotifications] = useState([]);
     const[filter,setfilter]=useState([])
     const [error, setError] = useState('');
     const [sortoptions,setsortoptions]=useState('')
     const navigate = useNavigate();
+    const socket = io("http://localhost:3000");
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -21,6 +23,17 @@ const Orders = () => {
             }
         };
         fetchOrder();
+
+        socket.on("adminNotification", (notification) => {
+            setNotifications((prev) => [notification, ...prev]);
+        });
+
+        // Cleanup socket on component unmount
+        return () => {
+            socket.off("adminNotification");
+        }; 
+
+
     }, []);
 
     useEffect(()=>{
@@ -63,6 +76,18 @@ const Orders = () => {
                        
                     </select>
                 </label>
+            </div>
+            <div className="notifications">
+                <h2>Notifications</h2>
+                {notifications.length > 0 ? (
+                    notifications.map((notif, index) => (
+                        <div key={index} className="notification">
+                            {notif.message}
+                        </div>
+                    ))
+                ) : (
+                    <p>No new notifications</p>
+                )}
             </div>
             <div className="orders-list">
                 <table className="order-table">

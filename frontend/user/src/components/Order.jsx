@@ -43,6 +43,7 @@ useEffect(()=>{
     {
         filtered=filtered.filter((order=>order.orderStatus==='Delivered'))
     }
+    
     setfilter(filtered)
 },[sortoptions,orders])
 
@@ -97,6 +98,7 @@ const openoverlay=(orderid)=>{
             <option value="Active">Active</option>
             <option value="Cancelled">Cancelled</option>
             <option value="Delivered">Delivered</option>
+          
         </select>
     </label>
 </div>

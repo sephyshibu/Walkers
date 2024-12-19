@@ -107,7 +107,15 @@ const Productpage = () => {
         navigate(`/products/display/${id}`);
     };
 
-    
+    const handleaddwishlist=async(userId,productId)=>{
+        try {
+            const response=await axiosInstanceuser.post('/addwishlist',{userId,productId})
+            console.log(response.data.message)
+
+        } catch (error) {
+            console.loog("error in wishllist",errro)
+        }
+    }
 
 
     return (
@@ -179,6 +187,7 @@ const Productpage = () => {
                         <h3 className="product-title">{product.title}</h3>
                         {product.price &&
                         <p className="product-price">Price: Rs.{product.price}</p>}
+                        <button onClick={()=>handleaddwishlist(userId,product._id)}>Add to wishList</button>
                     </div>
                 ))
             ) : (

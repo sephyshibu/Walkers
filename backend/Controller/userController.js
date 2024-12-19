@@ -11,6 +11,8 @@ const cartdb=require('../models/cart')
 const addressdb=require('../models/address')
 const address = require('../models/address')
 const orderdb=require('../models/order')
+const wishlistdb=require('../models/wishlist')
+
 function generateOTP(){
     return Math.floor(1000 * Math.random()*9000).toString()
 
@@ -666,6 +668,15 @@ const deleteorder=async(req,res)=>{
         orderdoc.cancelationreason=reason
         await orderdoc.save();
 
+        for(const item of orderdoc.items)
+        {
+            await Productdb.findByIdAndUpdate(item.productId,{
+                $inc:{availableQuantity:item.quantity}
+            })
+        }
+       
+
+
         res.status(200).json({ message: "Order deleted successfully" });
     } catch (error) {
         console.error(error);
@@ -1087,7 +1098,7 @@ const placingorder=async(req,res)=>{
      return res.status(400).json({ message: 'Not enough stock available' });
      }
      
-    //  product.availableQuantity -= quantity;
+     product.availableQuantity -= quantity;
      await product.save();
 
     let cart=await cartdb.findOne({userId})
@@ -1391,6 +1402,73 @@ const updatecartminus=async(req,res)=>{
 }
 
 
+const addwishlist=async(req,res)=>{
+    const {userId,productId} =req.body
+try{
+    const product=await Productdb.findById(productId)
+    if(!product)
+    {
+        res.status(400).json({message:"Product Not Found"})
+    }
+
+    const wishlist=await wishlistdb.findOne({userId}) 
+    if(!wishlist)
+    {
+        wishlist=new wishlistdb({userId, products:[]})
+    }
+
+    if(!wishlist.products.includes(productId))
+    {
+        wishlist.products.push(productId)
+        await wishlist.save()
+    }
+
+    res.status(200).json({message:"added to wishlist"})
+}
+catch(err)
+{
+    res.status(500).json({ message: 'Server error', err });
+}
+
+}
 
 
-module.exports={updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,fetchorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}
+const fetchwishlist=async(req,res)=>{
+        const{userId}=req.params
+
+        try{
+            const wishlist=await wishlistdb.findOne({userId}).populate('products')
+            console.log(wishlist)
+            if(!wishlist)
+            {
+                res.status(400).json({messgae:"wishlist not found"})
+            }
+
+            res.status(200).json(wishlist)
+        }
+        catch (error) {
+            res.status(500).json({ message: 'Server error', error });
+        }
+    }
+
+    const removeproductfrowwishlist=async(req,res)=>{
+        const{userId,productId}=req.params
+    try{
+        const wishlist=await wishlistdb.findOne({userId})
+        if(!wishlist)
+            {
+                res.status(400).json({messgae:"wishlist not found"})
+            }
+
+        wishlist.products=wishlist.products.filter((id)=>id.toString()!=productId)
+        await wishlist.save() 
+        res.status(200).json(wishlist)
+    }
+
+    catch (error) {
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
+
+
+module.exports={addwishlist,fetchwishlist,removeproductfrowwishlist,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,fetchorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartplus,updatecartminus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,fetchproductdetails,getProducts,signup,login,verifyotp,resendotp,googleLogin}

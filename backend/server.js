@@ -1,6 +1,7 @@
 require('dotenv').config()
 const cors= require('cors')
 const mongoose=require('mongoose')
+
 const PORT=process.env.PORT||3000
 const userrouter=require('./userRouter')
 const adminRouter = require('./adminRouter')
@@ -43,3 +44,4 @@ app.use('/admin', adminRouter)
 app.listen(PORT,()=>{
     console.log(`server is running in port ${PORT}`)
 })
+

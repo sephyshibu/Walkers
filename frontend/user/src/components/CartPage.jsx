@@ -17,7 +17,10 @@ const CartPage = () => {
     console.log("userId",userId)
     const fetchCart = useCallback(async () => {
         try {
-            const response = await axiosInstanceuser.get(`/fetchcart/${userId}`);
+            const response = await axiosInstanceuser.get(`/fetchcart/${userId}`,{
+                headers: {
+                    'User-Id': userId  // Pass the userId in the headers
+                }});
             console.log("fetchhhhhhc cart",response.data);
             if (response.data.message) {
                 setMessage(response.data.message);
