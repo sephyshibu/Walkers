@@ -12,7 +12,7 @@ const WishlistSchema= new mongoose.Schema({
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:'walkersproduct',
-            required:true
+            required:false
         }
     ],
     createdAt: {

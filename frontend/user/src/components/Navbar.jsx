@@ -68,6 +68,9 @@ const Navbar = () => {
           <li className={location.pathname === "/cart" ? "active-link" : ""}>
             <Link to="/cart"><img className="trolley" src={trolley}/></Link>
           </li>
+          {/* <li className={location.pathname === "/wishlist" ? "active-link" : ""}>
+            <Link to="/wishlist">wishlist</Link>
+          </li> */}
           <li>
             <button className="auth-button" onClick={handleLoginLogout}>
               {userId ? 'Logout' : 'Login'}

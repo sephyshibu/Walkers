@@ -9,7 +9,7 @@ const Orders = () => {
     const [error, setError] = useState('');
     const [sortoptions,setsortoptions]=useState('')
     const navigate = useNavigate();
-    const socket = io("http://localhost:3000");
+    // const socket = io("http://localhost:3000");
 
     useEffect(() => {
         const fetchOrder = async () => {
@@ -23,17 +23,6 @@ const Orders = () => {
             }
         };
         fetchOrder();
-
-        socket.on("adminNotification", (notification) => {
-            setNotifications((prev) => [notification, ...prev]);
-        });
-
-        // Cleanup socket on component unmount
-        return () => {
-            socket.off("adminNotification");
-        }; 
-
-
     }, []);
 
     useEffect(()=>{

@@ -113,7 +113,7 @@ const Productpage = () => {
             console.log(response.data.message)
 
         } catch (error) {
-            console.loog("error in wishllist",errro)
+            console.log("error in wishllist",error)
         }
     }
 

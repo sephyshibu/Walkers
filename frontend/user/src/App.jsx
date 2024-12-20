@@ -21,6 +21,7 @@ import Forgetpassword from './components/Forgetpassword'
 import Forgetpasswordotp from './components/forgetpasswordotp'
 import ForgetChangepassword from './components/ForgetChangepassword'
 import ThankYou from './components/ThankYou'
+import WishList from './components/WishList'
 function App() {
   
  return(
@@ -35,8 +36,10 @@ function App() {
         <Route path='/forgetpassword' element={<Forgetpassword/>}/>
         <Route path='/forgetpasswordotp' element={<Forgetpasswordotp/>}/>
         <Route path='/changepassword' element={<ForgetChangepassword/>}/>
+        <Route path='/wallet' element={<ProtectedRouter></ProtectedRouter>}/>
         <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
         <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
+        <Route path='/wishlist' element={<ProtectedRouter><WishList/></ProtectedRouter>}/>
         <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>
         <Route path='/account/address/add' element={<ProtectedRouter><Address/></ProtectedRouter>}/>
         <Route path='/account/addresspage' element={<ProtectedRouter><AddressPage/></ProtectedRouter>}/>

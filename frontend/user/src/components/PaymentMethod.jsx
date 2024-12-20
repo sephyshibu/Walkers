@@ -49,9 +49,55 @@ const PaymentMethod = () => {
             console.log("after clicking place order",response)
 
             if (response.status === 201) {
+                const{orderId}=response.data
+                console.log("order Id from razor pay",orderId)
+                if(selectedmethod==='RazorPay'){
+                    const options={
+                        key:"rzp_test_qp0MD1b9oAJB0i",
+                        amount:totalprice,
+                        currency:"INR",
+                        name: "Your Company Name",
+                        description: "Order Payment",
+                        order_id: orderId,
+                        handler:async(response)=>{
+                            try{
+                                const verifyResponse = await axiosInstanceuser.post('/verifypayment', {
+                                    cartId,userId,
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                  }); 
+                                  if (verifyResponse.data.success) {
+                                    alert('Payment successful!');
+                                    navigate('/thankyoupage');
+                                  } else {
+                                    alert('Payment verification failed');
+                                  }
+                            }
+                            catch (error) {
+                                console.error('Payment verification error:', error);
+                                alert('Payment verification failed. Please try again.');
+                              }
+
+                        },
+                        prefill:{
+                            id: userId
+                        },
+                        theme: {
+                          color: "#3399cc",
+                        },
+                    }
+                    const rzp = new window.Razorpay(options);
+                    rzp.open();
+                    rzp.on("payment failed",(response)=>{
+                        console.error("payment failed",response)
+                        alert("payment failed")
+                    })
+                }else{
 
                 alert('Order placed successfully!');
                 navigate('/thankyoupage')
+                }
             }
         } catch (error) {
           console.error('Failed to place order:', error);
@@ -72,9 +118,9 @@ const PaymentMethod = () => {
             </div>
 
 
-            <div className={`payement-card ${selectedmethod==='PayPal'? 'selected':""}`}
-            onClick={()=>handlePaymentSelect('PayPal')}>
-                <h4>PayPal</h4>
+            <div className={`payement-card ${selectedmethod==='RazorPay'? 'selected':""}`}
+            onClick={()=>handlePaymentSelect('RazorPay')}>
+                <h4>RazorPay</h4>
             </div>
 
 

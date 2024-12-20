@@ -4,6 +4,8 @@ import AddressPage from './AddressPage'
 import ChangePassword from './ChangePassword'
 import Navbar from './Navbar'
 import Order from './Order'
+import WishList from './WishList'
+import Wallet from './Wallet'
 import AccountDetail from './AccountDetail'
 import axiosInstanceuser from '../axios'
 const Account = () => {
@@ -22,14 +24,17 @@ const Account = () => {
             case "changepassword":
                 return<ChangePassword/>
 
-            // case "wishlist":
-            //     return<Wishlist/>
+            case "wishlist":
+                return<WishList/>
 
             case "orders":
                 return<Order/>
 
             case "accountdetail":
                 return<AccountDetail/>
+
+            // case "wishlist":
+            //     return<Wallet/>
         }
     }
 
@@ -77,6 +82,12 @@ const Account = () => {
                 onClick={()=>setactivesection("accountdetail")}>
                     Account Details
 
+                </li>
+
+                <li 
+                className={activesection==="detail"?"active":""}
+                onClick={()=>setactivesection("wallet")}>
+                   Wallet
                 </li>
 
 

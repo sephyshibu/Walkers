@@ -83,7 +83,20 @@ const openoverlay=(orderid)=>{
         setShowOverlay(false);
         setReason('');
     };
-
+const handlereturn=async(orderid,productid)=>{
+    console.log("productid",productid)
+    console.log("orderid",orderid)
+    try{
+        const response=await axiosInstanceuser.put(`/returnorder/${userId}`,{
+            productid, orderid
+        })
+        console.log("response from return an item", response.data)
+    }
+    catch(err){
+        console.error('Error remove an product item', err);
+    }
+   
+}
 
     // const { orderid,deliverydate, orderStatus, orderdata, totalprice } = orders;
 
@@ -128,10 +141,19 @@ const openoverlay=(orderid)=>{
                         <h3>Items:</h3>
                         {order.items.map((item, index) => (
                             <div key={index} className="item">
+                                   
                                 <div className="item-title">{item.title}</div>
                                 <div>Quantity: {item.quantity}</div>
                                 <div>Price: ${item.price}</div>
+                                <button
+                            onClick={() => handlereturn(order.orderId, item.productId._id)}
+                            className="return-button"
+                        >
+                            Return
+                        </button>
+
                             </div>
+                           
                         ))}
                     </div>
                 </div>
