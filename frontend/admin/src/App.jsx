@@ -15,6 +15,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Orders from './components/Orders';
 import EditOrder from './components/EditOrder';
 import Retrun from './components/Retrun';
+import Coupon from './components/Coupon';
 function App() {
 
   
@@ -60,6 +61,7 @@ function App() {
     <Route path="products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
     <Route path="orders" element={<ProtectedRoute><Orders/></ProtectedRoute>} />
     <Route path="return" element={<ProtectedRoute><Retrun/></ProtectedRoute>} />
+    <Route path="coupon" element={<ProtectedRoute><Coupon/></ProtectedRoute>} />
 {/* </Route>   */}
   </Route>
 </Routes>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axiosInstanceuser from '../axios';
 import './Productpage.css';
 import { useNavigate } from 'react-router';
@@ -7,9 +7,13 @@ import banner1 from '../images/Business.png';
 import Footer from './Footer';
 import { useSelector } from 'react-redux';
 import { persistor } from '../app/store';
+import debounce from 'lodash.debounce'
+
+
 const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
     const [sortoptions,setsortoptions]=useState('')
+    const[searchterm,setsearchterm]=useState('')
     const[filteredproduct,setfilteredproduct]=useState([])
     const[category,setcategory]=useState('ALL PRODUCTS')
     const[minprice,setminprice]=useState('')
@@ -117,6 +121,23 @@ const Productpage = () => {
         }
     }
 
+    const debouncesearch = useCallback(
+        debounce((query) => {
+          const filtered = products.filter((product) => 
+            product.title.toLowerCase().includes(query.toLowerCase())
+          );
+          setfilteredproduct(filtered);
+        }, 500), // Delay of 500ms
+        [products] // Dependency on products array
+      );
+
+    const handleSearch=(e)=>{
+        const query=e.target.value
+        setsearchterm(query)
+        debouncesearch(query)
+
+    }
+
 
     return (
         <div className="products-user-page">
@@ -128,6 +149,10 @@ const Productpage = () => {
                 <h1 className="page-title">Our Exclusive Products</h1>
                 <p className="page-subtitle">Explore our collection of premium products</p>
             </header>
+
+        <div className='searchoptions'>
+            <input type='text' value={searchterm} onChange={handleSearch} placeholder='enter the search product'/>
+        </div>
 
             <div className="filters">
             <label>
