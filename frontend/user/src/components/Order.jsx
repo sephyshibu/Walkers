@@ -207,7 +207,7 @@ const handlereturn=async()=>{
                         <span>Status: {list.orderStatus}</span>
                     </div>
                     <button
-                        disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled'}
+                        disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
                         onClick={() => openoverlay(list.orderid)}
                         className="action-button"
                     >
@@ -223,7 +223,7 @@ const handlereturn=async()=>{
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
                         <button
-                            disabled={list.isreturned}
+                            disabled={list.isreturned || list.orderStatus!='Delivered'}
                             onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
                             className="return-button"
                         >

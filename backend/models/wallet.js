@@ -7,7 +7,7 @@ const WalletSchema=new mongoose.Schema({
             transaction_id:{type:String, unique:true},
             amount:{type:Number,default:0},
             createdAt:{ type: Date, default: Date.now },
-            transactionmethod:{type:String,required:true}
+            transactionmethod:{type:String,enum:["refundreturn","refundcancel"],required:true}
         }
     ],
     

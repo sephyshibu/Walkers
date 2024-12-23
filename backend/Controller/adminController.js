@@ -5,6 +5,9 @@ const Categorydb =require('../models/category')
 const Productdb=require('../models/product')
 const Orderdb=require('../models/order')
 const addressdb=require('../models/address')
+const wallet =require('../models/wallet')
+const { v4: uuidv4 } = require('uuid'); // create transaction id for uniqque
+
 const loginAdmin=async(req,res)=>{
     
     const{email, password}=req.body
@@ -480,6 +483,26 @@ const updatereturnstatus=async(req,res)=>{
         else {
             product.returnstatus=actiontype
             product.refundstatus=true
+
+            const userwallet=await wallet.findOne({userId:orderdoc.userId})
+            if(!userwallet)
+            {
+                return res.status(404).json({message:"Wallert not found oof thwe user"})
+            }
+
+            const transaction = {
+                transaction_id: uuidv4(), // Generate a unique transaction ID
+                amount: product.price*product.quantity,
+                transactionmethod: "refundreturn",
+              };
+            userwallet.transactions.push(transaction);
+            userwallet.balance+=transaction.amount
+            
+            await userwallet.save();
+
+            console.log("Refund added to wallet:", transaction);
+
+
         }
       
         
