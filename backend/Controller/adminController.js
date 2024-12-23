@@ -389,6 +389,8 @@ const addProduct = async (req, res) => {
 const updatepaymentstatus=async(req,res)=>{
     const{id}=req.params
     const{orderstatus}=req.body
+    console.log("id",id)
+    console.log("order status", orderstatus)
 
     await Orderdb.findByIdAndUpdate(id,{orderStatus:orderstatus})
     res.json({ message: 'Order updated successfully' });
@@ -421,6 +423,73 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const getreturneditems = async (req,res) => {
+    try {
+      const orders = await Orderdb.find(
+        { "items.isreturned": true }, // Find orders with returned items
+        { "items.$": 1, userId: 1, _id: 1 } // Select only the returned items, userId, and orderId
+      )
+        .populate("userId", "username email") // Optionally populate userId with additional user details like name
+        .populate("items.productId") // Optionally populate productId with additional product details like title
+        .exec();
 
-module.exports={softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+
+      console.log("return", orders)
+
+      const returnedItems = orders.map(order => {
+        return order.items.map(item => ({
+          orderId: order._id,
+          userId: order.userId,
+          productId: item.productId,
+          title: item.title,
+          quantity: item.quantity,
+          price: item.price,
+          isreturned: item.isreturned,
+          returnstatus: item.returnstatus,
+          refundstatus: item.refundstatus,
+          returnreason: item.returnreason,
+        }));
+      }).flat(); // Flatten the array of items
+  
+      console.log(returnedItems);
+      return res.status(200).json(returnedItems);
+    } catch (err) {
+      console.error("Error fetching returned items:", err);
+      return [];
+    }
+  };
+const updatereturnstatus=async(req,res)=>{
+    const{id}=req.params
+    const{actiontype,productId}=req.body
+    console.log(id)
+    console.log("action type",productId)
+    try {
+        const orderdoc=await Orderdb.findById(id)
+        console.log("order doc",orderdoc)
+
+        const product=orderdoc.items.find((item)=>item.productId.toString()===productId.toString()) 
+
+      
+        console.log("product",product)
+        if(actiontype==='Accepted'){
+            product.returnstatus=actiontype
+        }
+        else if(actiontype==="Rejected"){
+            product.returnstatus=actiontype
+        }
+        else {
+            product.returnstatus=actiontype
+            product.refundstatus=true
+        }
+      
+        
+        await orderdoc.save()
+        res.status(200).json({ message: "Return status updated successfully" });
+    } catch (error) {
+        console.error("Error update returned status:", error);
+    }
+}
+  
+
+module.exports={updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

@@ -19,7 +19,11 @@ const OrderSchema = new mongoose.Schema({
             productId: { type: mongoose.Schema.Types.ObjectId, ref: "walkersproduct", required: true },
             title:{type:String, requires:true},
             quantity:{type:Number, required:true, default:1},
-            price:{type:Number, required:true}
+            price:{type:Number, required:true},
+            isreturned:{type:Boolean, default:false},
+            returnstatus:{type:String, enum:['Pending','Accepted','Rejected','Refund'],default:"Pending", required:true},
+            refundstatus:{type:Boolean, default:false},
+            returnreason:{type:String, default:null}
         }
     ],
     tax: {type: Number,default: 60},

@@ -14,6 +14,7 @@ import EditProduct from './components/EditProduct';
 import ProtectedRoute from './components/ProtectedRoute';
 import Orders from './components/Orders';
 import EditOrder from './components/EditOrder';
+import Retrun from './components/Retrun';
 function App() {
 
   
@@ -58,6 +59,7 @@ function App() {
     <Route path="category" element={<ProtectedRoute><Category /></ProtectedRoute>} />
     <Route path="products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
     <Route path="orders" element={<ProtectedRoute><Orders/></ProtectedRoute>} />
+    <Route path="return" element={<ProtectedRoute><Retrun/></ProtectedRoute>} />
 {/* </Route>   */}
   </Route>
 </Routes>

@@ -1,11 +1,11 @@
 /* Overall Layout */
 .layout {
     display: flex;
-    min-height: 100vh;
+    
     /* background-color: #f4f4f4; */
   }
 .overview{
-    padding: 55px 55px;
+    padding: 20px 35px;
     color: #fff;
     text-decoration: none;
     font-size: 20px;

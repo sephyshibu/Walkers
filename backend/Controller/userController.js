@@ -13,6 +13,7 @@ const address = require("../models/address");
 const orderdb = require("../models/order");
 const wishlistdb = require("../models/wishlist");
 const returndb =require('../models/return')
+const wallet= require('../models/wallet')
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { userInfo } = require("os");
@@ -108,6 +109,8 @@ const signup = async (req, res) => {
     req.session.userData = { email, password, username };
     console.log("session ", req.session);
     console.log("OTP send session", req.session.userOTP);
+
+
     res.status(200).json({ message: "Backend Successful" });
   } catch (error) {
     console.log(error);
@@ -276,6 +279,14 @@ const verifyotp = async (req, res) => {
       });
 
       await newuser.save();
+
+      const newwallet=new wallet({
+        userId:newuser._id
+      })
+      await newwallet.save();
+      console.log("wallet created")
+
+      
       console.log(
         "from session deconstruct",
         user.username,
@@ -801,44 +812,79 @@ const fetchaddress = async (req, res) => {
 };
 
 const fetchorder = async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    // Fetch all orders for the given userId
-    const orders = await orderdb
-      .find({ userId })
-      .populate("items.productId", "name"); // Optional populate
-
-    // If no orders found
-    if (!orders || orders.length === 0) {
-      return res.status(404).json({ message: "Orders not found" });
+    const { userId } = req.params;
+  
+    try {
+      // Fetch all orders for the given userId
+      const orders = await orderdb
+        .find({ userId })
+        .populate({
+          path: "addressId",
+          select: "address", // Select only the address field
+        })
+        .populate({
+          path: "items.productId",
+          select: "name", // Optional: Populate product details
+        });
+  
+      console.log("orders", orders);
+  
+      // If no orders found
+      if (!orders || orders.length === 0) {
+        return res.status(404).json({ message: "Orders not found" });
+      }
+  
+      // Map over orders to structure the response
+      const ordersData = orders.map((order) => {
+        // Find the specific address based on the `addressId` (if needed)
+        const address = order.addressId?.address?.find(
+          (addr) => addr._id.toString() === order.addressId._id.toString()
+        );
+        // console.log(address)
+  
+        return {
+          orderId: order._id,
+          items: order.items.map((item) => ({
+            productId: item.productId,
+            title: item.title,
+            quantity: item.quantity,
+            price: item.price,
+            isreturned:item.isreturned,
+            returnstatus:item.returnstatus,
+            refundstatus:item.refundstatus,
+            returnreason:item.returnreason
+          })),
+          totalPrice: order.totalprice,
+          orderStatus: order.orderStatus,
+          cancellationReason: order.cancelationreason || null,
+          orderDate: order.orderDate,
+          deliveryDate: order.deliverydate,
+          paymentMethod: order.paymentmethod,
+          paymentStatus: order.paymentstatus,
+         
+          address: address
+            ? {
+                addressname: address.addressname,
+                streetAddress: address.streetAddress,
+                pincode: address.pincode,
+                state: address.state,
+                phonenumber: address.phonenumber,
+              }
+            : null,
+        };
+      });
+      console.log(ordersData)
+  
+      // Send the response
+      return res.status(200).json({ orders: ordersData });
+    } catch (error) {
+      console.error("An error occurred while fetching orders:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
+  };
+  
 
-    // Map over orders to structure the response
-    const ordersData = orders.map((order) => ({
-      orderId: order._id,
-      items: order.items.map((item) => ({
-        productId: item.productId,
-        title: item.title,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-      totalPrice: order.totalprice,
-      orderStatus: order.orderStatus,
-      cancellationReason: order.cancelationreason || null,
-      orderDate: order.orderDate,
-      deliveryDate: order.deliverydate,
-      paymentMethod: order.paymentmethod,
-      paymentStatus: order.paymentstatus,
-    }));
 
-    // Send the response
-    return res.status(200).json({ orders: ordersData });
-  } catch (error) {
-    console.error("An error occurred while fetching orders:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
 const fetchcart = async (req, res) => {
   const { userId } = req.params;
 
@@ -1570,72 +1616,110 @@ const removeproductfrowwishlist = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
-const returnorder=async(req,res)=>{
-    const{userId}=req.params
-    const{productid,orderid}=req.body
-    console.log("orderid",orderid)
-    console.log("productid",productid)
-    console.log("userid",userId)
+
+const returnorder = async (req, res) => {
+    const { userId } = req.params;
+    const { productid, orderid, returnreason } = req.body;
+
     try {
-      
-        const orderdoc=await orderdb
-                    .findById(orderid)
-                    .populate('userId','username email')
-                    .populate('items.productId','title')
+        // Find the order
+        const order = await orderdb.findOne({ _id: orderid, userId });
 
-        console.log("orderdoc",orderdoc)
-
-        if(orderdoc)
-        {
-            const username=orderdoc.userId.username
-            const email=orderdoc.userId.email
-            const product=orderdoc.items.find(item=>item.productId._id.toString()=== productid)
-            console.log("username",username)
-            console.log("email",email)
-            console.log("product",product)
-
-            if (product) {
-                const productDetails = {
-                    title: product.productId.title, // Product title
-                    price: product.price,          // Product price
-                    quantity: product.quantity     // Product quantity
-                };
-                const totalprice=productDetails.price*productDetails.quantity
-
-                const returndoc=new returndb({
-                    userId,
-                    productId:productid,
-                    username,
-                    email,
-                    title:productDetails.title,
-                    price:productDetails.price,
-                    quantity: productDetails.quantity,
-                    totalprice
-                });
-
-                await returndoc.save();
-                console.log("Return document saved successfully", returndoc);
-
-
-                console.log("Username:", username);
-                console.log("Email:", email);
-                console.log("Product Details:", productDetails);
-            }else {
-                console.log("Order not found");
-                return res.status(404).json({ message: "Order not found" });
-            }
-        } else {
-            console.log("Order not found");
+        if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
 
+        // Find the product in the order
+        const product = order.items.find(item => item.productId.toString() === productid);
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found in order" });
+        }
+
+        if (product.isreturned) {
+            return res.status(400).json({ message: "Product already returned" });
+        }
+
+        // Update product return details
+        product.isreturned = true;
+        product.returnreason = returnreason;
+
+        // Save the order
+        await order.save();
+
+        return res.status(200).json({ message: "Return request sent successfully" });
     } catch (error) {
-        console.error("Error in returning an item:", error);
-        return res.status(500).json({ message: "Internal Server Error" });
+        console.error("Error processing return request:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
+};
+
+// const returnorder=async(req,res)=>{
+//     const{userId}=req.params
+//     const{productid,orderid}=req.body
+//     console.log("orderid",orderid)
+//     console.log("productid",productid)
+//     console.log("userid",userId)
+//     try {
+      
+//         const orderdoc=await orderdb
+//                     .findById(orderid)
+//                     .populate('userId','username email')
+//                     .populate('items.productId','title')
+
+//         console.log("orderdoc",orderdoc)
+
+//         if(orderdoc)
+//         {
+//             const username=orderdoc.userId.username
+//             const email=orderdoc.userId.email
+//             const product=orderdoc.items.find(item=>item.productId._id.toString()=== productid)
+//             console.log("username",username)
+//             console.log("email",email)
+//             console.log("product",product)
+
+//             if (product) {
+//                 const productDetails = {
+//                     title: product.productId.title, // Product title
+//                     price: product.price,          // Product price
+//                     quantity: product.quantity     // Product quantity
+//                 };
+//                 const totalprice=productDetails.price*productDetails.quantity
+
+//                 const returndoc=new returndb({
+//                     userId,
+//                     productId:productid,
+//                     username,
+//                     email,
+//                     title:productDetails.title,
+//                     price:productDetails.price,
+//                     quantity: productDetails.quantity,
+//                     totalprice
+//                 });
+
+//                 await returndoc.save();
+//                 console.log("Return document saved successfully", returndoc);
+
+
+//                 console.log("Username:", username);
+//                 console.log("Email:", email);
+//                 console.log("Product Details:", productDetails);
+//             }else {
+//                 console.log("Order not found");
+//                 return res.status(404).json({ message: "Order not found" });
+//             }
+//         } else {
+//             console.log("Order not found");
+//             return res.status(404).json({ message: "Order not found" });
+//         }
+
+//     } catch (error) {
+//         console.error("Error in returning an item:", error);
+//         return res.status(500).json({ message: "Internal Server Error" });
+//     }
 
      
-}
+// }
 
 module.exports = {
     returnorder,
