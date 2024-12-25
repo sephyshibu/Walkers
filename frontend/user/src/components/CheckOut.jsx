@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import axiosInstanceuser from '../axios'
 import Navbar from './Navbar'
 import './Checkout.css'
-import { useNavigate } from 'react-router-dom'
+import { useLocation,useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { defaultaddr } from '../features/DefaultAddressSlice'
 import { persistor } from "../app/store";
@@ -11,6 +11,8 @@ import { persistor } from "../app/store";
 const CheckOut = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const navigate=useNavigate()
+    const location = useLocation();
+    const { couponId } = location.state || {};
     console.log("place order", userId)
     const [defaultaddress, setdefaultaddress]=useState({})
     const[cart,setcart]=useState({items:[], totalprice:0})
@@ -66,7 +68,7 @@ const CheckOut = () => {
     const handleproccedtopayment=(e)=>{
         e.preventDefault()
         
-        navigate('/checkout/payment')
+        navigate('/checkout/payment',{ state: { couponId } });
         
     }
   return (

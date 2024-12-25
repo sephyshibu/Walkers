@@ -229,3 +229,15 @@ button[type='button']:disabled {
   padding: 5px;
   font-size: 20px;
 }
+.coupon-list {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.coupon-item {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}

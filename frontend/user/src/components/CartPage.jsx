@@ -9,12 +9,21 @@ import { useDispatch } from 'react-redux'
 import { persistor } from '../app/store'
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
+    const[coupon, setcoupon]=useState([])
+    const [selectedCoupon, setSelectedCoupon] = useState(null);
+    
+    const[usedcoupon,setusedcoupon]=useState([])
+    const[couponapplied, setcouponapplied]=useState(false)
     const[error,seterror]=useState('')
     const [message, setMessage] = useState('');
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const userId=useSelector((state)=>state.user.user._id)
     console.log("userId",userId)
+
+
+    //gfdgfdg
+    
     const fetchCart = useCallback(async () => {
         try {
             const response = await axiosInstanceuser.get(`/fetchcart/${userId}`,{
@@ -22,6 +31,8 @@ const CartPage = () => {
                     'User-Id': userId  // Pass the userId in the headers
                 }});
             console.log("fetchhhhhhc cart",response.data);
+
+            
             if (response.data.message) {
                 setMessage(response.data.message);
                 setCart({ items: [], totalprice: 0 });
@@ -29,7 +40,13 @@ const CartPage = () => {
             } else{
             setCart(response.data);
             dispatch(cartitems(response.data))
-            
+            if (response.data.appliedCoupon) {
+                setSelectedCoupon(response.data.appliedCoupon);
+                setcouponapplied(true);
+            } else {
+                setSelectedCoupon(null);
+                setcouponapplied(false);
+            }
             }
             seterror('');
         } catch (err) {
@@ -48,9 +65,58 @@ const CartPage = () => {
         }
     }, [userId]);
 
+
+    useEffect(()=>{
+    const fetchcoupon=async()=>{
+        try {
+            const responsecoupon = await axiosInstanceuser.get(`/fetchcoupon/${userId}`,{
+                headers: {
+                    'User-Id': userId  // Pass the userId in the headers
+                }});
+            console.log("fetchhhhhhc coupon",responsecoupon.data);
+            if (responsecoupon.data.message) {
+                setMessage(responsecoupon.data.message);
+                setcoupon([]);
+             
+            } else{
+            setcoupon(responsecoupon.data.unusedcoupons);
+            
+            
+            }
+            seterror('');
+        } catch (err) {
+            if (err.responsecoupon?.status === 403 && err.responsecoupon?.data?.action === "logout") {
+                alert("Your account is inactive. Logging out.");
+                localStorage.removeItem("userId"); // Clear the local storage
+                 await persistor.purge(); // Clear persisted Redux state
+                navigate('/login'); // Redirect to the product display page
+            }else  if (err.responsecoupon && err.responsecoupon.data.message) {
+                seterror(err.responsecoupon.data.message); // Custom server error message
+            } 
+            else {
+                seterror("Failed to add to cart");
+            }
+            
+        }
+    }
+    fetchcoupon()
+ } , [userId]);
+
+
+
     useEffect(() => {
-        if (userId) fetchCart();
+        if (userId) {
+         fetchCart();
+        
+        }
     }, [userId, fetchCart]);
+
+    useEffect(() => {
+        if (cart.items.length === 0) {
+          setcouponapplied(false); // Reset coupon applied flag when cart is empty
+          setSelectedCoupon(null); // Reset selected coupon
+        }
+      }, [cart.items]); // Trigger when cart items change
 
 
     const updateQuantityMinus = async (productId, newQuantity) => {
@@ -146,10 +212,11 @@ const CartPage = () => {
             return;
         }
         try {
-            const response = await axiosInstanceuser.post("/checkout", { userId });
+                                
+            const response = await axiosInstanceuser.post("/checkout", { userId ,selectedCoupon});
             if (response.status === 200) {
                 setMessage(response.data.message);
-                navigate('/checkout');
+                navigate('/checkout', { state: { couponId: selectedCoupon?._id } });
             }
         } catch (error) {
             if (error.response && error.response.status === 400) {
@@ -166,6 +233,66 @@ const CartPage = () => {
         
           
     }
+
+    // const applyCoupon=async(couponItem)=>{
+    //     console.log(couponItem)
+    //     setSelectedCoupon(couponItem)
+       
+        
+        // try {
+        //     const response=await axiosInstanceuser.post(`/addcoupon/${userId}`,{
+        //         cartId:cart._id,
+        //         couponId:couponItem._id
+        //     })
+        //     // console.log(response.data.usedcoupons)
+        //     if (response.data) {
+               
+        //         setSelectedCoupon(response.data.usedcoupons); // Store the selected coupon
+        //         setMessage(`Coupon applied successfully! You saved Rs.${couponItem.couponamount}`);
+        //     }
+        //     else{
+        //         setMessage(response.data.message)
+        //     }
+        // } catch (err) {
+        //     if (err.response && err.response.data && err.response.data.message) {
+        //         seterror(err.response.data.message ); // Server's custom message
+        //     } else {
+        //         seterror({ general: 'Something went wrong. Please try again.' });
+        //     }
+        // }
+    // }
+
+
+    // const applyCoupon = () => {
+    //     if (selectedCoupon) {
+    //         if (cart.totalprice >= selectedCoupon.minprice) {
+    //             const discount = selectedCoupon.couponamount;
+    //             const discountedPrice = cart.totalprice - discount;
+    //             setCart((prevCart) => ({ ...prevCart, totalprice: discountedPrice }));
+    //             setMessage(`Coupon applied! You saved Rs.${discount}`);
+    //         } else {
+    //             setMessage(`Minimum cart value for this coupon is Rs.${selectedCoupon.minprice}`);
+    //         }
+    //     } else {
+    //         setMessage('Please select a coupon to apply.');
+    //     }
+    // };
+
+
+    const applyCoupon = async (couponItem) => {
+        try {
+            const response = await axiosInstanceuser.post(`/applycoupon/${userId}`, {
+                couponId: couponItem._id
+            });
+    
+            setSelectedCoupon(couponItem);
+            setMessage(`Coupon applied successfully!`);
+        } catch (err) {
+            setMessage(err.response?.data?.message || 'Error applying coupon.');
+        }
+    };
+    
+
   return (
   
     <div className="cart-page">
@@ -216,8 +343,43 @@ const CartPage = () => {
             </div>
           ))}
           <hr />
+         
           <h4>Total Price: Rs.{cart.totalprice.toFixed(2)}</h4>
+          
+          {selectedCoupon && (
+                <div className="applied-coupon">
+                  
+                 
+                    <h5>Applied Coupon: {selectedCoupon.title}</h5>
+                    <p>You saved Rs.{selectedCoupon.couponamount}</p>
+                </div>
+            )}
           <button type='button' onClick={handlePlaceorder}>CheckOut</button>
+          
+        </div>
+
+
+        <div className="coupon-list">
+                    <h3>Available Coupons</h3>
+                    {coupon.length > 0 ? (
+                        coupon.map((couponItem) => (
+                            <div
+                                key={couponItem._id}
+                                // className={`coupon-item ${selectedCoupon?._id === couponItem._id ? 'selected' : ''}`}
+                                // onClick={() =>applyCoupon(couponItem)
+                                // }
+                            >
+                                <h4>{couponItem.title}</h4>
+                                <p>Type: {couponItem.coupontype}</p>
+                                <p>Amount: Rs.{couponItem.couponamount}</p>
+                                <p>Min Price: Rs.{couponItem.minprice}</p>
+                                <p>Expires On: {new Date(couponItem.expiredon).toLocaleDateString()}</p>
+                                <button onClick={() => applyCoupon(couponItem)}>Apply</button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No coupons available</p>
+                    )}
         </div>
         
       </div>

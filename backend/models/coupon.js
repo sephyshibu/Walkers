@@ -8,6 +8,7 @@ const CouponSchema=new mongoose.Schema({
     minprice:{type:Number},
     createdon:{type:Date, default:Date.now},
     expiredon:{type:Date, required:true},
+    isblocked:{type:Boolean, default:false},
     userId:[{ type: mongoose.Schema.Types.ObjectId, ref: 'walkersuser' }],
 })
 module.exports=mongoose.model('Coupon',CouponSchema)

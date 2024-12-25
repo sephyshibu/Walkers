@@ -6,6 +6,7 @@ const Productdb=require('../models/product')
 const Orderdb=require('../models/order')
 const addressdb=require('../models/address')
 const wallet =require('../models/wallet')
+const coupondb= require('../models/coupon')
 const { v4: uuidv4 } = require('uuid'); // create transaction id for uniqque
 
 const loginAdmin=async(req,res)=>{
@@ -512,7 +513,24 @@ const updatereturnstatus=async(req,res)=>{
         console.error("Error update returned status:", error);
     }
 }
-  
 
-module.exports={updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+
+const addcoupon=async(req,res)=>{
+    const{title,decription,coupontype,couponamount,minprice,expiredon}=req.body
+    console.log("add coupon",req.body)
+try{
+    const newcoupon=new coupondb({
+        title,decription,coupontype,couponamount,minprice,expiredon
+    })
+    await newcoupon.save()
+    res.status(200).json({ message: "Coupon created Successfully" });
+}  
+catch (error) {
+    console.error("error Verifying OTP", error);
+    res.status(500).json({ message: "An error occured" });
+  }
+}
+
+
+module.exports={addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

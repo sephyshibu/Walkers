@@ -14,6 +14,7 @@ const orderdb = require("../models/order");
 const wishlistdb = require("../models/wishlist");
 const returndb =require('../models/return')
 const wallet= require('../models/wallet')
+const coupondb=require('../models/coupon')
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { userInfo } = require("os");
@@ -499,6 +500,8 @@ const getProducts = async (req, res) => {
 
 const checkout = async (req, res) => {
   const { userId } = req.body;
+  const{selectedCoupon}=req.body
+  console.log("selected coupon",selectedCoupon)
 
   try {
     // Find cart and populate product details
@@ -555,8 +558,57 @@ const checkout = async (req, res) => {
         unavailableProducts,
       });
     }
+    
+
+    let finalPrice = cart.totalprice;
+
+    if (selectedCoupon) {
+      const coupon = await coupondb.findById(selectedCoupon);
+
+            if (!coupon || coupon.isblocked || new Date() > new Date(coupon.expiredon)) {
+                return res.status(400).json({ message: 'Invalid or expired coupon.' });
+            }
+
+            if (coupon.userId.includes(userId)) {
+                return res.status(400).json({ message: 'You have already used this coupon.' });
+            }
+
+            if (finalPrice >= coupon.minprice) {
+                finalPrice -= coupon.coupontype === 'fixed' 
+                    ? coupon.couponamount 
+                    : (finalPrice * coupon.couponamount) / 100;
+
+                // coupon.userId.push(userId);
+                await coupon.save();
+            } else {
+                return res.status(400).json({ message: `Minimum cart value for this coupon is Rs.${coupon.minprice}.` });
+            }
+
+    // const coupon=await coupondb.findById(selectedCoupon._id)
+    // if(!coupon){
+    //   res.status(404).json({message:"coupon not found"})
+    // }
+    // if (coupon.userId.includes(userId)) {
+    //   console.log("lalal")
+    //   return res.status(400).json({ message: "Coupon already applied to this user." });
+    // }
+    
+  
+  
+    //   if(coupon.minprice<=cart.totalprice)
+    //   {
+        
+      
+    //     cart.totalprice-=coupon.couponamount
+    //     coupon.userId.push(userId)
+        
+    //   }
+    //   await coupon.save()
+    //   await cart.save()
+
 
     // If all checks pass
+          }
     return res.status(200).json({ message: "Checkout successful" });
   } catch (error) {
     console.error("Error during checkout:", error);
@@ -912,6 +964,27 @@ const fetchcart = async (req, res) => {
   }
 };
 
+
+const fetchcoupon=async(req,res)=>{
+  const{userId}=req.params
+  const currentdate= new Date()
+  
+  try {
+    const unusedcoupons=await coupondb.find({
+      userId:{$nin:[userId]},
+      isblocked:false,
+      expiredon:{$gte:currentdate}
+
+    })
+    console.log(unusedcoupons)
+    res.status(200).json({unusedcoupons})
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 // const fetchcart = async (req, res) => {
 //     const { userId } = req.params;
 //     console.log(userId);
@@ -1070,6 +1143,7 @@ const placingorder = async (req, res) => {
       paymentstatus,
       items,
       totalprice,
+      couponId
     } = req.body;
     console.log("request body", req.body);
     console.log(
@@ -1077,6 +1151,40 @@ const placingorder = async (req, res) => {
       "this is secret",
       process.env.RAZORPAY_KEY_SECRET
     );
+    console.log("couponId",couponId)
+
+    // Fetch coupon details if couponId is provided
+    let discount = 0;
+    if (couponId) {
+      const coupon = await coupondb.findById(couponId); // Replace `coupondb` with your actual coupon model
+      console.log(coupon)
+      if (!coupon) {
+        return res.status(400).json({ message: "Invalid coupon ID" });
+      }
+
+      // Validate coupon (e.g., check expiry date and usage)
+      const currentDate = new Date();
+      if (coupon.expiryDate < currentDate) {
+        return res.status(400).json({ message: "Coupon has expired" });
+      }
+
+      // Check if the coupon has a percentage or fixed discount
+      if (coupon.coupontype === "percentage") {
+        discount = (totalprice * coupon.couponamount) / 100; // e.g., 10% discount
+      } else if (coupon.coupontype === "fixed") {
+        discount = coupon.couponamount; // e.g., ₹100 off
+        console.log("discount", discount)
+      }
+
+      coupon.userId.push(userId);
+      await coupon.save()
+      // Ensure discount does not exceed totalprice
+      discount = Math.min(discount, totalprice);
+    }
+
+    // Apply discount
+    totalprice = totalprice - discount;
+  
 
     const tax = orderdb.schema.path("tax").defaultValue;
     const shippingFee = orderdb.schema.path("shippingFee").defaultValue;
@@ -1653,7 +1761,64 @@ const returnorder = async (req, res) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+// const applycoupon=async(req,res)=>{
+//   const{cartId,couponId}=req.body
+//   const{userId}=req.params
+//   console.log("cart Id",cartId)
+//   console.log("coupon id", couponId)
+//   try{
+//     const coupon=await coupondb.findById(couponId)
+//     if(!coupon){
+//       res.status(404).json({message:"coupon not found"})
+//     }
+//     const cart = await cartdb.findById(cartId);
+//     if (!cart) {
+//       return res.status(404).json({ message: 'Cart not found' });
+//   }
 
+//   if (cart.iscart) {
+   
+//     return res.status(400).json({ message: "Coupon already applied to this cart." });
+   
+//   } 
+
+//   if (coupon.userId.includes(userId)) {
+//     console.log("lalal")
+//     return res.status(400).json({ message: "Coupon already applied to this user." });
+//   }
+  
+
+
+//     if(coupon.minprice<=cart.totalprice)
+//     {
+      
+      
+//       cart.totalprice-=coupon.couponamount
+//       coupon.userId.push(userId)
+      
+//     }
+    
+//     await cart.save()
+//     await coupon.save()
+
+//     const usedcoupons = await coupondb.find({
+//       userId: userId,
+//       isblocked: false,
+     
+//     });
+
+    
+//     console.log("dfsdfgu",usedcoupons)
+
+
+//     res.status(200).json({
+//       message: 'Coupon applied successfully',
+//      usedcoupons
+//     });
+//   } catch (error) {
+//       res.status(500).json({ message: 'Error applying coupon', error });
+//   }
+// }
 // const returnorder=async(req,res)=>{
 //     const{userId}=req.params
 //     const{productid,orderid}=req.body
@@ -1720,9 +1885,37 @@ const returnorder = async (req, res) => {
 
      
 // }
+const applycoupon=async(req,res)=>{
+  const { userId } = req.params;
+  const { couponId } = req.body;
+
+  try {
+      const coupon = await coupondb.findById(couponId);
+
+      if (!coupon || coupon.isblocked || new Date() > new Date(coupon.expiredon)) {
+          return res.status(400).json({ message: 'Invalid or expired coupon.' });
+      }
+
+      if (coupon.userId.includes(userId)) {
+          return res.status(400).json({ message: 'You have already used this coupon.' });
+      }
+
+      const cart = await cartdb.findOne({ userId });
+
+      if (cart.totalprice < coupon.minprice) {
+          return res.status(400).json({ message: `Minimum cart value for this coupon is Rs.${coupon.minprice}.` });
+      }
+
+      // Attach coupon for price preview but don't deduct price here
+      res.status(200).json({ coupon });
+  } catch (err) {
+      res.status(500).json({ message: 'Error applying coupon.' });
+  }
+}
 
 module.exports = {
     returnorder,
+    applycoupon,
   verifyPayment,
   addwishlist,
   fetchwishlist,
@@ -1759,4 +1952,5 @@ module.exports = {
   verifyotp,
   resendotp,
   googleLogin,
+  fetchcoupon
 };

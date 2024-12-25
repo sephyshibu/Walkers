@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
+const {applycoupon,fetchcoupon,returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 const checkusersstatus=require('./middleware/checkuserstatus')
@@ -42,4 +42,9 @@ router.post('/addwishlist',verifyAccessToken,addwishlist)
 router.get('/fetchwishlist/:userId',verifyAccessToken,fetchwishlist)
 router.delete('/removeproductfrowwishlist/:userId',verifyAccessToken,removeproductfrowwishlist)
 router.put('/returnorder/:userId',verifyAccessToken,returnorder)
+router.get('/fetchcoupon/:userId',verifyAccessToken,fetchcoupon)
+
+router.post('/applycoupon/:userId',verifyAccessToken,applycoupon)
+
+
 module.exports=router

@@ -3,10 +3,12 @@ import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
 import './PaymentMethod.css'
-import {useNavigate} from 'react-router-dom'
+import {useLocation,useNavigate} from 'react-router-dom'
 const PaymentMethod = () => {
     const[selectedmethod,setselectedmethod]=useState('')
     const navigate=useNavigate()
+    const location = useLocation();
+    const { couponId } = location.state || {};
     const userId=useSelector((state)=>state.user.user._id)
     console.log("payment method userId ", userId)
 
@@ -44,7 +46,8 @@ const PaymentMethod = () => {
                 paymentmethod:selectedmethod,
                 paymentstatus:selectedmethod==='COD'?'Pending':'Success',
                 items:cartitems,
-                totalprice
+                totalprice,
+                couponId
             })
             console.log("after clicking place order",response)
 
