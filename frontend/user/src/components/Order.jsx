@@ -95,7 +95,8 @@ const handleCancelOrder = async (orderId) => {
         try {
             const response = await axiosInstanceuser.put(`/cancelorder/${orderId}`, {
                 orderStatus: 'Cancelled',
-                cancellationreason:reason
+                cancellationreason:reason,
+                userId
             });
             console.log('Order cancelled:', response.data);
             alert("ordercancelled")

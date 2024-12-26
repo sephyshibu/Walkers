@@ -711,8 +711,9 @@ const updateaddress = async (req, res) => {
 };
 const deleteorder = async (req, res) => {
   const { orderid } = req.params;
-  const { reason } = req.body;
+  const { reason,userId } = req.body;
   console.log("backend reason", reason);
+  console.log("backend userId",userId)
   try {
     const orderdoc = await orderdb.findById(orderid);
     console.log("delete order", orderdoc);

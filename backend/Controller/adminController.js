@@ -427,6 +427,20 @@ const updateProduct = async (req, res) => {
     }
 };
 
+const cancelorderfetch=async(req,res)=>{
+    try {
+        const orders= await Orderdb.find({orderStatus:"Cancelled"}
+
+        )
+        .populate("userId", "username email")
+        .select('_id userId items totalprice'); // Fetch only specific fields from the Order schema
+        res.status(200).json(orders);
+    } catch (error) {
+      console.error('Error fetching cancelled orders:', error);
+      res.status(500).json({ error: 'Failed to fetch cancelled orders' });
+    }
+}
+
 const getreturneditems = async (req,res) => {
     try {
       const orders = await Orderdb.find(
@@ -462,6 +476,52 @@ const getreturneditems = async (req,res) => {
       return [];
     }
   };
+
+const cancelorderrefund=async(req,res)=>{
+    const{id}=req.params
+    const{actiontype}=req.body
+    console.log(id)
+    console.log("action type",actiontype)
+
+    try {
+        const orderdoc=await Orderdb.findById(id)
+        console.log("order doc",orderdoc)
+
+        if(actiontype==="Refund"){
+
+        
+            const userwallet=await wallet.findOne({userId:orderdoc.userId})
+            console.log("userwallet",userwallet)
+            if(!userwallet)
+            {
+                return res.status(404).json({message:"Wallert not found oof thwe user"})
+            }
+
+            const transaction = {
+                transaction_id: uuidv4(), // Generate a unique transaction ID
+                amount: orderdoc.totalprice,
+                transactionmethod: "refundreturn",
+              };
+            userwallet.transactions.push(transaction);
+            userwallet.balance+=transaction.amount
+            
+            await userwallet.save();
+
+            console.log("Refund added to wallet:", transaction);
+
+
+        }
+      
+        
+        await orderdoc.save()
+        res.status(200).json({ message: "Cancel order updated successfully" });
+    } catch (error) {
+        console.error("Error update returned status:", error);
+    }
+}
+
+
+
 const updatereturnstatus=async(req,res)=>{
     const{id}=req.params
     const{actiontype,productId}=req.body
@@ -532,5 +592,5 @@ catch (error) {
 }
 
 
-module.exports={addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

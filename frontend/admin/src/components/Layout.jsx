@@ -95,6 +95,16 @@ const Layout = () => {
             <Link to="/admindashboard/coupon">Coupons</Link>
           </li>
 
+          <li
+            className={
+              location.pathname === "/admindashboard/cancelorders"
+                ? "active-link"
+                : ""
+            }
+          >
+            <Link to="/admindashboard/cancelorders">Cancel Orders</Link>
+          </li>
+
 
 
         </ul>
