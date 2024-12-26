@@ -33,8 +33,8 @@ const Account = () => {
             case "accountdetail":
                 return<AccountDetail/>
 
-            // case "wishlist":
-            //     return<Wallet/>
+            case "wallet":
+                return<Wallet/>
         }
     }
 

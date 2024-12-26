@@ -137,7 +137,7 @@
 }
 
 
-button[type='button'] {
+.applycoupon ,.placeorderbtn{
   width: 100%;
   padding: 12px;
   background-color: #ff9900;

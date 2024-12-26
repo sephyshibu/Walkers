@@ -17,6 +17,7 @@ const CheckOut = () => {
     const [defaultaddress, setdefaultaddress]=useState({})
     const[cart,setcart]=useState({items:[], totalprice:0})
     const[error,seterror]=useState('')
+    const [couponDiscount, setCouponDiscount] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const dispatch=useDispatch()
     useEffect(()=>{
@@ -40,6 +41,18 @@ const CheckOut = () => {
                 // dispatch(proceed(responsecart.data))
                 // console.log(defaultaddress)
                 seterror('')
+                if (couponId) {
+                    console.log("couponId", couponId)
+                    const couponResponse = await axiosInstanceuser.get(`/fetchcoupondetails/${couponId}`);
+                    console.log("response from fetch coupon", couponResponse.data);
+                    setCouponDiscount(couponResponse.data.coupondoc.couponamount);
+                    console.log("coupon discount",couponResponse.data.coupondoc.couponamount )
+                    // Update cart total price with coupon discount
+                    setcart((prevCart) => ({
+                        ...prevCart,
+                        totalprice: Math.max(0, prevCart.totalprice - couponResponse.data.coupondoc.couponamount),
+                    }));
+                }
 
             } catch (error) {
                 if (error.response?.status === 403 && error.response?.data?.action === "logout") {
@@ -101,7 +114,8 @@ const CheckOut = () => {
             </div>
           ))}
           <hr />
-          <h4>Total Price: ${cart.totalprice.toFixed(2)}</h4>
+          {couponDiscount > 0 && <p>Coupon Discount: -Rs. {couponDiscount.toFixed(2)}</p>}
+                    <h4>Total Price: Rs. {cart.totalprice.toFixed(2)}</h4>
           <button type='button'
             onClick={handleproccedtopayment}
             className="place-order-button">Procced to payment</button>

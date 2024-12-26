@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './Order.css'
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Order = () => {
@@ -99,7 +101,7 @@ const handleCancelOrder = async (orderId) => {
                 userId
             });
             console.log('Order cancelled:', response.data);
-            alert("ordercancelled")
+            toast.error("ordercancelled")
             setFeedback('Your order has been cancelled successfully.');
             // setorder((prevorder)=>prevorder.map((order)=>order.orderId===currentorderid?{...order,orderStatus:"Cancelled"}:order))
              // Update the orders state directly to reflect the cancelled order
@@ -127,7 +129,7 @@ const handlereturn=async()=>{
     // console.log("productid",productid)
     // console.log("orderid",orderid)
     if (!returnReason.trim()) {
-        alert("Please provide a reason for return.");
+        toast.info("Please provide a reason for return.");
         return;
     }
     try{
@@ -172,7 +174,7 @@ const handlereturn=async()=>{
         );
         
 
-        alert("Return request sent successfully");
+        toast.success("Return request sent successfully");
         closeReturnOverlay();
 
 
@@ -187,6 +189,7 @@ const handlereturn=async()=>{
 
     return (
 <div className="order-page">
+<ToastContainer />
     <h1>Your Orders</h1>
     {error && <div className="error-messages">{error}</div>}
     <div className="filters">
@@ -220,7 +223,7 @@ const handlereturn=async()=>{
                         <div>Product quantity:{list.quantity}</div>
                         <div>Order Date: {new Date(list.orderdate).toLocaleDateString()}</div>
                         <div>Delivery Date: {new Date(list.deliverydate).toLocaleDateString()}</div>
-                        <div>Total Price: ${list.totalprice}</div>
+                        <div>Total Price: Rs. {list.totalprice}</div>
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
                         <button

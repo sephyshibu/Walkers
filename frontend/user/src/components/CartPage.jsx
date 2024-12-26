@@ -11,7 +11,7 @@ const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[coupon, setcoupon]=useState([])
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-    
+      const [couponDiscount, setCouponDiscount] = useState(0);
     const[usedcoupon,setusedcoupon]=useState([])
     const[couponapplied, setcouponapplied]=useState(false)
     const[error,seterror]=useState('')
@@ -284,6 +284,19 @@ const CartPage = () => {
             const response = await axiosInstanceuser.post(`/applycoupon/${userId}`, {
                 couponId: couponItem._id
             });
+
+            if(cart.totalprice<=couponItem.minprice)
+            {
+                setMessage(`minimum amoount in cart is above ${couponItem.minprice}`)
+            }
+            let discount=couponItem.couponamount
+            setCouponDiscount(discount)
+            // const discountedPrice = Math.max(0, cart.totalprice - discount);
+
+            setCart((prevcart)=>({
+                ...prevcart,
+                totalprice: Math.max(0, cart.totalprice - discount)
+            }))
     
             setSelectedCoupon(couponItem);
             setMessage(`Coupon applied successfully!`);
@@ -344,7 +357,8 @@ const CartPage = () => {
           ))}
           <hr />
          
-          <h4>Total Price: Rs.{cart.totalprice.toFixed(2)}</h4>
+          {couponDiscount > 0 && <p>Coupon Discount: -Rs. {couponDiscount.toFixed(2)}</p>}
+          <h4>Total Price: Rs. {cart.totalprice.toFixed(2)}</h4>
           
           {selectedCoupon && (
                 <div className="applied-coupon">
@@ -354,7 +368,7 @@ const CartPage = () => {
                     <p>You saved Rs.{selectedCoupon.couponamount}</p>
                 </div>
             )}
-          <button type='button' onClick={handlePlaceorder}>CheckOut</button>
+          <button className="placeorderbtn" type='button' onClick={handlePlaceorder}>CheckOut</button>
           
         </div>
 
@@ -374,7 +388,7 @@ const CartPage = () => {
                                 <p>Amount: Rs.{couponItem.couponamount}</p>
                                 <p>Min Price: Rs.{couponItem.minprice}</p>
                                 <p>Expires On: {new Date(couponItem.expiredon).toLocaleDateString()}</p>
-                                <button onClick={() => applyCoupon(couponItem)}>Apply</button>
+                                <button className='applycoupon' onClick={() => applyCoupon(couponItem)}>Apply</button>
                             </div>
                         ))
                     ) : (

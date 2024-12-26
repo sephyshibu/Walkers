@@ -965,7 +965,33 @@ const fetchcart = async (req, res) => {
   }
 };
 
+const coupondetails=async(req,res)=>{
+  const{couponId}=req.params
+  console.log("coupondetails", couponId)
 
+  try {
+    const coupondoc=await coupondb.findById(couponId)
+    console.log("coupondoc", coupondoc)
+    res.status(200).json({coupondoc})
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
+const fetchwallet=async(req,res)=>{
+  const{userId}=req.params
+  console.log("fetch wallet userId", userId)
+  try {
+    const walletdoc=await wallet.find({userId:userId})
+    console.log("wallet doc", walletdoc)
+    res.status(200).json({walletdoc})
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
 const fetchcoupon=async(req,res)=>{
   const{userId}=req.params
   const currentdate= new Date()
@@ -1690,6 +1716,7 @@ const fetchwishlist = async (req, res) => {
 
   // Check if `wishlist` exists
   try {
+   
     const wishlist = await wishlistdb.findOne({ userId }).populate("products");
     console.log(wishlist);
     if (!wishlist) {
@@ -1915,6 +1942,7 @@ const applycoupon=async(req,res)=>{
 }
 
 module.exports = {
+  fetchwallet,
     returnorder,
     applycoupon,
   verifyPayment,
@@ -1953,5 +1981,5 @@ module.exports = {
   verifyotp,
   resendotp,
   googleLogin,
-  fetchcoupon
+  fetchcoupon, coupondetails
 };
