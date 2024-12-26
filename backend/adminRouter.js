@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
+const {toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
 const verifyAccessToken =require('./middleware/verifyaccessToken')
 const { verify } = require('jsonwebtoken')
 
@@ -10,7 +10,7 @@ router.post('/refresh',refreshToken)
 
 router.get('/viewusers',verifyAccessToken,userfetch)
 router.put('/customer/:userId/block',verifyAccessToken,toggleUserStatus )
-
+router.put('/coupon/:itemId/block',verifyAccessToken,toggleCouponStatus)
 router.get('/edit/:id',verifyAccessToken,editcategory)
 router.put('/update/:id',verifyAccessToken,updateCategory)
 router.put('/deletecategory/:id/delete',verifyAccessToken,softdeletecategory)
@@ -35,4 +35,8 @@ router.patch('/updatecancelordersrefundstatus/:id',verifyAccessToken,cancelorder
 
 router.post('/addcoupon',verifyAccessToken,addcoupon)
 router.get('/getcancelitem', verifyAccessToken,cancelorderfetch)
+router.get('/getcoupon', verifyAccessToken, getcoupon)
+
+
+
 module.exports=router

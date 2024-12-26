@@ -1953,7 +1953,9 @@ const applycoupon=async(req,res)=>{
   }
 }
 
+
 module.exports = {
+
   fetchwallet,
     returnorder,
     applycoupon,

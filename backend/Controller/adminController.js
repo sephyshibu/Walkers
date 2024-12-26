@@ -590,7 +590,34 @@ catch (error) {
     res.status(500).json({ message: "An error occured" });
   }
 }
+const getcoupon=async(req,res)=>{
+    try {
+      const coupon=await coupondb.find({})
+      console.log(coupon)
+      res.status(200).json({message:"Successfully fetched", coupon })
+    } catch (error) {
+      res.status(500).json({ message: 'Error applying coupon.' });
+    }
+  }
+  const toggleCouponStatus=async(req,res)=>{
+        const{itemId}=req.params
+        console.log("item Id",itemId)
+
+        try {
+            const coupon=await coupondb.findById(itemId)
+            if(!coupon)
+            {
+                return res.status(404).json("coupon not found")
+            }
+            coupon.isblocked=!coupon.isblocked
+            await coupon.save()
+            res.status(200).json(coupon)
+        } catch (error) {
+            res.status(500).json("Failed to update the status")
+        }
+  }
+  
 
 
-module.exports={cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

@@ -39,8 +39,14 @@ const Retrun = () => {
                   );
                   setsuccess(true)
                   
-            } catch (error) {
+            } catch (err) {
+              if (err.response && err.response.data && err.response.data.message) {
+                seterror(err.response.data.message);
                 
+            }
+            else{
+                seterror('Something went wrong. Please try again.');
+            }
             }
     }
   return (

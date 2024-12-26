@@ -47,6 +47,5 @@ router.get('/fetchcoupon/:userId',verifyAccessToken,fetchcoupon)
 router.post('/applycoupon/:userId',verifyAccessToken,applycoupon)
 router.get('/fetchcoupondetails/:couponId', verifyAccessToken,coupondetails)
 
-
 router.get('/fetchwallet/:userId',verifyAccessToken,fetchwallet)
 module.exports=router

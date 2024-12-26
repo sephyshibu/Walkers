@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const CouponSchema=new mongoose.Schema({
     title:{type:String, required:true},
-    descrtiption:{type:String},
+    s:{type:String},
     coupontype:{type:String, enum:['fixed','percentage']},
     couponamount:{type:Number},
     minprice:{type:Number},

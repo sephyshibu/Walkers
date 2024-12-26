@@ -20,6 +20,7 @@
     "passport-google-oauth20": "^2.0.0",
     "razorpay": "^2.9.5",
     "react-google-login": "^5.2.2",
+    "sweetalert2": "^11.15.3",
     "uuid": "^11.0.3"
   }
 }
