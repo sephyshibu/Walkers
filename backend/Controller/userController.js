@@ -1692,14 +1692,26 @@ const addwishlist = async (req, res) => {
       wishlist = new wishlistdb({ userId, products: [] });
       await wishlist.save();
       console.log("New wishlist saved:", wishlist);
-    } else {
+    } 
+    else {
       console.log("Wishlist already exists:", wishlist);
     }
-
-    if (!wishlist.products.includes(productId)) {
-      wishlist.products.push(productId);
-      await wishlist.save();
+    if (wishlist.products.includes(productId)) {
+      return res.status(200).json({ message: "This product already exists in your wishlist" });
     }
+
+    // Add product to the wishlist if it does not exist
+    wishlist.products.push(productId);
+    await wishlist.save();
+
+    // if (!wishlist.products.includes(productId)) {
+    //   wishlist.products.push(productId);
+    //   await wishlist.save();
+    // }
+    // else{
+    //   res.status(200).json({ message: "This product already existed" });
+    // }
+    
 
     res.status(200).json({ message: "added to wishlist" });
   } catch (err) {
