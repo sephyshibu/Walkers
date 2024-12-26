@@ -7,6 +7,12 @@ import { useLocation,useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { defaultaddr } from '../features/DefaultAddressSlice'
 import { persistor } from "../app/store";
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+
+
+
 // import { defaultaddress } from '../features/DefaultAddressSlice'
 const CheckOut = () => {
     const userId=useSelector((state)=>state.user.user._id)
@@ -56,7 +62,7 @@ const CheckOut = () => {
 
             } catch (error) {
                 if (error.response?.status === 403 && error.response?.data?.action === "logout") {
-                            alert("Your account is inactive. Logging out.");
+                            toast.error("Your account is inactive. Logging out.");
                             localStorage.removeItem("userId"); // Clear the local storage
                             await persistor.purge(); // Clear persisted Redux state
                             navigate('/login'); // Redirect to the product display page
@@ -87,6 +93,7 @@ const CheckOut = () => {
   return (
     <div className="place-order-page">
         <Navbar/>
+        <ToastContainer/>
         {error && <p className='error-messageplaceorder'>{error}</p>}
     <div className='checkout-container'>
         <div className='shipping-address-section'>

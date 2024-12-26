@@ -8,7 +8,8 @@ import Footer from './Footer';
 import { useSelector } from 'react-redux';
 import { persistor } from '../app/store';
 import debounce from 'lodash.debounce'
-
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
@@ -59,7 +60,7 @@ const Productpage = () => {
             } catch (error) {
                 console.log('Error in fetching products', error);
                 if (error.response?.status === 403 && error.response?.data?.action === "logout") {
-                    alert("Your account is inactive. Logging out.");
+                    toast.error("Your account is inactive. Logging out.");
                     localStorage.removeItem("userId"); // Clear the local storage
                     await persistor.purge();
                     navigate('/login'); // Redirect to the product display page
@@ -142,6 +143,7 @@ const Productpage = () => {
     return (
         <div className="products-user-page">
             <Navbar />
+            <ToastContainer/>
             <div className="banner">
                 <img src={banner1} alt="" />
             </div>

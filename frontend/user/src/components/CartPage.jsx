@@ -7,6 +7,9 @@ import{cartitems} from '../features/CartSlice'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { persistor } from '../app/store'
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[coupon, setcoupon]=useState([])
@@ -51,7 +54,7 @@ const CartPage = () => {
             seterror('');
         } catch (err) {
             if (err.response?.status === 403 && err.response?.data?.action === "logout") {
-                alert("Your account is inactive. Logging out.");
+                toast.error("Your account is inactive. Logging out.");
                 localStorage.removeItem("userId"); // Clear the local storage
                  await persistor.purge(); // Clear persisted Redux state
                 navigate('/login'); // Redirect to the product display page
@@ -86,7 +89,7 @@ const CartPage = () => {
             seterror('');
         } catch (err) {
             if (err.responsecoupon?.status === 403 && err.responsecoupon?.data?.action === "logout") {
-                alert("Your account is inactive. Logging out.");
+                toast.error("Your account is inactive. Logging out.");
                 localStorage.removeItem("userId"); // Clear the local storage
                  await persistor.purge(); // Clear persisted Redux state
                 navigate('/login'); // Redirect to the product display page
@@ -187,7 +190,7 @@ const CartPage = () => {
                     // If cart is deleted, you can reset the cart state to empty or show a message
                     setCart({ items: [], totalprice: 0 });
                     seterror(""); // Clear any error state
-                    alert("Your cart is empty.");
+                    toast.info("Your cart is empty.");
                     
                 } else {
                     // Otherwise, re-fetch the cart data if some items remain
@@ -310,6 +313,7 @@ const CartPage = () => {
   
     <div className="cart-page">
           <Navbar/>
+          <ToastContainer/>
           {message && (
             <p className="messagecart" style={{ color: "green" }}>
                 {message}

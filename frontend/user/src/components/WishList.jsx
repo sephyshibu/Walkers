@@ -1,10 +1,14 @@
 import React ,{useState,useEffect}from 'react'
 import { useSelector } from 'react-redux';
 import axiosInstanceuser from '../axios';
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import Navbar from './Navbar';
 // import { useNavigate } from 'react-router';
 const WishList=()=>{
 const userId=useSelector((state)=>state.user.user._id)
 const[error,seterror]=useState('')
+
 // const navigate=useNavigate()
 const[wishlistshow ,setwishlistshow]=useState([])
 useEffect(()=>{
@@ -28,7 +32,7 @@ const handleDelete=async(productId)=>{
 try{
     const response=await axiosInstanceuser.delete(`/removeproductfrowwishlist/${userId}`,{
         data: { productId }})
-    console.log("deleted")
+    toast.error("deleted")
     // delete aki kaxzinjal udane refetech otherwise it is not visiblee
     const updatedResponse = await axiosInstanceuser.get(`/fetchwishlist/${userId}`);
     setwishlistshow(updatedResponse.data.products)
@@ -41,7 +45,10 @@ catch(err)
 }
 
 return (
+    
 <div className="wishlist-page-container" style={{ padding: "20px" }}>
+  <Navbar/>
+  <ToastContainer/>
   <h2  className="wishlist-page-title">User Addresses</h2>
   {error && <p style={{ color: "red" }}>{error}</p>}
   <div className="wishlist-grid" style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>

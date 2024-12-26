@@ -8,6 +8,10 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useSelector } from "react-redux";
 import { persistor } from "../app/store";
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+
 
 const ProductDisplay = () => {
   const userId=useSelector((state)=>state.user.user._id)
@@ -84,7 +88,7 @@ const ProductDisplay = () => {
         } catch (error) {
         console.log("Error occurred during fetching product details");
         if (error.response?.status === 403 && error.response?.data?.action === "logout") {
-          alert("Your account is inactive. Logging out.");
+          toast.error("Your account is inactive. Logging out.");
           localStorage.removeItem("userId"); // Clear the local storage
           navigate('/login'); // Redirect to the product display page
       } else {
@@ -146,7 +150,7 @@ const ProductDisplay = () => {
         formdata.availableQuantity === 0 || 
         (selectedVariant && selectedVariant.availableQuantity === 0)
       ) {
-        alert("The product is out of stock");
+        toast.info("The product is out of stock");
         return;
       }
       
@@ -160,13 +164,13 @@ const ProductDisplay = () => {
         
       })
       console.log("add to cart response in product display page ",response.data)
-      alert("Product added to cart!");
+      toast.success("Product added to cart!");
     
     }
     catch(err){
       console.log("error in adding cart",err)
       if (err.response?.status === 403 && err.response?.data?.action === "logout") {
-        alert("Your account is inactive. Logging out.");
+        toast.error("Your account is inactive. Logging out.");
         localStorage.removeItem("userId"); // Clear the local storage
         await persistor.purge();
         navigate('/login'); // Redirect to the product display page
@@ -184,6 +188,7 @@ const ProductDisplay = () => {
   return (
     <div className="product-display-page">
       <Navbar/>
+      <ToastContainer/>
     <div className="product-display-container">
       {error && <p className="error-messagecartadd ">{error}</p>}
       {!error && (

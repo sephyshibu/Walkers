@@ -86,6 +86,8 @@ import React, { useState, useEffect } from 'react'
 import axiosInstanceadmin from '../axios'
 import { useParams, useNavigate } from 'react-router-dom'
 import './EditOrder.css'
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
     const { id } = useParams()
@@ -119,7 +121,7 @@ const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
             })
             setIsOpen(false)
             navigate('/admindashboard/orders')
-            alert('order updated successfully')
+            toast.success('order updated successfully')
         }
         catch (error) {
             console.log('Error updating order:', error);

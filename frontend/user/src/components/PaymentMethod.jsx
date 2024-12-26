@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
 import './PaymentMethod.css'
 import {useLocation,useNavigate} from 'react-router-dom'
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 const PaymentMethod = () => {
     const[selectedmethod,setselectedmethod]=useState('')
     const navigate=useNavigate()
@@ -35,7 +38,7 @@ const PaymentMethod = () => {
 
         if(!selectedmethod)
         {
-            alert("Please select payment method")
+            toast.error("Please select payment method")
         }
         try{
             console.log("hoo")
@@ -71,7 +74,7 @@ const PaymentMethod = () => {
                                     razorpay_signature: response.razorpay_signature,
                                   }); 
                                   if (verifyResponse.data.success) {
-                                    alert('Payment successful!');
+                                    toast.success('Payment successful!');
                                     navigate('/thankyoupage');
                                   } else {
                                     alert('Payment verification failed');
@@ -79,7 +82,7 @@ const PaymentMethod = () => {
                             }
                             catch (error) {
                                 console.error('Payment verification error:', error);
-                                alert('Payment verification failed. Please try again.');
+                                toast.error('Payment verification failed. Please try again.');
                               }
 
                         },
@@ -94,17 +97,17 @@ const PaymentMethod = () => {
                     rzp.open();
                     rzp.on("payment failed",(response)=>{
                         console.error("payment failed",response)
-                        alert("payment failed")
+                        toast.error("payment failed")
                     })
                 }else{
 
-                alert('Order placed successfully!');
+                toast.success('Order placed successfully!');
                 navigate('/thankyoupage')
                 }
             }
         } catch (error) {
           console.error('Failed to place order:', error);
-          alert('Error placing the order. Please try again.');
+          toast.error('Error placing the order. Please try again.');
         }
 
       
@@ -112,6 +115,7 @@ const PaymentMethod = () => {
   return (
     <div className='payemnt-page-container'>
         <Navbar/>
+        <ToastContainer/>
         <h2>Payment Method</h2>
         <div className='payment-method'>
 

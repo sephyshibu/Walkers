@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstanceuser from '../axios'
 import './Wallet.css'
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Wallet = () => {
   const userId = useSelector((state) => state.user.user._id)
@@ -19,7 +22,7 @@ const Wallet = () => {
         setLoading(false)
       } catch (error) {
         if (error.response?.status === 403 && error.response?.data?.action === "logout") {
-          alert("Your account is inactive. Logging out.")
+          toast.error("Your account is inactive. Logging out.")
           localStorage.removeItem("userId")
           // await persistor.purge() // Uncomment if you have persistor configured
           // navigate('/login') // Uncomment if you have navigation configured
@@ -54,6 +57,7 @@ const Wallet = () => {
 
   return (
     <div className="wallet-container">
+      <ToastContainer/>
       <h2 className="wallet-title">Your Wallet</h2>
       {wallet && (
         <>
