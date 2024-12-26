@@ -115,7 +115,7 @@ const Productpage = () => {
     const handleaddwishlist=async(userId,productId)=>{
         try {
             const response=await axiosInstanceuser.post('/addwishlist',{userId,productId})
-            console.log(response.data.message)
+            toast.success(response.data.message)
 
         } catch (error) {
             console.log("error in wishllist",error)

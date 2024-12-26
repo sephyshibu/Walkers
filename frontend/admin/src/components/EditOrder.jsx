@@ -120,8 +120,9 @@ const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
                 orderstatus: orderStatus
             })
             setIsOpen(false)
-            navigate('/admindashboard/orders')
             toast.success('order updated successfully')
+            navigate('/admindashboard/orders')
+          
         }
         catch (error) {
             console.log('Error updating order:', error);
