@@ -466,6 +466,7 @@ const getreturneditems = async (req,res) => {
           returnstatus: item.returnstatus,
           refundstatus: item.refundstatus,
           returnreason: item.returnreason,
+          refundDate:item.refundDate
         }));
       }).flat(); // Flatten the array of items
   
@@ -544,7 +545,7 @@ const updatereturnstatus=async(req,res)=>{
         else {
             product.returnstatus=actiontype
             product.refundstatus=true
-
+            product.refundDate=new Date()
             const userwallet=await wallet.findOne({userId:orderdoc.userId})
             if(!userwallet)
             {

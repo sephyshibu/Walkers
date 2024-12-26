@@ -1,10 +1,13 @@
 import React ,{useState}from 'react'
 import { useEffect } from 'react'
 import axiosInstanceadmin from '../axios'
+import Swal from 'sweetalert2';
 
 const Retrun = () => {
     const[cancelorders,setcancelorders]=useState([])
     const[success,setsuccess]=useState(false)
+   
+     const [error, seterror] = useState('');
     useEffect(()=>{
             const fetchcancelorders=async()=>{
                 try {
@@ -18,8 +21,8 @@ const Retrun = () => {
                 }
             }
             fetchcancelorders()
-            setsuccess(false)
-    },[success])
+           
+    },[])
 
 
     const handleFunction=async(id,actiontype)=>{
@@ -30,19 +33,44 @@ const Retrun = () => {
                 console.log(response.data)
 
 
-                setreturnorders((prevorder) =>
-                    prevorder.map((order) =>
-                      order._id === id
-                        ? { ...order, returnstatus: actiontype }
-                        : order
-                    )
-                  );
-                  setsuccess(true)
+                // setcancelorders((prevorder) =>
+                //     prevorder.map((order) =>
+                //       order._id === id
+                //         ? { ...order,returnstatus: actiontype }
+                //         : order
+                //     )
+                //   );
+                setcancelorders((prevOrders) => prevOrders.filter((order) => order._id !== id));
+                setsuccess(true); // Mark the success state to show the result
+                  
                   
             } catch (error) {
                 
             }
     }
+
+    const confirmRefund = (id) => {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to process a refund. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, refund it!',
+        cancelButtonText: 'Cancel'
+        
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleFunction(id, "Refund");
+          Swal.fire(
+            'Refunded!',
+            'The refund has been processed successfully.',
+            'success'
+          );
+        }
+      });
+    };
   return (
     <div>
       <h2>Cancel Orders</h2>
@@ -74,7 +102,7 @@ const Retrun = () => {
               <strong>Total prive:</strong> {order.totalprice}
             </p>
             
-            <button onClick={()=>handleFunction(order._id,"Refund")}>Refund</button>
+            <button onClick={() => confirmRefund(order._id)}>Refund</button>
           </div>
         ))}
       </div>

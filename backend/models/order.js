@@ -22,6 +22,7 @@ const OrderSchema = new mongoose.Schema({
             price:{type:Number, required:true},
             isreturned:{type:Boolean, default:false},
             returnstatus:{type:String, enum:['Pending','Accepted','Rejected','Refund'],default:"Pending", required:true},
+            refundDate:{type:Date},
             refundstatus:{type:Boolean, default:false},
             returnreason:{type:String, default:null}
         }
