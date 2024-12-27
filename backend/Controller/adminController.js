@@ -695,6 +695,21 @@ const productoffer=async(req,res)=>{
         res.status(400).json({ error: err.message });
     }
 }
+
+const categoryoffer=async(req,res)=>{
+    const{offerId}=req.body
+    const{categoryId}=req.params
+    console.log("categoryid",categoryId)
+    console.log('offerId', offerId)
+    try {
+        const categorydoc=await Categorydb.findByIdAndUpdate(categoryId,{offerId}, {new:true})
+        console.log("categorydoc", categorydoc)
+        await categorydoc.save()
+        res.status(200).json(categorydoc);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
   
-module.exports={productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={categoryoffer,productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

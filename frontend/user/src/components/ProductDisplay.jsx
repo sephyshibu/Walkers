@@ -50,6 +50,8 @@ const ProductDisplay = () => {
         const fetchdetails = response.data;
         console.log("frontend fetch product",fetchdetails)
         setProducts(fetchdetails);
+        const finalOffer = fetchdetails.finalOffer;
+
 
 
         const initialState = {
@@ -59,7 +61,8 @@ const ProductDisplay = () => {
           stockStatus: fetchdetails.stockStatus,
           availableQuantity:fetchdetails.availableQuantity,
           image: fetchdetails.images[0], // First image
-          offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
+          // offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
+          offeramount: finalOffer ? finalOffer.offeramount : 0, // Use finalOffer's amount
         };
 
         setInitialProductState(initialState);
@@ -72,7 +75,8 @@ const ProductDisplay = () => {
           description: fetchdetails.description,
           availableQuantity:fetchdetails.availableQuantity,
           stockStatus: fetchdetails.stockStatus,
-          offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
+          // offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
+          offeramount: finalOffer ? finalOffer.offeramount : 0, // Handle null finalOffer
         });
       
 
@@ -265,9 +269,9 @@ const ProductDisplay = () => {
               {formdata.offeramount > 0 && (
                 <p className="product-prev-price">Rs.{formdata.price}</p>
               )}
-              <p className="product-price">
-                Rs.{formdata.offeramount ? formdata.price - formdata.offeramount : formdata.price}
-              </p>
+             <p className="product-price">
+              Rs.{formdata.offeramount ? formdata.price - formdata.offeramount : formdata.price}
+            </p>
               {/* <p className="product-price">Rs.{formdata.price-formdata.offeramount}</p> */}
               <p className="product-price">Quantity: {formdata.availableQuantity}</p>
             </div>

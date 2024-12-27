@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
+const {categoryoffer,productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
 const verifyAccessToken =require('./middleware/verifyaccessToken')
 const { verify } = require('jsonwebtoken')
 
@@ -16,6 +16,9 @@ router.put('/update/:id',verifyAccessToken,updateCategory)
 router.put('/deletecategory/:id/delete',verifyAccessToken,softdeletecategory)
 router.post('/addcategory',verifyAccessToken,addCategory)
 router.get('/viewcategory',verifyAccessToken,categoryfetch)
+router.put('/category/:categoryId/offer', verifyAccessToken, categoryoffer)
+
+
 
 router.get('/products/:id',verifyAccessToken,fetcheditproduct)
 router.put('/deleteproduct/:id/delete',verifyAccessToken,softdeleteproduct)

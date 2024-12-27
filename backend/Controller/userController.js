@@ -1104,7 +1104,41 @@ const fetchproductdetails = async (req, res) => {
 
 
     console.log("details", productdetails);
-    const productdata = productdetails.toObject();
+
+    if(!productdetails)
+    {
+      return res.status(404).json({message:"product not found"})
+    }
+
+    const categorydoc=await Categorydb.findOne({categoryname:productdetails.category}).populate('offerId').exec();
+    console.log("category doc",categorydoc)
+    let finalOffer=null
+
+    if (productdetails.offerId && categorydoc?.offerId) {
+      // Compare product and category offers
+      finalOffer =
+        productdetails.offerId.offeramount >= categorydoc.offerId.offeramount
+          ? productdetails.offerId
+          : categorydoc.offerId;
+    } else if (productdetails.offerId) {
+      finalOffer = productdetails.offerId;
+    } else if (categorydoc?.offerId) {
+      finalOffer = categorydoc.offerId;
+    }
+    console.log("final offer", finalOffer)
+    const response = {
+      ...productdetails.toObject(),
+      finalOffer,
+    };
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error("Error fetching product details:", err);
+    res.status(500).json({ message: "Failed to fetch product details" });
+  }
+};
+
+// const productdata = productdetails.toObject();
 
     // if (productdata.offerId) {
     //   productdata.offerId = {
@@ -1115,13 +1149,7 @@ const fetchproductdetails = async (req, res) => {
     //   productdata.offerId = null; // No offer for this product
     // }
 
-    console.log("fetchproduct", productdata);
-    res.status(200).json(productdata);
-  } catch (err) {
-    console.error("Error fetching product details:", err);
-    res.status(500).json({ message: "Failed to fetch product details" });
-  }
-};
+    // console.log("fetchproduct", productdata);
 const fetchrecom = async (req, res) => {
   const { category } = req.params;
 

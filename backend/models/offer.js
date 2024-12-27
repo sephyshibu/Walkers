@@ -7,6 +7,7 @@ const OfferSchema=new mongoose.Schema({
         require: true,
         enum: ['fixed', 'percentage'], // Enclose the values in quotes
     },
+    status:{type:Boolean, default:false},
     
     offeramount:{type:Number, required:true,
                 validate:{validator:value=>value>0, 

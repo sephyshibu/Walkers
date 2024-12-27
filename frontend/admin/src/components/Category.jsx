@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react'
 import axiosInstanceadmin from '../axios'
 import { useNavigate } from 'react-router'
 import './Category.css'
+import AddOfferCategory from './AddOfferCategory'
+
 const Category = () => {
     const [category,setcategory]=useState("")
     const[lists,setlists]=useState([])
+    const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const[error,seterror]=useState('')
     // const[msg,setmsg]=useState('')
     const navigate=useNavigate()
@@ -25,7 +29,17 @@ const Category = () => {
         fetchlist()
     },[])
 
-
+    const openModal = (categoryId) => {
+        console.log("categoryId", categoryId)
+        setSelectedCategoryId(categoryId);
+        setIsModalOpen(true);
+      };
+      
+      const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedCategoryId(null);
+      };
+      
 
 
     const handleChange=(e)=>{
@@ -117,6 +131,7 @@ const Category = () => {
                             {/* <td>{user.phonenumber}</td> */}
                             <td>{list.status ? "Active":"InActive"}</td>
                             <td>
+                                <button onClick={() => openModal(list._id)}>Add Offer</button>
                                 <button className="edit-button" onClick={()=>handleEdit(list._id)}>
                                 Edit
                                 </button>
@@ -127,6 +142,11 @@ const Category = () => {
                             </td>
                         </tr>
                 ) })}
+                <AddOfferCategory
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        categoryId={selectedCategoryId}
+                    />
                 </tbody>
             </table>
         </div>
