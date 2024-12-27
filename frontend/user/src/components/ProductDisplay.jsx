@@ -59,6 +59,7 @@ const ProductDisplay = () => {
           stockStatus: fetchdetails.stockStatus,
           availableQuantity:fetchdetails.availableQuantity,
           image: fetchdetails.images[0], // First image
+          offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
         };
 
         setInitialProductState(initialState);
@@ -71,8 +72,9 @@ const ProductDisplay = () => {
           description: fetchdetails.description,
           availableQuantity:fetchdetails.availableQuantity,
           stockStatus: fetchdetails.stockStatus,
-          
+          offeramount: fetchdetails.offerId?.offeramount || 0, // Handle null offerId
         });
+      
 
         setExistingImages(fetchdetails.images);
         setvariantslist(fetchdetails.variants);
@@ -102,8 +104,8 @@ const ProductDisplay = () => {
     fetchProduct();
   }, [id]);
 
-
-
+  console.log("formdata", formdata)
+  console.log("sdfsdfgsagf",formdata.offeramount)
 
   const Controls = () => {
     const { zoomIn, zoomOut, resetTransform } = useControls();
@@ -160,7 +162,7 @@ const ProductDisplay = () => {
         title:formdata.title||selectedVariant.name,
         availableQuantity:formdata.availableQuantity|| selectedVariant.availableQuantity,
         quantity,
-        price:formdata.price||selectedVariant.price,
+        price:formdata.price-formdata.offeramount||selectedVariant.price,
         
       })
       console.log("add to cart response in product display page ",response.data)
@@ -259,8 +261,14 @@ const ProductDisplay = () => {
           <div className="product-right">
             <h1 className="product-title">{formdata.title}</h1>
             <div className="price-section">
-              <p className="product-prev-price">Rs.{formdata.price * 1.2}</p>
-              <p className="product-price">Rs.{formdata.price}</p>
+              
+              {formdata.offeramount > 0 && (
+                <p className="product-prev-price">Rs.{formdata.price}</p>
+              )}
+              <p className="product-price">
+                Rs.{formdata.offeramount ? formdata.price - formdata.offeramount : formdata.price}
+              </p>
+              {/* <p className="product-price">Rs.{formdata.price-formdata.offeramount}</p> */}
               <p className="product-price">Quantity: {formdata.availableQuantity}</p>
             </div>
             <div className="product-rating">

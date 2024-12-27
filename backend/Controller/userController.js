@@ -1094,9 +1094,27 @@ const fetchproductdetails = async (req, res) => {
   console.log("product display detail", id);
 
   try {
-    const productdetails = await Productdb.findById(id);
+   
+    const productdetails = await Productdb.findById(id)
+    .populate({
+        path: 'offerId',
+       
+    })
+    .exec();
+
+
     console.log("details", productdetails);
     const productdata = productdetails.toObject();
+
+    // if (productdata.offerId) {
+    //   productdata.offerId = {
+    //     offeramount: productdata.offerId.offeramount,
+    //     expiredon: productdata.offerId.expiredon
+    //   };
+    // } else {
+    //   productdata.offerId = null; // No offer for this product
+    // }
+
     console.log("fetchproduct", productdata);
     res.status(200).json(productdata);
   } catch (err) {
