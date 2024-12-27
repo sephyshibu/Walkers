@@ -1,0 +1,70 @@
+.modal-container {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    margin: auto;
+    outline: none;
+}
+
+.modal-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #555;
+}
+
+.form-group select,
+.form-group input {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.btn-add {
+    background-color: #28a745;
+}
+
+.btn-cancel {
+    background-color: #ffc107;
+}
+
+
+.btn:hover {
+    opacity: 0.9;
+}

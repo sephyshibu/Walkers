@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axiosInstanceadmin from '../axios';
+import './AddOffer.css'; // Import the CSS file
 
 const AddOffer = ({ isOpen, onRequestClose, productId }) => {
     const [offerData, setOfferData] = useState({
@@ -30,34 +31,66 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onRequestClose={onRequestClose} ariaHideApp={false}>
-            <h2>Add Offer</h2>
-            <form>
-                <label>Offer Type:</label>
-                <select name="offertype" value={offerData.offertype} onChange={handleInputChange}>
-                    <option value="fixed">Fixed</option>
-                    <option value="percentage">Percentage</option>
-                </select>
-                <label>Offer Amount:</label>
-                <input
-                    type="number"
-                    name="offeramount"
-                    value={offerData.offeramount}
-                    onChange={handleInputChange}
-                />
-                <label>Expiry Date:</label>
-                <input
-                    type="date"
-                    name="expiredon"
-                    value={offerData.expiredon}
-                    onChange={handleInputChange}
-                />
-                <button type="button" onClick={handleAddOffer}>
-                    Add Offer
-                </button>
-                <button type="button" onClick={onRequestClose}>
-                    Cancel
-                </button>
+        <Modal
+            isOpen={isOpen}
+            onRequestClose={onRequestClose}
+            ariaHideApp={false}
+            className="modal-container"
+            overlayClassName="modal-overlay"
+        >
+            <h2 className="modal-title">Add Offer</h2>
+            <form className="form-container">
+                <div className="form-group">
+                    <label htmlFor="offertype">Offer Type:</label>
+                    <select
+                        id="offertype"
+                        name="offertype"
+                        value={offerData.offertype}
+                        onChange={handleInputChange}
+                        className="form-input"
+                    >
+                        <option value="fixed">Fixed</option>
+                        <option value="percentage">Percentage</option>
+                    </select>
+                </div>
+                <div className="form-group">
+                    <label htmlFor="offeramount">Offer Amount:</label>
+                    <input
+                        type="number"
+                        id="offeramount"
+                        name="offeramount"
+                        value={offerData.offeramount}
+                        onChange={handleInputChange}
+                        className="form-input"
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="expiredon">Expiry Date:</label>
+                    <input
+                        type="date"
+                        id="expiredon"
+                        name="expiredon"
+                        value={offerData.expiredon}
+                        onChange={handleInputChange}
+                        className="form-input"
+                    />
+                </div>
+                <div className="button-container">
+                    <button
+                        type="button"
+                        onClick={handleAddOffer}
+                        className="btn btn-add"
+                    >
+                        Add Offer
+                    </button>
+                    <button
+                        type="button"
+                        onClick={onRequestClose}
+                        className="btn btn-cancel"
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>
         </Modal>
     );
