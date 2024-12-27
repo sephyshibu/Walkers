@@ -618,7 +618,52 @@ const getcoupon=async(req,res)=>{
         }
   }
   
-
-
-module.exports={toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+  const salesreport = async (req, res) => {
+    try {
+      const { fromDate, toDate } = req.query;
+  
+      const matchQuery = {
+        orderStatus: { $nin: ["Cancelled"] },
+        'items.isreturned': false,
+      };
+  
+      if (fromDate && toDate) {
+        matchQuery.orderDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
+      }
+  
+      const salesData = await Orderdb.aggregate([
+        { $unwind: '$items' },
+        { $match: matchQuery },
+        {
+          $group: {
+            _id: null,
+            totalSales: { $sum: "$totalprice" },
+            totalorders: { $sum: 1 },
+            monthlysales: {
+              $push: {
+                month: { $month: "$orderDate" },
+                year: { $year: "$orderDate" },
+                total: "$totalprice",
+              },
+            },
+          },
+        },
+      ]);
+  
+      if (salesData.length === 0) {
+        return res.status(200).json({ totalSales: 0, totalorders: 0, monthlysales: [] });
+      }
+  
+      res.status(200).json({
+        totalSales: salesData[0].totalSales,
+        totalorders: salesData[0].totalorders,
+        monthlysales: salesData[0].monthlysales,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Something went wrong.' });
+    }
+  };
+  
+module.exports={salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

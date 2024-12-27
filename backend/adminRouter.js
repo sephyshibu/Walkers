@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
+const {salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory,updateCategory,softdeletecategory} = require('./Controller/adminController')
 const verifyAccessToken =require('./middleware/verifyaccessToken')
 const { verify } = require('jsonwebtoken')
 
@@ -37,6 +37,6 @@ router.post('/addcoupon',verifyAccessToken,addcoupon)
 router.get('/getcancelitem', verifyAccessToken,cancelorderfetch)
 router.get('/getcoupon', verifyAccessToken, getcoupon)
 
-
+router.get('/salesreport', verifyAccessToken, salesreport)
 
 module.exports=router
