@@ -5,10 +5,14 @@ import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 import { useNavigate } from 'react-router';
 import './Product.css';
+import AddOffer from './Addoffer'
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProductId, setSelectedProductId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const itemsPerPage = 5; // Display 5 items per page
   const [formData, setFormData] = useState({
     title: '',
@@ -256,6 +260,15 @@ const handleVariantChange = (index, field, value) => {
       )
   );
 };
+const openModal = (productId) => {
+  setSelectedProductId(productId);
+  setIsModalOpen(true);
+};
+
+const closeModal = () => {
+  setIsModalOpen(false);
+  setSelectedProductId(null);
+};
 
 
 
@@ -446,6 +459,7 @@ const handleVariantChange = (index, field, value) => {
                               )}
                             </td> */}
                             <td>
+                                <button onClick={() => openModal(product._id)}>Add Offer</button>
                                 <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
                                 <button  className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id,product.status)}>
                                         {product.status?"Delete":"Undo"}
@@ -453,6 +467,11 @@ const handleVariantChange = (index, field, value) => {
                             </td>
                         </tr>
                     ))}
+                    <AddOffer
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                        productId={selectedProductId}
+                    />
                 </tbody>
             </table>
               )}

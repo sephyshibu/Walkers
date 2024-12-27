@@ -15,7 +15,10 @@ const ProductSchema= new mongoose.Schema({
         // validate: { validator: value => value > 0, message: "Quantity must be greater than 0" }
     },
     images: { type: [String], required: true }, // Cloudinary URLs
-    
+    offerId:{type:mongoose. Schema.Types.ObjectId,
+            ref:"offer",
+            default:null
+    },
     
     status:{
         type:Boolean,

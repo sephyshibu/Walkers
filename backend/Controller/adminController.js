@@ -7,6 +7,7 @@ const Orderdb=require('../models/order')
 const addressdb=require('../models/address')
 const wallet =require('../models/wallet')
 const coupondb= require('../models/coupon')
+const offerdb=require('../models/offer')
 const { v4: uuidv4 } = require('uuid'); // create transaction id for uniqque
 
 const loginAdmin=async(req,res)=>{
@@ -664,6 +665,36 @@ const getcoupon=async(req,res)=>{
       res.status(500).json({ error: 'Something went wrong.' });
     }
   };
+
+  const addoffer=async(req,res)=>{
+    const{offertype, offeramount, expiredon}=req.body
+    console.log("req body", req.body)
+    try {
+        const newoffer= new offerdb({offertype, offeramount, expiredon})
+        console.log("newoffer", newoffer)
+        await newoffer.save()
+        res.status(201).json(newoffer);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+
+  }
+
+
+const productoffer=async(req,res)=>{
+    const{offerId}=req.body
+    const{productId}=req.params
+    console.log("productid",productId)
+    console.log('offerId', offerId)
+    try {
+        const productdoc=await Productdb.findByIdAndUpdate(productId,{offerId}, {new:true})
+        console.log("productdoc", productdoc)
+        await productdoc.save()
+        res.status(200).json(productdoc);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
   
-module.exports={salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 
