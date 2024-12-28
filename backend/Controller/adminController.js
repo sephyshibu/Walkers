@@ -311,39 +311,90 @@ const categoryfetch=async(req,res)=>{
     }
 }
 
+// const fetchorder = async (req, res) => {
+
+//     try {
+//         // Fetch all orders
+//         const { page = 1, limit = 10 } = req.query; // Get page and limit from query params (default to 1 and 10)
+
+//         const orders = await Orderdb.find()
+//             .populate('userId', 'username email'); // Populate user details
+            
+//         // Enrich orders with address details manually
+//         const enrichedOrders = await Promise.all(
+//             orders.map(async (order) => {
+//                 let addressname = 'Address not found';
+
+//                 // Fetch the address details for the given addressId
+//                 if (order.addressId) {
+//                     const addressDoc = await addressdb.findOne(
+//                         { "address._id": order.addressId }, // Match the nested address ID
+//                         { "address.$": 1 } // Retrieve only the matching address in the array
+//                     );
+
+//                     if (addressDoc && addressDoc.address.length > 0) {
+//                         addressname = addressDoc.address[0].addressname; // Extract the addressname
+//                     }
+//                 }
+
+//                 return {
+//                     ...order._doc, // Spread existing order fields
+//                     addressname, // Add addressname
+//                 };
+//             })
+//         );
+
+//         console.log("Backend enriched orders", enrichedOrders);
+
+//         res.status(200).json(enrichedOrders);
+//     } catch (err) {
+//         console.error("Error in fetchorder:", err);
+//         res.status(500).json({ message: 'Failed to fetch orders' });
+//     }
+// };
+
 const fetchorder = async (req, res) => {
     try {
-        // Fetch all orders
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const totalOrders = await Orderdb.countDocuments();
+
         const orders = await Orderdb.find()
-            .populate('userId', 'username email'); // Populate user details
-        
-        // Enrich orders with address details manually
+            .populate('userId', 'username email')
+            .sort({ _id: -1 })  // Sort by _id in descending order (newest first)
+            .skip(skip)
+            .limit(limit);
+
         const enrichedOrders = await Promise.all(
             orders.map(async (order) => {
                 let addressname = 'Address not found';
 
-                // Fetch the address details for the given addressId
                 if (order.addressId) {
                     const addressDoc = await addressdb.findOne(
-                        { "address._id": order.addressId }, // Match the nested address ID
-                        { "address.$": 1 } // Retrieve only the matching address in the array
+                        { "address._id": order.addressId },
+                        { "address.$": 1 }
                     );
 
                     if (addressDoc && addressDoc.address.length > 0) {
-                        addressname = addressDoc.address[0].addressname; // Extract the addressname
+                        addressname = addressDoc.address[0].addressname;
                     }
                 }
 
                 return {
-                    ...order._doc, // Spread existing order fields
-                    addressname, // Add addressname
+                    ...order._doc,
+                    addressname,
                 };
             })
         );
 
-        console.log("Backend enriched orders", enrichedOrders);
-
-        res.status(200).json(enrichedOrders);
+        res.status(200).json({
+            orders: enrichedOrders,
+            currentPage: page,
+            totalPages: Math.ceil(totalOrders / limit),
+            totalOrders
+        });
     } catch (err) {
         console.error("Error in fetchorder:", err);
         res.status(500).json({ message: 'Failed to fetch orders' });
@@ -710,6 +761,60 @@ const categoryoffer=async(req,res)=>{
         res.status(400).json({ error: err.message });
     }
 }
+const fetchproductoffer=async(req,res)=>{
+    const{productId}=req.params
+    try {
+      const productdoc=await Productdb.findById(productId)
+                                      .populate("offerId")
+      
+      console.log("offer details",productdoc.offerId)
+      if(!productdoc.offerId){
+        return res.status(404).json({message:"offer not found"})
+      }
+      return res.status(200).json(productdoc.offerId)
+      } catch (err) {
+        console.error("Error fetching offer details:", err);
+        res.status(500).json({ message: "Failed to fetch offer details" });
+    }
+  }
+
+  const fetchcategoryoffer=async(req,res)=>{
+    const{categoryId}=req.params
+    console.log("categoryId", categoryId)
+    
+    try {
+      const categorydoc=await Categorydb.findById(categoryId)
+                                      .populate("offerId")
+                                     
+      console.log("offer details",categorydoc.offerId)
+      if(!categorydoc.offerId){
+        return res.status(404).json({message:"offer not found"})
+      }
+      return res.status(200).json(categorydoc.offerId)
+      } catch (err) {
+        console.error("Error fetching offer details:", err);
+        res.status(500).json({ message: "Failed to fetch offer details" });
+    }
+  }
+  const deleteoffer = async(req,res)=>{
+    const{offerId}=req.params
+
+    try {
+        const offerdoc=await offerdb.findById(offerId)
+        console.log("offerdocdelet", offerdoc)
+
+        if(!offerdoc)
+        {
+            return res.status(404).json({message:"no offer doc found"})
+        }
+       await offerdb.findByIdAndDelete(offerId)
+        res.status(200).json({ message: "offer deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Error deleting offer" });
+    }
+  }
+
   
-module.exports={categoryoffer,productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
+module.exports={deleteoffer,fetchcategoryoffer,fetchproductoffer,categoryoffer,productoffer,addoffer,salesreport,toggleCouponStatus,getcoupon,cancelorderrefund,cancelorderfetch,addcoupon,updatereturnstatus,getreturneditems,softdeletevariant,updatepaymentstatus,fetchparticularorder,fetchorder,refreshToken,softdeleteproduct,fetcheditproduct,updateProduct,addProduct,fetchproduct,softdeletecategory,updateCategory,loginAdmin,toggleUserStatus,userfetch,addCategory,categoryfetch,editcategory}
 

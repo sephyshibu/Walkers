@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect} from 'react';
 import Modal from 'react-modal';
 import axiosInstanceadmin from '../axios';
 import { styled } from '@stitches/react';
@@ -9,12 +9,45 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
         offeramount: '',
         expiredon: '',
     });
-
+    const[error,setErrors]=useState({})
+    const[deleting,setdeleting]=useState(false)
+    const[displayoffer,setdisplayoffer]=useState([])
     console.log("categoryid", categoryId);
+    useEffect(() => {
+        const fetchoffercat = async () => {
+            try {
+                const response = await axiosInstanceadmin.get(`/fetchcategoryoffer/${categoryId}`);
+                setdisplayoffer(response.data); // Display the offer details
+                
+                console.log("feteched offer",response.data)
+            } catch (err) {
+                console.error('Error fetching offer:', err);
+                if (err.response && err.response.status === 404) {
+                    setdisplayoffer({ message: "No offer found" }); // Handle "No offer found" case
+                } else {
+                    setErrors({ global: "Failed to fetch products." });
+                }
+            }
+        };
+        fetchoffercat();
+        setdeleting(false)
+    }, [categoryId,deleting]);
 
+    console.log("category offer",displayoffer)
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setOfferData((prev) => ({ ...prev, [name]: value }));
+        setErrors((prev) => ({ ...prev, [name]: "" })); // Clear error for the field
+    };
+    const validateForm = () => {
+        const newErrors = {};
+        if (!offerData.offeramount || offerData.offeramount <= 0) {
+            newErrors.offeramount = "Please enter a valid offer amount greater than 0.";
+        }
+        if (!offerData.expiredon) {
+            newErrors.expiredon = "Please select an expiry date.";
+        }
+        return newErrors;
     };
 
     const handleAddOffer = async () => {
@@ -27,6 +60,15 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
             console.error('Error adding offer:', error);
         }
     };
+    const handleDelete=async(offerId)=>{
+        try {
+            const response=await axiosInstanceadmin.delete(`/deleteoffer/${offerId}`)
+            console.log(response.data)
+            setdeleting(true)
+        } catch (error) {
+            console.error('Error deleting offer:', error);
+        }
+    }
 
     return (
         <StyledModal
@@ -66,6 +108,7 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
                             value={offerData.offeramount}
                             onChange={handleInputChange}
                         />
+                        {error.offeramount && <p className="error-text">{error.offeramount}</p>}
                     </FormGroup>
                     <FormGroup>
                         <Label htmlFor="expiredon">Expiry Date:</Label>
@@ -76,6 +119,7 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
                             value={offerData.expiredon}
                             onChange={handleInputChange}
                         />
+                        {error.expiredon && <p className="error-text">{error.expiredon}</p>}
                     </FormGroup>
                     <ButtonContainer>
                         <Button onClick={handleAddOffer} primary>
@@ -86,6 +130,34 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
                         </Button>
                     </ButtonContainer>
                 </Form>
+                <h2>Applied offer</h2>
+            <table className='productoffer-table'>
+                <thead>
+                    <tr>
+                        <th>Offer Id</th>
+                        <th>Offer type</th>
+                        <th>Offer Amount</th>
+                        <th>Created On</th>
+                        <th>Expired On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {displayoffer && (
+                <tr key={displayoffer._id} className="offertable">
+                    <td>{displayoffer._id}</td>
+                    <td>{displayoffer.offertype}</td>
+                    <td>{displayoffer.offeramount}</td>
+                    <td>{displayoffer.createdon}</td>
+                    <td>{displayoffer.expiredon}</td>
+                    <td>
+                        <button onClick={()=>handleDelete(displayoffer._id)}>Delete Offer</button>
+                    </td>
+                </tr>
+)}
+
+                </tbody>
+            </table>
             </ModalContent>
         </StyledModal>
     );
@@ -103,7 +175,7 @@ const ModalContent = styled('div', {
     padding: '2rem',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     width: '100%',
-    maxWidth: '400px',
+    maxWidth: '800px',
 
     h2: {
         margin: '0 0 1.5rem',

@@ -1,58 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstanceadmin from '../axios';
-import './Order.css'
+import './Order.css';
 import EditOrder from './EditOrder';
 
 const Orders = () => {
     const [orders, setOrders] = useState([]);
-    const [notifications, setNotifications] = useState([]);
-    const[filter,setfilter]=useState([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [error, setError] = useState('');
-    const [sortoptions,setsortoptions]=useState('')
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState({});
     const navigate = useNavigate();
-    const[isOpen,setIsOpen]=useState(false)
-    const[selectedOrder,setSelectedOrder]=useState({})
-  
 
     useEffect(() => {
-        const fetchOrder = async () => {
-            try {
-                const response = await axiosInstanceadmin.get('/fetchorder');
-                console.log('Fetched orders:', response.data);
-                setOrders(response.data);
-              
-                const combinedItems=response.data.flatMap((order)=>(
-                    order.items.map((item)=>({
-                        ...item,addressId:order.addressId,orderid:order._id, userId:order.userId,orderStatus:order.orderStatus,addressname:order.addressname,
-                        paymentmethod:order.paymentmethod, paymentstatus:order.paymentstatus,totalprice:order.totalprice
-                    }))
-                ))
-                
-                 console.log(combinedItems)
-                 setOrders(combinedItems)
-            } catch (error) {
-                console.log('Error in fetching orders:', error);
-                setError('Error in fetching orders');
-            }
-        };
-        fetchOrder();
-    }, []);
+        fetchOrders();
+    }, [currentPage, itemsPerPage]);
 
-    
-    const openoverlay=(id)=>{
-        setcurrentorderid(id)
-        setshowoverlay(true)
-    }
+    const fetchOrders = async () => {
+        try {
+            const response = await axiosInstanceadmin.get('/fetchorder', {
+                params: { page: currentPage, limit: itemsPerPage }
+            });
+            const { orders, currentPage: responsePage, totalPages } = response.data;
+            
+            const combinedItems = orders.flatMap((order) => (
+                order.items.map((item) => ({
+                    ...item,
+                    addressId: order.addressId,
+                    orderid: order._id,
+                    userId: order.userId,
+                    orderStatus: order.orderStatus,
+                    addressname: order.addressname,
+                    paymentmethod: order.paymentmethod,
+                    paymentstatus: order.paymentstatus,
+                    totalprice: order.totalprice,
+                    orderDate:order.orderDate
+                }))
+            )).sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));  // Sort by creation date, newest first;
 
-    const closeoverlay=()=>{
-        setshowoverlay(false)
-    }
+            setOrders(combinedItems);
+            setCurrentPage(responsePage);
+            setTotalPages(totalPages);
+        } catch (error) {
+            console.log('Error in fetching orders:', error);
+            setError('Error in fetching orders');
+        }
+    };
 
     const handleEdit = (list) => {
-        // navigate(`/editorder/${id}`);
-        setSelectedOrder(list)
-        setIsOpen(true)
+        setSelectedOrder(list);
+        setIsOpen(true);
+    };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+    const handleItemsPerPageChange = (event) => {
+        setItemsPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
     };
 
     return (
@@ -84,22 +92,42 @@ const Orders = () => {
                                 <td>{list.orderStatus}</td>
                                 <td>{list.title}</td>
                                 <td>{list.totalprice}</td>
-                                
                                 <td>
                                     <button
                                         className="action-button"
                                         onClick={() => handleEdit(list)}
-                                        disabled={list.orderStatus==="Cancelled"}
+                                        disabled={list.orderStatus === "Cancelled"}
                                     >
                                         Action
                                     </button>
                                 </td>
                             </tr>
-                            
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            <div className="pagination-controls">
+                <button 
+                    onClick={() => handlePageChange(currentPage - 1)} 
+                    disabled={currentPage === 1}
+                >
+                    Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button 
+                    onClick={() => handlePageChange(currentPage + 1)} 
+                    disabled={currentPage === totalPages}
+                >
+                    Next
+                </button>
+                <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+                    <option value="10">10 per page</option>
+                    <option value="20">20 per page</option>
+                    <option value="50">50 per page</option>
+                </select>
+            </div>
+            
             {isOpen && <EditOrder isOpen={isOpen} selectedOrder={selectedOrder} setIsOpen={setIsOpen}/>}
         </div>
     );

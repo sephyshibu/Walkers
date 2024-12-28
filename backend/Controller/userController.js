@@ -1998,10 +1998,26 @@ const applycoupon=async(req,res)=>{
       res.status(500).json({ message: 'Error applying coupon.' });
   }
 }
+const searchoption=async(req,res)=>{
+  const{query}=req.query
+try{
+  const products=await Productdb.find({
+    title:{$regex:query, $options:'i'}
+  })
+
+  res.status(200).json({products})
+}
+catch (error) {
+  console.error("Error in search endpoint:", error);
+  res.status(500).json({ message: "Server error while searching products." });
+}
+}
+
 
 
 module.exports = {
 
+  searchoption,
   fetchwallet,
     returnorder,
     applycoupon,

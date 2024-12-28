@@ -15,7 +15,7 @@ const CategorySchema= new mongoose.Schema({
     offerId:{type:mongoose. Schema.Types.ObjectId,
                 ref:"offer",
                 default:null
-        }
+        },
     
 })
 

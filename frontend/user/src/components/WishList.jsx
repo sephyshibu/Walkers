@@ -103,8 +103,10 @@ import axiosInstanceuser from '../axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './Navbar';
+import { useNavigate } from 'react-router-dom';
 import './Wishlist.css'
 const WishList = () => {
+  const navigate=useNavigate()
   const userId = useSelector((state) => state.user.user._id);
   const [error, setError] = useState('');
   const [wishlistshow, setWishlistShow] = useState([]);
@@ -136,6 +138,10 @@ const WishList = () => {
     }
   };
 
+  const handleAddToCart=async(id)=>{
+    navigate(`/products/display/${id}`)
+}
+
   return (
     <div className="wishlist-page-container">
       <Navbar />
@@ -156,6 +162,8 @@ const WishList = () => {
                 >
                   Remove
                 </button>
+                <button className="add-to-cart" 
+                onClick={()=>handleAddToCart(wish._id)}>Add to Cart</button>
               </div>
             </div>
           ))

@@ -27,7 +27,7 @@ const Order = () => {
             try {
                 const response = await axiosInstanceuser.get(`/fetchorder/${userId}`);
                 console.log("Fetched orders:", response.data.orders);
-                setorder(response.data.orders); // Update state with orders array
+                setorder(response.data.orders.reverse()); // Update state with orders array
 
 
                 const combinedItems=response.data.orders.flatMap((order)=>(

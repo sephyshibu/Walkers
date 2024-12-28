@@ -123,13 +123,26 @@ const Productpage = () => {
     }
 
     const debouncesearch = useCallback(
-        debounce((query) => {
-          const filtered = products.filter((product) => 
-            product.title.toLowerCase().includes(query.toLowerCase())
-          );
-          setfilteredproduct(filtered);
+        debounce(async(query) => {
+        //   const filtered = products.filter((product) => 
+        //     product.title.toLowerCase().includes(query.toLowerCase())
+        //   );
+
+        try{
+            const response=await axiosInstanceuser.get('/searchquery',{
+                params:{query},
+                headers: {
+                    'User-Id': userId  // Pass the userId in the headers
+                }})
+                setfilteredproduct(response.data.products);
+        }
+        catch(error){
+            console.error("Error fetching search results:", error);
+            toast.error("Failed to fetch search results.");
+        }
+          
         }, 500), // Delay of 500ms
-        [products] // Dependency on products array
+        [userId] // Dependency on products array
       );
 
     const handleSearch=(e)=>{
