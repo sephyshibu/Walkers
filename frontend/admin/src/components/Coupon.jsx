@@ -25,7 +25,7 @@ const Coupon = () => {
       try {
         const response = await axiosInstanceadmin.get('/getcoupon');
         console.log("Fetched return orders", response.data.coupon);
-        setcoupon(response.data.coupon);
+        setcoupon(response.data.coupon.reverse());
       } catch (error) {
         console.log("Error in fetching coupons", error);
       }

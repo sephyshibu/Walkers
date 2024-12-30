@@ -28,16 +28,32 @@ const Order = () => {
                 const response = await axiosInstanceuser.get(`/fetchorder/${userId}`);
                 console.log("Fetched orders:", response.data.orders);
                 setorder(response.data.orders.reverse()); // Update state with orders array
-
+           
 
                 const combinedItems=response.data.orders.flatMap((order)=>(
+                    
                     order.items.map((item)=>({
-                        ...item,addressId:order.addressId,orderid:order.orderId, userId:order.userId,orderStatus:order.orderStatus,addressname:order.addressname,
-                        paymentmethod:order.paymentMethod, paymentstatus:order.paymentStatus,totalprice:order.totalPrice,
-                        orderdate:order.orderDate, deliverydate:order.deliveryDate,productId:item.productId,isreturned:item.isreturned,returnstatus:item.returnstatus,refundstatus:item.refundstatus,returnreason:item.returnreason
+                        ...item,
+                        addressId:order.addressId,
+                        orderid:order.orderId, 
+                        userId:order.userId,
+                        orderStatus:order.orderStatus,
+                        addressname:order.addressname,
+                        paymentmethod:order.paymentMethod, 
+                        paymentstatus:order.paymentStatus,
+                        totalprice:order.totalPrice,
+                        orderdate:order.orderDate, 
+                        deliverydate:order.deliveryDate,
+                        productId:item.productId,
+                        isreturned:item.isreturned,
+                        returnstatus:item.returnstatus,
+                        refundstatus:item.refundstatus,
+                        returnreason:item.returnreason
                     }))
+                    
                 ))
-                
+                console.log("orderID",orders.orderid)
+               
                  console.log("Combined Orders",combinedItems)
                  setorder(combinedItems)
 

@@ -14,7 +14,7 @@ const Retrun = () => {
                     console.log("ewfhhwgfuhgu")
                     const response=await axiosInstanceadmin.get('/getcancelitem')
                     console.log("feteched cancel orders",response.data)
-                    setcancelorders(response.data)
+                    setcancelorders(response.data.reverse())
                     
                 } catch (error) {
                     console.log("Error in fetching cancel orders", error);

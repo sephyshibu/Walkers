@@ -13,12 +13,18 @@ import pic6 from '../images/pic6.jpeg'
 import pic4 from '../images/pic4.jpg'
 import banner1 from '../images/Business.png'
 import banner2 from '../images/Business 1.png'
+
+
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
   const [startIndex, setStartIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const banners = [banner1, banner2]; // Array of banner images
+  // const banners = [banner1, banner2]; // Array of banner images
+
+  const banners = [
+    '../images/video.mp4'
+    ];
 
   const navigate=useNavigate()
   useEffect(()=>{
@@ -47,7 +53,7 @@ const Home = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % banners.length); // Cycle through slides
-    }, 5000); // Change slide every 5 seconds
+    }, 9000); // Change slide every 5 seconds
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [banners.length]);
@@ -86,11 +92,22 @@ const Home = () => {
       <Navbar />
       <div className="products-user-page">
       <div className="banner">
-        <img
+        {/* <img
           className="banner-image"
           src={banners[currentSlide]}
           alt={`Banner ${currentSlide + 1}`}
-        />
+        /> */}
+
+      <video
+          key={currentSlide} // Forces re-render on slide change
+          className="banner-video"
+          src={banners[currentSlide]} // Use video source
+          autoPlay
+          muted
+          loop
+      >
+        Your browser does not support the video tag.
+      </video>
         
       </div>
     </div>
