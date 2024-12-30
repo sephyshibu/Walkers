@@ -4,5 +4,5 @@ const searchLimiter = rateLimit({
     max: 20, // Limit each IP to 20 requests per windowMs
     message: "Too many search requests from this IP, please try again after a minute.",
   });
-
+  console.log("search limiter")
 module.exports=searchLimiter

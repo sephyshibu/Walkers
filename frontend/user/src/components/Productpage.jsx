@@ -124,9 +124,6 @@ const Productpage = () => {
 
     const debouncesearch = useCallback(
         debounce(async(query) => {
-        //   const filtered = products.filter((product) => 
-        //     product.title.toLowerCase().includes(query.toLowerCase())
-        //   );
 
         try{
             const response=await axiosInstanceuser.get('/searchquery',{
@@ -165,9 +162,16 @@ const Productpage = () => {
                 <p className="page-subtitle">Explore our collection of premium products</p>
             </header>
 
-        <div className='searchoptions'>
-            <input type='text' value={searchterm} onChange={handleSearch} placeholder='enter the search product'/>
-        </div>
+            <div className="search-options">
+                <input
+                    type="text"
+                    value={searchterm}
+                    onChange={handleSearch}
+                    placeholder="Enter the search product"
+                    className="search-input"
+                />
+               
+            </div>
 
             <div className="filters">
             <label>

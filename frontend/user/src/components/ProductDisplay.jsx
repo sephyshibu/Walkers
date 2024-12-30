@@ -260,7 +260,7 @@ const ProductDisplay = () => {
                 </div>
                 
           </div>
-        </div>   
+       
 
           <div className="product-right">
             <h1 className="product-title">{formdata.title}</h1>
@@ -293,7 +293,7 @@ const ProductDisplay = () => {
               {/* <button className="buy-now">Buy Now</button> */}
             </div>
           </div>
-
+          </div>   
 
           <div className="reviews-section">
             <h2>Customer Reviews</h2>

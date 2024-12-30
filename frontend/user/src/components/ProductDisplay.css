@@ -1,3 +1,4 @@
+
 .product-display-page {
   font-family: Arial, sans-serif;
   background-color: #f8f8f8;
@@ -8,6 +9,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  margin-top: 60px; /* Same height as the navbar */
 }
 
 .product-main {
@@ -17,7 +19,7 @@
 }
 
 .product-left {
-  flex: 0 0 40%;
+  flex: 0 0 50%;
 }
 
 .main-image-container {
@@ -59,6 +61,7 @@
 
 .product-right {
   flex: 1;
+  margin-top: 100px;
 }
 
 .product-title {
