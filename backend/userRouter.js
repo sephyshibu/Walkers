@@ -4,6 +4,7 @@ const {searchoption,fetchwallet,coupondetails,applycoupon,fetchcoupon,returnorde
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 const checkusersstatus=require('./middleware/checkuserstatus')
+const searchLimiter=require('./middleware/searchlimiter')
 
 router.post('/signup',signup)
 router.post('/refresh',refreshToken)
@@ -48,7 +49,7 @@ router.post('/applycoupon/:userId',verifyAccessToken,applycoupon)
 router.get('/fetchcoupondetails/:couponId', verifyAccessToken,coupondetails)
 
 router.get('/fetchwallet/:userId',verifyAccessToken,fetchwallet)
-router.get('/searchquery',verifyAccessToken,searchoption)
+router.get('/searchquery',verifyAccessToken,searchLimiter,searchoption)
 
 
 

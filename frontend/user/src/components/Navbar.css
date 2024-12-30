@@ -10,7 +10,7 @@
   left: 0; /* Ensure full width */
   width: 100%;
   z-index: 1000;
- 
+  background-color: rgba(255, 255, 255, 0.6); /* Slightly transparent */
   backdrop-filter: blur(5px); /* Add blur effect */
 }
 

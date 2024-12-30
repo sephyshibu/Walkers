@@ -7,7 +7,7 @@
 .about-title {
   text-align: center;
   font-size: 2.5rem;
-  color: #333;
+  color: black;
   margin-bottom: 30px;
   font-weight: bold;
 }
@@ -28,30 +28,45 @@
   flex-direction: column;
   gap: 20px;
 }
-
 .image-slide {
-  width: 100%;
-  height: 200px;
+  width: 200px; /* Fixed width for square shape */
+  height: 200px; /* Height matches width */
   object-fit: cover;
   opacity: 0;
+  margin-left: 90px;
   transform: translateX(-100%);
   transition: all 1s ease-out; /* Smooth transition */
 }
 
+
 .image-slide.animate {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateX(0) translateY(0); /* Reset position for animation */
 }
 
 .image-slide:nth-child(1).animate {
   transition-delay: 0s;
+  width:50%;
+  transform: translateX(-20px) translateY(-10px) scale(1.3); /* Slight displacement to the top-left */
 }
+
 .image-slide:nth-child(2).animate {
   transition-delay: 0.3s;
+  width:50%;
+  transform: translateX(215px) translateY(18px) scaleY(1.6); /* Slight displacement to the bottom-right */
 }
+
 .image-slide:nth-child(3).animate {
   transition-delay: 0.6s;
+  width: 45%;
+  transform: translateX(-98px) translateY(-60px); /* Slight displacement to the bottom-left */
 }
+.image-slide:nth-child(4).animate {
+  transition-delay: 0.6s;
+  width: 35%;
+  transform: translateX(218px) translateY(-140px); /* Slight displacement to the bottom-left */
+}
+
 
 @keyframes slideIn {
   0% {
@@ -65,7 +80,7 @@
 }
 
 /* Text Column */
-.text-column {
+/* .text-column {
   flex: 1.5;
   color: #555;
   font-family: Arial, sans-serif;
@@ -81,21 +96,58 @@
   line-height: 1.6;
   font-size: 1.1rem;
   margin-bottom: 20px;
+} */
+.text-column {
+  flex: 1.5;
+  font-family: Arial, sans-serif;
+  color: #555;
 }
+
+/* Main Heading (ABOUT US) */
+.about-title {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 20px; /* Spacing below the main heading */
+  font-weight: bold;
+  text-align: center; /* Align to the left */
+}
+
+/* Subheading Styling */
+.subheading {
+  font-size: 1.5rem;
+  color: #666;
+  margin-bottom: 20px; /* Spacing below the subheading */
+  font-weight: 600; /* Slightly bold */
+  text-align: left; /* Align to the left */
+}
+
+/* Paragraph Styling */
+.pargarph-about {
+  line-height: 1.6;
+  font-size: 1.1rem;
+  margin-bottom: 30px; /* Proper spacing below the paragraph */
+  text-align: left; /* Left alignment */
+} 
 
 .features-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  gap: 20px; /* Space between cards */
   margin-top: 30px;
 }
 
-/* Feature Card */
 .feature-card {
   background-color: #fff;
-  padding: 20px;
+  width: 100%; /* Automatically adapts to grid column width */
+  aspect-ratio: 1 / 1; /* Ensures the card is a square */
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex; /* Enables Flexbox */
+  flex-direction: column; /* Stack content vertically */
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  text-align: center; /* Center-align text inside the card */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -108,6 +160,7 @@
   font-size: 1.2rem;
   font-weight: bold;
   color: #333;
+  margin-bottom: 10px; /* Space between title and description */
 }
 
 .feature-card p {

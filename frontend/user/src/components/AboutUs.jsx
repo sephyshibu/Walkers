@@ -4,6 +4,7 @@ import pic1 from '../images/pic1.jpg';
 import pic2 from '../images/pic2.jpg';
 import pic3 from '../images/pic3.jpg';
 
+
 const AboutUs = () => {
     const features = [
         { title: 'High-Efficiency Products', description: 'Our products are designed to maximize energy output.' },
@@ -34,16 +35,18 @@ const AboutUs = () => {
     
     return (
         <div id="about-us-section" className="about-us">
-            <h1 className='about-title'>About Us</h1>
+           
             <div className="about-content">
                 <div className="image-column">
                     <img src={pic1} alt="Solar Panels" className="image-slide"/>
                     <img src={pic2} alt="Batteries" className="image-slide"/>
                     <img src={pic3} alt="Inverters" className="image-slide"/>
+                    <img src={pic1} alt="Inverters" className="image-slide"/>
                 </div>
                 <div className="text-column">
-                    <h1>Leading the Solar Revolution</h1>
-                    <p>
+                  <h1 className='about-title'>ABOUT US</h1>
+                    <h3 className='subheading'>Leading the Solar Revolution</h3>
+                    <p className='pargarph-about'>
                         We bring the power of the sun to your doorstep. Our mission is to
                         make sustainable energy accessible for everyone, reducing dependence
                         on traditional energy sources. With top-tier solar panels,

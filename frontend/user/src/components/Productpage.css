@@ -46,6 +46,7 @@
 /* Banner Styling */
 .banner img {
   width: 100%;
+  height:500px;
   border-radius: 12px;
   margin-bottom: 40px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
