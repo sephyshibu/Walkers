@@ -388,7 +388,8 @@ const fetchorder = async (req, res) => {
                 };
             })
         );
-
+        console.log("total pages", Math.ceil(totalOrders / limit))
+        console.log("current page", page)
         res.status(200).json({
             orders: enrichedOrders,
             currentPage: page,

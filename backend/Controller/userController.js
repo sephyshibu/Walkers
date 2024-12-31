@@ -426,6 +426,11 @@ const googleLogin = async (req, res) => {
 
 const getProducts = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+
     const activeCategories = await Categorydb.find({ status: true }).select(
       "categoryname"
     );
@@ -436,9 +441,25 @@ const getProducts = async (req, res) => {
     const products = await Productdb.find({
       status: true,
       category: { $in: activeCategoryNames },
-    });
+    })
+      .skip(skip) // Skip the number of items
+      .limit(limit); // Limit the number of items
 
-    return res.status(200).json({ products });
+    const totalProducts = await Productdb.countDocuments({
+        status: true,
+        category: { $in: activeCategoryNames },
+      });
+    console.log("total products", totalProducts)
+      const totalPages = Math.ceil(totalProducts / limit);
+    console.log("totalpages",totalPages)
+    console.log("currentpage",page)
+      return res.status(200).json({
+        products,
+        currentPage: page,
+        totalPages,
+        totalProducts,
+      });
+
   } catch (error) {
     console.error(
       "An error occurred during get product based on category",

@@ -15,12 +15,16 @@ const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
     const [sortoptions,setsortoptions]=useState('')
     const[searchterm,setsearchterm]=useState('')
+    const[currentPage,setCurrentPage]=useState(1)
+    const[totalPages,setTotalPages]=useState(0)
+    const[itemsPerPage,setItemsPerPage]=useState(5)
     const[filteredproduct,setfilteredproduct]=useState([])
     const[category,setcategory]=useState('ALL PRODUCTS')
     const[minprice,setminprice]=useState('')
     const[maxprice,setmaxprice]=useState('')
     const userId=useSelector((state)=>state.user.user._id)
     const navigate = useNavigate();
+    const[error,setError]=useState('')
 //       useEffect(() => {
 //     const checkUserStatus = async () => {
 //         try {
@@ -47,31 +51,30 @@ const Productpage = () => {
 
 //     checkUserStatus();
 // }, [navigate]);
+
+
+    const fetchProducts = useCallback(async () => {
+        try {
+            const response = await axiosInstanceuser.get('/getproducts', {
+                headers: {
+                    'User-Id': userId,
+                },
+                params: {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                },
+            });
+            setProducts(response.data.products);
+            setfilteredproduct(response.data.products);
+            setTotalPages(response.data.totalPages);
+        } catch (error) {
+            console.log('Error in fetching products', error);
+        }
+    }, [currentPage, itemsPerPage, userId]); // Dependencies
+    
     useEffect(() => {
-        const fetchProducts = async () => {
-
-            try {
-                const response = await axiosInstanceuser.get('/getproducts',{
-                    headers: {
-                        'User-Id': userId  // Pass the userId in the headers
-                    }});
-                setProducts(response.data.products); // Save products in state
-                setfilteredproduct(response.data.products)
-            } catch (error) {
-                console.log('Error in fetching products', error);
-                if (error.response?.status === 403 && error.response?.data?.action === "logout") {
-                    toast.error("Your account is inactive. Logging out.");
-                    localStorage.removeItem("userId"); // Clear the local storage
-                    await persistor.purge();
-                    navigate('/login'); // Redirect to the product display page
-                } else {
-                    setError("Failed to add to cart");
-                }
-            }
-        };
         fetchProducts();
-    }, []);
-
+    },[currentPage, itemsPerPage]);
 
     useEffect(()=>{
         let filtered=[...products]
@@ -104,7 +107,12 @@ const Productpage = () => {
         setfilteredproduct(filtered)
     },[category,minprice,maxprice,sortoptions,products])
 
-
+    const handlePageChange = (newPage) => {
+            console.log("next new page", newPage)
+            setCurrentPage(newPage);
+        
+    };
+    
 
 
 
@@ -238,6 +246,22 @@ const Productpage = () => {
                 <p>No products match your filters.</p>
             )}
         </div>
+        <div className="pagination">
+            <button 
+                onClick={() => handlePageChange(currentPage - 1)} 
+                disabled={currentPage === 1}
+            >
+                Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button 
+                onClick={() => handlePageChange(currentPage + 1)} 
+                disabled={currentPage === totalPages}
+            >
+                Next
+            </button>
+        </div>
+
 
             <Footer />
         </div>

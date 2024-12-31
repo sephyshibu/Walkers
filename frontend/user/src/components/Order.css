@@ -1,147 +1,55 @@
 .order-page {
-    font-family: 'Arial', sans-serif;
     padding: 20px;
-    background-color: #f9f9f9;
-    color: #333;
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
 }
 
-h1 {
-    text-align: center;
-    color: #444;
-    margin-bottom: 20px;
-}
-
-.error-messages {
-    color: red;
-    text-align: center;
+.filters select {
+    padding: 10px;
     margin-bottom: 20px;
 }
 
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Reduce spacing between orders */
-    width: 100%;
-    margin: 0 auto;
+    gap: 20px;
 }
 
 .order-card {
-    background: transparent; /* Remove background */
-    border: none; /* Remove border */
-    box-shadow: none; /* Remove shadow */
-    padding: 0; /* Remove padding */
-    width: 100%;
-    max-width: none; /* Ensure full width */
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
 }
 
 .order-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-    font-size: 1em;
-}
-
-.order-header h2 {
-    font-size: 1.1em;
-    color: #444;
-    margin: 0;
-}
-
-.order-details {
-    margin-bottom: 10px;
-    font-size: 0.9em;
-    color: #555;
+    margin-bottom: 15px;
+    font-weight: bold;
 }
 
 .order-details div {
-    margin-bottom: 5px;
-}
-
-.items-list {
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-.items-list h3 {
     margin-bottom: 8px;
-    color: #333;
 }
 
-.item {
-    margin-bottom: 5px;
-}
-
-.item-title {
-    font-weight: bold;
-    color: #222;
+.order-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
 }
 
 .action-button {
-    padding: 8px 12px;
-    margin-top: 5px;
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
-    color: #fff;
-    background-color: #007bff;
-    font-size: 0.8em;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    color: #fff;
 }
 
-.action-button.secondary {
-    background-color: #6c757d;
+.action-button.cancel {
+    background-color: #e74c3c;
 }
 
-.action-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.action-button:hover:not(:disabled) {
-    background-color: #0056b3;
-}
-
-/* Overlay Styles */
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.overlay-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-}
-
-.overlay-content h3 {
-    margin-bottom: 15px;
-    color: #333;
-}
-
-.reason-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 0.9em;
-}
-
-.feedback-message {
-    margin-top: 15px;
-    color: green;
-    font-weight: bold;
+.action-button:hover {
+    opacity: 0.9;
 }

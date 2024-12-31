@@ -5,7 +5,6 @@ import './Order.css'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const Order = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const[reason,setReason]=useState('')
@@ -19,7 +18,6 @@ const Order = () => {
     const [returnOverlay, setReturnOverlay] = useState(false);
     const [returnReason, setReturnReason] = useState('');
     const [returnProductId, setReturnProductId] = useState(null);
-
 
 
     useEffect(() => {
@@ -193,7 +191,6 @@ const handlereturn=async()=>{
         toast.success("Return request sent successfully");
         closeReturnOverlay();
 
-
     }
     catch(err){
         console.error('Error remove an product item', err);
@@ -226,13 +223,7 @@ const handlereturn=async()=>{
                     <div className="order-header">
                         <span>Status: {list.orderStatus}</span>
                     </div>
-                    <button
-                        disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
-                        onClick={() => openoverlay(list.orderid)}
-                        className="action-button"
-                    >
-                        Cancel
-                    </button>
+                    
                     <div className="order-details">
                         <div>Product title:{list.title}</div>
                         <div>Product price:{list.price}</div>
@@ -242,13 +233,23 @@ const handlereturn=async()=>{
                         <div>Total Price: Rs. {list.totalprice}</div>
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
-                        <button
-                            disabled={list.isreturned || list.orderStatus!='Delivered'}
-                            onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
-                            className="return-button"
-                        >
-                            {list.isreturned ? "Returned" : "Return"}
-                        </button>
+                    </div>
+                    <div className="order-actions">
+                                <button
+                                    disabled={list.isreturned || list.orderStatus!='Delivered'}
+                                    onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
+                                    className="return-button"
+                                >
+                                    {list.isreturned ? "Returned" : "Return"}
+                                </button>
+                                <button
+                                disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
+                                onClick={() => openoverlay(list.orderid)}
+                                className="action-button"
+                            >
+                                Cancel
+                                </button>
+                    </div>
                         
 
                         {returnOverlay && (
@@ -273,7 +274,7 @@ const handlereturn=async()=>{
                             </div>
                         )}
                         
-                    </div>
+                    
                     
                     
                 </div>
@@ -308,7 +309,6 @@ const handlereturn=async()=>{
             )}
             </div>
     </div>
-
 
 
 
@@ -362,10 +362,11 @@ const handlereturn=async()=>{
                 </div>
             </div> */
 
-
             
      /* </div> */
     );
 }
 
 export default Order
+
+
