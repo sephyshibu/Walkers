@@ -1,88 +1,112 @@
 /* Wishlist Page Styling */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f8f9fa;
+}
+
 .wishlist-page-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    min-height: 100vh;
-  }
-  
-  .wishlist-page-title {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  
-  .error-message {
-    color: red;
-    text-align: center;
-  }
-  
-  .wishlist-grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-  
-  .wish-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .wish-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .wish-card-image {
-    width: 100%;
-    height: auto;
-    border-radius: 8px 8px 0 0;
-    object-fit: cover;
-  }
-  
-  .wish-card-title {
-    font-size: 1.2rem;
-    margin: 10px 0;
-    color: #333;
-  }
-  
-  .wish-card-price {
-    font-size: 1rem;
-    color: #666;
-  }
-  
-  .wish-card-actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 10px;
-  }
-  
-  .button {
-    padding: 8px 12px;
-    font-size: 0.9rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .button-delete {
-    background-color: #e74c3c;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button-delete:hover {
-    background-color: #c0392b;
-  }
-  
-  .no-wishlist-message {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #666;
-  }
-  
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+.wishlist-page-title {
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.error-message {
+  color: #e74c3c;
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.wishlist-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding: 20px 0;
+}
+
+.wishlist-item img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  margin-right: 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.wishlist-details {
+  flex: 1;
+}
+
+.wishlist-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.wishlist-price {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.wishlist-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+
+.button-delete {
+  background-color: #e74c3c;
+  /* color: #fff; */
+}
+
+.button-delete:hover {
+  background-color: #c0392b;
+}
+
+.add-to-cart {
+  background-color: #3498db;
+  /* color: #fff; */
+}
+
+.add-to-cart:hover {
+  background-color: #2980b9;
+}
+
+.no-wishlist-message {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #999;
+  margin-top: 20px;
+}
+
+.loading-spinner {
+  text-align: center;
+  font-size: 1.5rem;
+  color: #666;
+  margin-top: 50px;
+}

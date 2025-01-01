@@ -11,7 +11,7 @@ const Return = () => {
         console.log("Fetching return orders...");
         const response = await axiosInstanceadmin.get('/getretunitem');
         console.log("Fetched return orders", response.data);
-        setreturnorders(response.data);
+        setreturnorders(response.data.reverse());
       } catch (error) {
         console.log("Error fetching return orders", error);
       }

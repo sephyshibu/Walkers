@@ -560,7 +560,7 @@ const cancelorderrefund=async(req,res)=>{
             userwallet.balance+=transaction.amount
             
             await userwallet.save();
-
+            
             console.log("Refund added to wallet:", transaction);
 
 
@@ -596,7 +596,7 @@ const updatereturnstatus=async(req,res)=>{
             product.returnstatus=actiontype
         }
         else {
-            product.returnstatus=actiontype
+            // product.returnstatus=actiontype
             product.refundstatus=true
             product.refundDate=new Date()
             const userwallet=await wallet.findOne({userId:orderdoc.userId})
@@ -670,20 +670,61 @@ const getcoupon=async(req,res)=>{
             res.status(500).json("Failed to update the status")
         }
   }
+
   
   const salesreport = async (req, res) => {
     try {
-      const { fromDate, toDate } = req.query;
-  
+      const { fromDate, toDate, period } = req.query;
+    
       const matchQuery = {
         orderStatus: { $nin: ["Cancelled"] },
         'items.isreturned': false,
       };
-  
       if (fromDate && toDate) {
-        matchQuery.orderDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
+        const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
+        const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
+    
+        matchQuery.orderDate = {
+            $gte: new Date(startOfDay),
+            $lte: new Date(endOfDay),
+        };
+    }
+    console.log("Final matchQuery:", JSON.stringify(matchQuery, null, 2));
+    
+      if (period === 'today') {
+        const today = new Date();
+        // console.log("today day",today)
+        matchQuery.orderDate = {
+          $gt: new Date(today.setHours(0, 0, 0, 0)),
+          $lte: new Date(today.setHours(23, 59, 59, 999)),
+        };
+        console.log("matchquery today", matchQuery.orderDate)
+      } else if (period === 'week') {
+        const startOfWeek = new Date();
+        
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        matchQuery.orderDate = {
+          $gte: startOfWeek,
+          $lte: new Date(),
+        };
+      } else if (period === 'month') {
+        const startOfMonth = new Date();
+        
+        startOfMonth.setDate(1);
+       
+        matchQuery.orderDate = {
+          $gte: startOfMonth,
+          $lte: new Date(),
+        };
+      } else if (period === 'year') {
+        const startOfYear = new Date();
+        startOfYear.setMonth(0, 1);
+        matchQuery.orderDate = {
+          $gte: startOfYear,
+          $lte: new Date(),
+        };
       }
-  
+    
       const salesData = await Orderdb.aggregate([
         { $unwind: '$items' },
         { $match: matchQuery },
@@ -694,6 +735,7 @@ const getcoupon=async(req,res)=>{
             totalorders: { $sum: 1 },
             monthlysales: {
               $push: {
+                
                 month: { $month: "$orderDate" },
                 year: { $year: "$orderDate" },
                 total: "$totalprice",
@@ -702,11 +744,11 @@ const getcoupon=async(req,res)=>{
           },
         },
       ]);
-  
+    
       if (salesData.length === 0) {
         return res.status(200).json({ totalSales: 0, totalorders: 0, monthlysales: [] });
       }
-  
+    
       res.status(200).json({
         totalSales: salesData[0].totalSales,
         totalorders: salesData[0].totalorders,
@@ -717,6 +759,56 @@ const getcoupon=async(req,res)=>{
       res.status(500).json({ error: 'Something went wrong.' });
     }
   };
+  
+
+
+  
+//   const salesreport = async (req, res) => {
+//     try {
+//       const { fromDate, toDate } = req.query;
+  
+//       const matchQuery = {
+//         orderStatus: { $nin: ["Cancelled"] },
+//         'items.isreturned': false,
+//       };
+  
+//       if (fromDate && toDate) {
+//         matchQuery.orderDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
+//       }
+  
+//       const salesData = await Orderdb.aggregate([
+//         { $unwind: '$items' },
+//         { $match: matchQuery },
+//         {
+//           $group: {
+//             _id: null,
+//             totalSales: { $sum: "$totalprice" },
+//             totalorders: { $sum: 1 },
+//             monthlysales: {
+//               $push: {
+//                 month: { $month: "$orderDate" },
+//                 year: { $year: "$orderDate" },
+//                 total: "$totalprice",
+//               },
+//             },
+//           },
+//         },
+//       ]);
+  
+//       if (salesData.length === 0) {
+//         return res.status(200).json({ totalSales: 0, totalorders: 0, monthlysales: [] });
+//       }
+  
+//       res.status(200).json({
+//         totalSales: salesData[0].totalSales,
+//         totalorders: salesData[0].totalorders,
+//         monthlysales: salesData[0].monthlysales,
+//       });
+//     } catch (err) {
+//       console.error(err);
+//       res.status(500).json({ error: 'Something went wrong.' });
+//     }
+//   };
 
   const addoffer=async(req,res)=>{
     const{offertype, offeramount, expiredon}=req.body

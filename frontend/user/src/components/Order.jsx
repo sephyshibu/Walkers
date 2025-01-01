@@ -202,20 +202,20 @@ const handlereturn=async()=>{
 
     return (
 <div className="order-page">
-<ToastContainer />
-    <h1>Your Orders</h1>
-    {error && <div className="error-messages">{error}</div>}
-    <div className="filters">
-    <label>
-        <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
-            <option value="">Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Delivered">Delivered</option>
-          
-        </select>
-    </label>
-</div>
+    <ToastContainer />
+        <h1>Your Orders</h1>
+        {error && <div className="error-messages">{error}</div>}
+        <div className="filters">
+        <label>
+            <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
+                <option value="">Select Status</option>
+                <option value="Active">Active</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Delivered">Delivered</option>
+            
+            </select>
+        </label>
+    </div>
     <div className="orders-list">
         {filter.length > 0 ? (
             filter.map((list) => (
@@ -234,7 +234,7 @@ const handlereturn=async()=>{
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
                     </div>
-                    <div className="order-actions">
+                        <div className="order-actions">
                                 <button
                                     disabled={list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
@@ -248,9 +248,11 @@ const handlereturn=async()=>{
                                 className="action-button"
                             >
                                 Cancel
-                                </button>
-                    </div>
-                        
+                            </button>
+
+                        </div>
+                              
+                      
 
                         {returnOverlay && (
                             <div className="overlay">
@@ -275,9 +277,9 @@ const handlereturn=async()=>{
                         )}
                         
                     
+                        </div>    
                     
-                    
-                </div>
+            
                 
                 
             ))
@@ -321,52 +323,8 @@ const handlereturn=async()=>{
 
 
 
-        // <div className="order-page">
-        //     <h1>Order Details</h1>
-
-        
-        /* <div className="order-card">
-                <div className="order-header">
-                    <h2>Order Summary</h2>
-                </div>
-                <div className="order-details">
-                <div>
-                        <strong>Order Id:</strong>{orderid}
-                    </div>
-                    <div>
-                        <strong>Total Price:</strong> ₹{totalprice}
-                    </div>
-                    <div>
-                        <strong>Delivery Date:</strong> {new Date(deliverydate).toLocaleDateString()}
-                    </div>
-                    <div>
-                        <strong>Order Status:</strong> {orderStatus}
-                    </div>
-                    <button
-                        disabled={orderStatus === 'Delivered'}
-                        onClick={() => handleCancelOrder(orderid)}
-                        className="action-button"
-                    >
-                        Cancel
-                    </button>
-                </div>
-                <div className="items-list">
-                    <h3>Items:</h3>
-                    {orderdata.items.map((item) => (
-                        <div className="item" key={item._id}>
-                            <p className="item-title">Title: {item.title}</p>
-                            <p>Price: ₹{item.price}</p>
-                            <p>Quantity: {item.quantity}</p>
-                        </div>
-                    ))}
-                </div>
-            </div> */
-
-            
-     /* </div> */
+       
     );
 }
 
 export default Order
-
-

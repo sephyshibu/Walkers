@@ -76,7 +76,7 @@ const Wallet = () => {
               <h3>Transaction History</h3>
               {wallet.transactions.length > 0 ? (
                 <ul className="transaction-list">
-                  {wallet.transactions.map((transaction) => (
+                  {wallet.transactions.reverse().map((transaction) => (
                     <li key={transaction.transaction_id} className="transaction-item">
                       <div className="transaction-info">
                         <span className="transaction-date">{formatDate(transaction.createdAt)}</span>
