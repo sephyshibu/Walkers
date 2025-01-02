@@ -13,8 +13,9 @@
   color: #333;
 }
 
-.cart-container {
+.cart-container {  
   display: flex;
+  flex-wrap: wrap; /* Allows wrapping of sections if needed */
   gap: 30px;
 }
 
@@ -25,7 +26,6 @@
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
 .cart-item {
   background-color: #fff;
   padding: 15px;
@@ -97,7 +97,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   align-self: flex-start;
 }
-
 .order-summary h4 {
   margin: 0 0 15px 0;
   font-size: 20px;
@@ -229,15 +228,32 @@ button[type='button']:disabled {
   padding: 5px;
   font-size: 20px;
 }
-.coupon-list {
+.coupon-section {
+  width: 100%;
+  margin-top: 20px;
   padding: 20px;
-  max-width: 600px;
-  margin: auto;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.coupon-item {
-  border: 1px solid #ccc;
-  padding: 15px;
+.coupon-section h4 {
+  font-size: 18px;
   margin-bottom: 10px;
+  color: #333;
+}
+
+.coupon-section .coupon-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.coupon-section .coupon-item {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px;
+  border: 1px solid #ccc;
   border-radius: 5px;
+  background-color: #fff;
 }

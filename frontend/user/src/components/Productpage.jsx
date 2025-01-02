@@ -248,14 +248,14 @@ const Productpage = () => {
         </div>
         {shouldShowPagination && (
                 <div className="pagination">
-                    <button
+                    <button className='prev-button'
                         onClick={() => handlePageChange(currentPage - 1)}
                         disabled={currentPage === 1}
                     >
                         Previous
                     </button>
                     <span>Page {currentPage} of {totalPages}</span>
-                    <button
+                    <button className='next-button'
                         onClick={() => handlePageChange(currentPage + 1)}
                         disabled={currentPage === totalPages}
                     >

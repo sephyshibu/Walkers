@@ -292,6 +292,25 @@
   background: linear-gradient(135deg, #16a085, #0e6655);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+.prev-button{
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 110px;
+}
+.next-button{
+  padding: 0.5rem 1rem;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 110px;
+}
+
 
 @media (max-width: 768px) {
   .search-options {

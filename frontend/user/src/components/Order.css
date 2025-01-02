@@ -18,21 +18,31 @@ h1 {
     margin-bottom: 20px;
 }
 
+.filters {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.filters select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .orders-list {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Reduce spacing between orders */
-    width: 100%;
-    margin: 0 auto;
+    gap: 15px;
 }
 
 .order-card {
-    background: transparent; /* Remove background */
-    border: none; /* Remove border */
-    box-shadow: none; /* Remove shadow */
-    padding: 0; /* Remove padding */
-    width: 100%;
-    max-width: none; /* Ensure full width */
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 10px;
 }
 
 .order-header {
@@ -40,91 +50,59 @@ h1 {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    font-size: 1em;
-}
-.order-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.action-button {
-    padding: 5px 1px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: #fff;
-}
-
-
-.order-header h2 {
-    font-size: 1.1em;
-    color: #444;
-    margin: 0;
+    font-weight: bold;
 }
 
 .order-details {
-    margin-bottom: 10px;
-    font-size: 0.9em;
+    line-height: 1.6;
+    font-size: 14px;
     color: #555;
+    margin-bottom: 15px;
 }
 
-.order-details div {
-    margin-bottom: 5px;
-}
-
-.items-list {
-    margin-top: 10px;
-    font-size: 0.9em;
-}
-
-.items-list h3 {
-    margin-bottom: 8px;
-    color: #333;
-}
-
-.item {
-    margin-bottom: 5px;
-}
-
-.item-title {
-    font-weight: bold;
-    color: #222;
-}
-
-.action-button {
-    padding: 8px 12px;
-   
+button {
+    padding: 6px 12px;  /* Smaller padding */
+    font-size: 12px;  /* Smaller font size */
     border: none;
     border-radius: 5px;
-    color: #fff;
-    background-color: #007bff;
-    font-size: 0.8em;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.action-button.secondary {
-    background-color: #6c757d;
+button.action-button {
+    background-color: #007bff;
+    color: #fff;
 }
 
-.action-button:disabled {
+button.action-button.secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+button.return-button {
+    background-color: #28a745;
+    color: #fff;
+}
+
+button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-.action-button:hover:not(:disabled) {
-    background-color: #0056b3;
+.order-actions {
+    display: flex;
+    justify-content: flex-start;  /* Align buttons to the left */
+    gap: 10px;  /* Add space between buttons */
+    margin-top: 10px;  /* Add spacing above the button group */
 }
 
-/* Overlay Styles */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -135,27 +113,35 @@ h1 {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     width: 90%;
-    max-width: 500px;
+    max-width: 400px;
     text-align: center;
 }
 
-.overlay-content h3 {
+textarea.reason-textarea {
+    width: 100%;
+    height: 80px;
     margin-bottom: 15px;
-    color: #333;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
 }
 
-.reason-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 0.9em;
+.overlay-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
 }
 
 .feedback-message {
-    margin-top: 15px;
+    margin-top: 10px;
     color: green;
-    font-weight: bold;
+    font-size: 14px;
+}
+
+.order-card:not(:last-child) {
+    border-bottom: 2px dashed #ccc;
 }

@@ -393,8 +393,9 @@ const CartPage = () => {
         </div>
 
 
-        <div className="coupon-list">
+        <div className="coupon-section">
                     <h3>Available Coupons</h3>
+                    <div className='coupon-list'>
                     {coupon.length > 0 ? (
                         coupon.map((couponItem) => (
                             <div
@@ -414,6 +415,7 @@ const CartPage = () => {
                     ) : (
                         <p>No coupons available</p>
                     )}
+                    </div>
         </div>
         
       </div>
