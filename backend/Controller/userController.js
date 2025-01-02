@@ -427,7 +427,7 @@ const googleLogin = async (req, res) => {
 const getProducts = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
 

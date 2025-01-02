@@ -402,7 +402,7 @@ const closeModal = () => {
                 onChange={(e)=>handleVariantChange(index,'stockStatus', e.target.value)}/>
           </div>
         ))}
-      <button type="button" onClick={handleAddVariant}>Add Variant</button>
+      {/* <button type="button" onClick={handleAddVariant}>Add Variant</button> */}
         <button type="button" onClick={handleAddProduct} className="add-product-button">
           Add Product
         </button>

@@ -17,7 +17,7 @@ const Productpage = () => {
     const[searchterm,setsearchterm]=useState('')
     const[currentPage,setCurrentPage]=useState(1)
     const[totalPages,setTotalPages]=useState(0)
-    const[itemsPerPage,setItemsPerPage]=useState(5)
+    const[itemsPerPage,setItemsPerPage]=useState(8)
     const[filteredproduct,setfilteredproduct]=useState([])
     const[category,setcategory]=useState('ALL PRODUCTS')
     const[minprice,setminprice]=useState('')
