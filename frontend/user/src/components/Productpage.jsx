@@ -7,6 +7,7 @@ import banner1 from '../images/Business.png';
 import Footer from './Footer';
 import { useSelector } from 'react-redux';
 import { persistor } from '../app/store';
+import throttle from 'lodash.throttle'
 import debounce from 'lodash.debounce'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
@@ -56,25 +57,24 @@ const Productpage = () => {
     const fetchProducts = useCallback(async () => {
         try {
             const response = await axiosInstanceuser.get('/getproducts', {
-                headers: {
-                    'User-Id': userId,
-                },
                 params: {
-                    page: currentPage,
+                    category: category,
+                    page: category !== 'ALL PRODUCTS' ? 1 : currentPage,
                     limit: itemsPerPage,
                 },
             });
             setProducts(response.data.products);
             setfilteredproduct(response.data.products);
             setTotalPages(response.data.totalPages);
+            setCurrentPage(response.data.currentPage);
         } catch (error) {
             console.log('Error in fetching products', error);
         }
-    }, [currentPage, itemsPerPage, userId]); // Dependencies
+    },  [currentPage, itemsPerPage, category, userId]); // Dependencies
     
     useEffect(() => {
         fetchProducts();
-    },[currentPage, itemsPerPage]);
+    },[fetchProducts]);
 
     useEffect(()=>{
         let filtered=[...products]
@@ -107,12 +107,14 @@ const Productpage = () => {
         setfilteredproduct(filtered)
     },[category,minprice,maxprice,sortoptions,products])
 
-    const handlePageChange = (newPage) => {
-            console.log("next new page", newPage)
-            setCurrentPage(newPage);
+    // const handlePageChange = (newPage) => {
+    //         console.log("next new page", newPage)
+    //         setCurrentPage(newPage);
         
+    // };
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
     };
-    
 
 
 
@@ -130,33 +132,31 @@ const Productpage = () => {
         }
     }
 
-    const debouncesearch = useCallback(
-        debounce(async(query) => {
-
-        try{
-            const response=await axiosInstanceuser.get('/searchquery',{
-                params:{query},
-                headers: {
-                    'User-Id': userId  // Pass the userId in the headers
-                }})
+    const throttledSearch = useCallback(
+        throttle(async (query) => {
+            try {
+                const response = await axiosInstanceuser.get('/searchquery', {
+                    params: { query },
+                    headers: {
+                        'User-Id': userId, // Pass the userId in the headers
+                    },
+                });
+                
                 setfilteredproduct(response.data.products);
-        }
-        catch(error){
-            console.error("Error fetching search results:", error);
-            toast.error("Failed to fetch search results.");
-        }
-          
-        }, 500), // Delay of 500ms
-        [userId] // Dependency on products array
-      );
+            } catch (error) {
+                console.error('Error fetching search results:', error);
+                toast.error('Failed to fetch search results.');
+            }
+        }, 1000), // Throttle with a 1-second delay
+        [userId]
+    );
 
-    const handleSearch=(e)=>{
-        const query=e.target.value
-        setsearchterm(query)
-        debouncesearch(query)
-
-    }
-
+    const handleSearch = (e) => {
+        const query = e.target.value;
+        setsearchterm(query);
+        throttledSearch(query);
+    };
+    const shouldShowPagination =!searchterm && category === 'ALL PRODUCTS' ;
 
     return (
         <div className="products-user-page">
@@ -246,21 +246,24 @@ const Productpage = () => {
                 <p>No products match your filters.</p>
             )}
         </div>
-        <div className="pagination">
-            <button 
-                onClick={() => handlePageChange(currentPage - 1)} 
-                disabled={currentPage === 1}
-            >
-                Previous
-            </button>
-            <span>Page {currentPage} of {totalPages}</span>
-            <button 
-                onClick={() => handlePageChange(currentPage + 1)} 
-                disabled={currentPage === totalPages}
-            >
-                Next
-            </button>
-        </div>
+        {shouldShowPagination && (
+                <div className="pagination">
+                    <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
+
 
 
             <Footer />

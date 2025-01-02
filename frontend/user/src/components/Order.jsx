@@ -251,9 +251,6 @@ const handlereturn=async()=>{
                             </button>
 
                         </div>
-                              
-                      
-
                         {returnOverlay && (
                             <div className="overlay">
                                 <div className="overlay-content">
@@ -310,20 +307,7 @@ const handlereturn=async()=>{
                 </div>
             )}
             </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-       
+    </div>   
     );
 }
 

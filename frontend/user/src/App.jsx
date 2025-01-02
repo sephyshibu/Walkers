@@ -38,8 +38,8 @@ function App() {
         <Route path='/forgetpasswordotp' element={<Forgetpasswordotp/>}/>
         <Route path='/changepassword' element={<ForgetChangepassword/>}/>
         <Route path='/wallet' element={<ProtectedRouter><Wallet/></ProtectedRouter>}/>
-        <Route path='/product' element={<ProtectedRouter><Productpage/></ProtectedRouter>}/>
-        <Route path='/products/display/:id' element={<ProtectedRouter><ProductDisplay/></ProtectedRouter>}/>
+        <Route path='/product' element={<Productpage/>}/>
+        <Route path='/products/display/:id' element={<ProductDisplay/>}/>
         <Route path='/wishlist' element={<ProtectedRouter><WishList/></ProtectedRouter>}/>
         <Route path='/cart' element={<ProtectedRouter><CartPage/></ProtectedRouter>}/>
         <Route path='/account/address/add' element={<ProtectedRouter><Address/></ProtectedRouter>}/>

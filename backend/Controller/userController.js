@@ -17,6 +17,7 @@ const wallet= require('../models/wallet')
 const coupondb=require('../models/coupon')
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+
 const { userInfo } = require("os");
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID, // Access the key_id from .env
@@ -424,50 +425,51 @@ const googleLogin = async (req, res) => {
 
 // }
 
-const getProducts = async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 8;
-    const skip = (page - 1) * limit;
+// const getProducts = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 8;
+//     const skip = (page - 1) * limit;
 
 
-    const activeCategories = await Categorydb.find({ status: true }).select(
-      "categoryname"
-    );
-    const activeCategoryNames = activeCategories.map(
-      (category) => category.categoryname
-    );
+//     const activeCategories = await Categorydb.find({ status: true }).select(
+//       "categoryname"
+//     );
+//     const activeCategoryNames = activeCategories.map(
+//       (category) => category.categoryname
+//     );
+    
 
-    const products = await Productdb.find({
-      status: true,
-      category: { $in: activeCategoryNames },
-    })
-      .skip(skip) // Skip the number of items
-      .limit(limit); // Limit the number of items
+//     const products = await Productdb.find({
+//       status: true,
+//       category: { $in: activeCategoryNames },
+//     })
+//       .skip(skip) // Skip the number of items
+//       .limit(limit); // Limit the number of items
 
-    const totalProducts = await Productdb.countDocuments({
-        status: true,
-        category: { $in: activeCategoryNames },
-      });
-    console.log("total products", totalProducts)
-      const totalPages = Math.ceil(totalProducts / limit);
-    console.log("totalpages",totalPages)
-    console.log("currentpage",page)
-      return res.status(200).json({
-        products,
-        currentPage: page,
-        totalPages,
-        totalProducts,
-      });
+//     const totalProducts = await Productdb.countDocuments({
+//         status: true,
+//         category: { $in: activeCategoryNames },
+//       });
+//     console.log("total products", totalProducts)
+//       const totalPages = Math.ceil(totalProducts / limit);
+//     console.log("totalpages",totalPages)
+//     console.log("currentpage",page)
+//       return res.status(200).json({
+//         products,
+//         currentPage: page,
+//         totalPages,
+//         totalProducts,
+//       });
 
-  } catch (error) {
-    console.error(
-      "An error occurred during get product based on category",
-      error
-    );
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+//   } catch (error) {
+//     console.error(
+//       "An error occurred during get product based on category",
+//       error
+//     );
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
 
 // const checkout = async (req, res) => {
 //     const { userId } = req.body;
@@ -518,6 +520,57 @@ const getProducts = async (req, res) => {
 //         return res.status(500).json({ message: "Internal server error" });
 //     }
 // };
+const getProducts = async (req, res) => {
+  try {
+    const { category, page, limit } = req.query;
+    const activeCategories = await Categorydb.find({ status: true }).select("categoryname");
+    const activeCategoryNames = activeCategories.map((category) => category.categoryname);
+
+    let query = {
+      status: true,
+      category: { $in: activeCategoryNames },
+    };
+
+    if (category && category !== 'ALL PRODUCTS') {
+      query.category = category;
+    }
+
+    let products;
+    let totalProducts;
+    let totalPages;
+    let currentPage;
+
+    if (category && category !== 'ALL PRODUCTS') {
+      // If a specific category is selected, return all products without pagination
+      products = await Productdb.find(query);
+      totalProducts = products.length;
+      totalPages = 1;
+      currentPage = 1;
+    } else {
+      // If no specific category or 'ALL PRODUCTS' is selected, use pagination
+      const pageNum = parseInt(page) || 1;
+      const pageSize = parseInt(limit) || 8;
+      const skip = (pageNum - 1) * pageSize;
+
+      products = await Productdb.find(query).skip(skip).limit(pageSize);
+      totalProducts = await Productdb.countDocuments(query);
+      totalPages = Math.ceil(totalProducts / pageSize);
+      currentPage = pageNum;
+    }
+
+    return res.status(200).json({
+      products,
+      currentPage,
+      totalPages,
+      totalProducts,
+    });
+
+  } catch (error) {
+    console.error("An error occurred during get product based on category", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 const checkout = async (req, res) => {
   const { userId } = req.body;
@@ -1422,11 +1475,13 @@ const addcart = async (req, res) => {
       const productIndex = cart.items.findIndex(
         (item) => item.productId.toString() === productId
       );
+      console.log("already existed product",productIndex)
       if (productIndex > -1) {
         // Update quantity and price if the product exists
         cart.items[productIndex].quantity += quantity;
-        cart.items[productIndex].price += price * quantity;
+        cart.items[productIndex].price =price;
         cart.items[productIndex].availableQuantity = availableQuantity;
+        
       } else {
         // Add new product to the cart
         cart.items.push({
@@ -1438,8 +1493,9 @@ const addcart = async (req, res) => {
         });
       }
       cart.totalprice = cart.items.reduce((total, item) => {
-        return total + item.price;
+        return total + item.quantity * item.price;
       }, 0);
+      
     }
     await cart.save();
     console.log(cart);
@@ -1995,10 +2051,11 @@ const returnorder = async (req, res) => {
 const applycoupon=async(req,res)=>{
   const { userId } = req.params;
   const { couponId } = req.body;
-
+  console.log("userId", userId)
+  console.log("couponId", couponId)
   try {
       const coupon = await coupondb.findById(couponId);
-
+      console.log("coupon",coupon)
       if (!coupon || coupon.isblocked || new Date() > new Date(coupon.expiredon)) {
           return res.status(400).json({ message: 'Invalid or expired coupon.' });
       }
@@ -2012,27 +2069,28 @@ const applycoupon=async(req,res)=>{
       if (cart.totalprice < coupon.minprice) {
           return res.status(400).json({ message: `Minimum cart value for this coupon is Rs.${coupon.minprice}.` });
       }
-
+      console.log("coupon backend",coupon)
       // Attach coupon for price preview but don't deduct price here
-      res.status(200).json({ coupon });
+      res.status(200).json({ success:"success",coupon });
   } catch (err) {
       res.status(500).json({ message: 'Error applying coupon.' });
   }
 }
-const searchoption=async(req,res)=>{
-  const{query}=req.query
-try{
-  const products=await Productdb.find({
-    title:{$regex:query, $options:'i'}
-  })
+const searchoption = async (req, res) => {
+  const { query } = req.query; // Get the search query from the request
 
-  res.status(200).json({products})
-}
-catch (error) {
-  console.error("Error in search endpoint:", error);
-  res.status(500).json({ message: "Server error while searching products." });
-}
-}
+  try {
+    const products = await Productdb.find({
+      title: { $regex: `^${query}`, $options: 'i' } // Matches strings starting with the query
+    });
+
+    res.status(200).json({ products });
+  } catch (error) {
+    console.error("Error in search endpoint:", error);
+    res.status(500).json({ message: "Server error while searching products." });
+  }
+};
+
 
 
 

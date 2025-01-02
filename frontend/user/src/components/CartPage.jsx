@@ -283,28 +283,44 @@ const CartPage = () => {
 
 
     const applyCoupon = async (couponItem) => {
-        try {
-            const response = await axiosInstanceuser.post(`/applycoupon/${userId}`, {
-                couponId: couponItem._id
-            });
-
-            if(cart.totalprice<=couponItem.minprice)
-            {
-                setMessage(`minimum amoount in cart is above ${couponItem.minprice}`)
-            }
-            let discount=couponItem.couponamount
-            setCouponDiscount(discount)
-            // const discountedPrice = Math.max(0, cart.totalprice - discount);
-
-            setCart((prevcart)=>({
-                ...prevcart,
-                totalprice: Math.max(0, cart.totalprice - discount)
-            }))
+        if (!couponItem) {
+            setMessage("Please select a valid coupon.");
+            return;
+        }
     
-            setSelectedCoupon(couponItem);
-            setMessage(`Coupon applied successfully!`);
+        // Reset total price to the original value before applying a new coupon
+        const originalTotalPrice = cart.items.reduce(
+            (total, item) => total + item.price * item.quantity,
+            0
+        );
+    
+        if (originalTotalPrice < couponItem.minprice) {
+            setMessage(`Minimum cart value for this coupon is Rs.${couponItem.minprice}`);
+            return;
+        }
+    
+        try {
+            // Apply the coupon on the backend
+            const response = await axiosInstanceuser.post(`/applycoupon/${userId}`, {
+                couponId: couponItem._id,
+            });
+    
+            if (response.data.success) {
+                const discount = couponItem.couponamount;
+    
+                // Update cart state with the discounted price
+                setCart((prevCart) => ({
+                    ...prevCart,
+                    totalprice: Math.max(0, originalTotalPrice - discount),
+                }));
+    
+                setSelectedCoupon(couponItem);
+                setMessage(`Coupon applied successfully! You saved Rs.${discount}`);
+            } else {
+                setMessage(response.data.message || "Failed to apply coupon.");
+            }
         } catch (err) {
-            setMessage(err.response?.data?.message || 'Error applying coupon.');
+            setMessage(err.response?.data?.message || "Error applying coupon.");
         }
     };
     

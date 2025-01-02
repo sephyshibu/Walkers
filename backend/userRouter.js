@@ -15,8 +15,8 @@ router.post('/resendotp',resendotp)
 router.put('/updatepasswordemail',updatepasswordemail)
 router.post('/forgetpasswordresendotp',forgetpasswordresendotp)
 router.post('/auth/google',googleLogin)
-router.get('/getproducts',verifyAccessToken,checkusersstatus,getProducts)
-router.get('/products/display/:id',verifyAccessToken,checkusersstatus,fetchproductdetails)
+router.get('/getproducts',verifyAccessToken,getProducts)
+router.get('/products/display/:id',verifyAccessToken,fetchproductdetails)
 router.get('/products/recommendations/:category',verifyAccessToken,fetchrecom)
 router.get('/fetchcategory',categoryname)
 router.post('/addcart',verifyAccessToken,checkusersstatus,addcart)
@@ -49,7 +49,7 @@ router.post('/applycoupon/:userId',verifyAccessToken,applycoupon)
 router.get('/fetchcoupondetails/:couponId', verifyAccessToken,coupondetails)
 
 router.get('/fetchwallet/:userId',verifyAccessToken,fetchwallet)
-router.get('/searchquery',verifyAccessToken,searchLimiter,searchoption)
+router.get('/searchquery',verifyAccessToken,searchoption)
 
 
 

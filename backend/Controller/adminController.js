@@ -487,6 +487,7 @@ const cancelorderfetch=async(req,res)=>{
         )
         .populate("userId", "username email")
         .select('_id userId items totalprice'); // Fetch only specific fields from the Order schema
+        console.log("cancel ordder", orders)
         res.status(200).json(orders);
     } catch (error) {
       console.error('Error fetching cancelled orders:', error);

@@ -151,7 +151,11 @@ const ProductDisplay = () => {
   //  alert("the product is out of stock")
   //   return
   //  }
-    try{
+  if (!userId) {
+    toast.error("Please login");
+  }else{
+
+      try{
       if (
         formdata.availableQuantity === 0 || 
         (selectedVariant && selectedVariant.availableQuantity === 0)
@@ -173,6 +177,7 @@ const ProductDisplay = () => {
       toast.success("Product added to cart!");
     
     }
+  
     catch(err){
       console.log("error in adding cart",err)
       if (err.response?.status === 403 && err.response?.data?.action === "logout") {
@@ -184,6 +189,7 @@ const ProductDisplay = () => {
         setError("Failed to add to cart");
     }
     }
+  }
   };
 
 
