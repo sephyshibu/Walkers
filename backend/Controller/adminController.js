@@ -673,93 +673,183 @@ const getcoupon=async(req,res)=>{
   }
 
   
-  const salesreport = async (req, res) => {
+//   const salesreport = async (req, res) => {
+//     try {
+//       const { fromDate, toDate, period } = req.query;
+//       console.log("jokiji")
+//       console.log("Query Parameters:", req.query);
+  
+//       const matchQuery = {
+//         orderStatus: { $in: ["Delivered"] }
+//       };
+  
+//       if (fromDate && toDate) {
+//         const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
+//         const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
+//         matchQuery.orderDate = { $gte: new Date(startOfDay), $lte: new Date(endOfDay) };
+//       }
+  
+//       console.log("Final matchQuery:", JSON.stringify(matchQuery, null, 2));
+  
+//       const salesData = await Orderdb.aggregate([
+//         { $unwind: '$items' },
+//         { $match: matchQuery },
+//         {
+//         $group: {
+//             _id: "$_id", // Group by the unique order identifier
+//             totalprice: { $first: "$totalprice" }
+//         }
+//         }
+//         ,
+//         {
+//           $addFields: {
+//             itemtotal: { $multiply: ["$items.quantity", "$items.price"] }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: null,
+//             totalSalesAmount: { $sum: "$itemtotal" },
+//             totalorders: { $sum: 1 },
+//            ordertotalsum: { $first: "$totalprice" }, 
+//             monthlysales: {
+//               $push: {
+//                 month: { $month: "$orderDate" },
+//                 year: { $year: "$orderDate" },
+//                 total: "$totalSalesAmount"
+//               }
+//             }
+//           }
+//         },
+        
+//         {
+//           $addFields: {
+//             discountprice: { $subtract: ["$ordertotalsum","$totalSalesAmount"] }
+//           }
+//         }
+//       ]);
+  
+//       console.log("Sales Data:", JSON.stringify(salesData, null, 2));
+  
+//       if (!salesData || salesData.length === 0) {
+//         console.log("No sales data found.");
+//         return res.status(200).json({ totalSalesAmount: 0, totalorders: 0, monthlysales: [], totaldiscounts: 0 });
+//       }
+  
+//       console.log("Discount price:", salesData[0].discountprice);
+  
+//       res.status(200).json({
+//         totalSales: salesData[0].totalSalesAmount,
+//         netAmount:salesData[0].ordertotalsum,
+//         totalorders: salesData[0].totalorders,
+//         monthlysales: salesData[0].monthlysales,
+//         totaldiscounts: salesData[0].discountprice
+//       });
+//     } catch (err) {
+//       console.error(err);
+//       res.status(500).json({ error: 'Something went wrong.' });
+//     }
+//   };
+
+const salesreport = async (req, res) => {
     try {
       const { fromDate, toDate, period } = req.query;
-    
+      console.log("Query Parameters:", req.query);
+  
       const matchQuery = {
-        orderStatus: { $nin: ["Cancelled"] },
-        'items.isreturned': false,
+        orderStatus: { $in: ["Delivered"] }
       };
+  
       if (fromDate && toDate) {
         const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
         const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
-    
-        matchQuery.orderDate = {
-            $gte: new Date(startOfDay),
-            $lte: new Date(endOfDay),
-        };
-    }
-    console.log("Final matchQuery:", JSON.stringify(matchQuery, null, 2));
-    
-      if (period === 'today') {
-        const today = new Date();
-        // console.log("today day",today)
-        matchQuery.orderDate = {
-          $gt: new Date(today.setHours(0, 0, 0, 0)),
-          $lte: new Date(today.setHours(23, 59, 59, 999)),
-        };
-        console.log("matchquery today", matchQuery.orderDate)
-      } else if (period === 'week') {
-        const startOfWeek = new Date();
-        
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-        matchQuery.orderDate = {
-          $gte: startOfWeek,
-          $lte: new Date(),
-        };
-      } else if (period === 'month') {
-        const startOfMonth = new Date();
-        
-        startOfMonth.setDate(1);
-       
-        matchQuery.orderDate = {
-          $gte: startOfMonth,
-          $lte: new Date(),
-        };
-      } else if (period === 'year') {
-        const startOfYear = new Date();
-        startOfYear.setMonth(0, 1);
-        matchQuery.orderDate = {
-          $gte: startOfYear,
-          $lte: new Date(),
-        };
+        matchQuery.orderDate = { $gte: new Date(startOfDay), $lte: new Date(endOfDay) };
       }
-    
+  
+      console.log("Final matchQuery:", JSON.stringify(matchQuery, null, 2));
+  
       const salesData = await Orderdb.aggregate([
-        { $unwind: '$items' },
+        // Match the relevant orders first
         { $match: matchQuery },
+        
+        // Unwind the items to calculate item totals
+        { $unwind: '$items' },
+  
+        // Calculate the item total (quantity * price)
+        {
+          $addFields: {
+            itemtotal: { $multiply: ["$items.quantity", "$items.price"] }
+          }
+        },
+        
+  
+        // Group by order to calculate total sales and other data
         {
           $group: {
-            _id: null,
-            totalSales: { $sum: "$totalprice" },
-            totalorders: { $sum: 1 },
-            monthlysales: {
+            _id: "$_id", // Group by unique order identifier
+            totalprice: { $first: "$totalprice" }, // Take the total price from the first item (which should be the same for all items in the order)
+            totalSalesAmount: { $sum: "$itemtotal" }, // Sum of item totals (itemquantity * itemprice)
+            tax: { $first: "$tax" },
+            shippingFee:{$first:"$shippingFee"},
+            orderDate: { $first: "$orderDate" }, // Order date (first occurrence)
+            monthlysales: { // Gather monthly sales data for later reporting
               $push: {
-                
                 month: { $month: "$orderDate" },
                 year: { $year: "$orderDate" },
-                total: "$totalprice",
-              },
-            },
-          },
+                total: "$totalSalesAmount"
+              }
+            }
+          }
         },
+  
+        // Calculate the discount (difference between total price and item totals)
+        {
+          $addFields: {
+            beforediscount: { $subtract: ["$totalprice", { $add: ["$tax", "$shippingFee"] }] }, // Discount as totalprice - (tax + shippingFee)
+            ordertotalsum:{$subtract:["$totalprice", "$tax"]},
+            taxshipping:{$sum:["$tax","$shippingFee"]}
+          }
+        },
+        {
+            $addFields: {
+              discountprice: { $subtract: ["$totalSalesAmount", "$beforediscount"] } // Discount as totalSalesAmount - beforediscount
+            }
+          },
+        // Group to calculate totals across all orders
+        {
+          $group: {
+            _id: null, // No need to group by anything else now
+            totalSalesAmount: { $sum: "$totalSalesAmount" },
+            totalorders: { $sum: 1 },
+            ordertotalsum: { $sum: "$ordertotalsum" },
+            monthlysales: { $push: "$monthlysales" },
+            totaldiscounts: { $sum: "$discountprice" }
+          }
+        }
       ]);
-    
-      if (salesData.length === 0) {
-        return res.status(200).json({ totalSales: 0, totalorders: 0, monthlysales: [] });
+  
+      console.log("Sales Data:", JSON.stringify(salesData, null, 2));
+  
+      if (!salesData || salesData.length === 0) {
+        console.log("No sales data found.");
+        return res.status(200).json({ totalSalesAmount: 0, totalorders: 0, monthlysales: [], totaldiscounts: 0 });
       }
-    
+  
+      console.log("Discount price:", salesData[0].totaldiscounts);
+  
       res.status(200).json({
-        totalSales: salesData[0].totalSales,
+        totalSales: salesData[0].totalSalesAmount,
+        netAmount: salesData[0].ordertotalsum,
         totalorders: salesData[0].totalorders,
         monthlysales: salesData[0].monthlysales,
+        totaldiscounts: salesData[0].totaldiscounts
       });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Something went wrong.' });
     }
   };
+
   
 
 

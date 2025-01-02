@@ -10,8 +10,11 @@ ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, Linear
 const DashboardPage = () => {
   const [salesData, setSalesData] = useState({
     totalSales: 0,
+    netAmount:0,
     totalorders: 0,
-    monthlysales: [],
+    totaldiscounts:0,
+    
+  
   });
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -29,6 +32,7 @@ const DashboardPage = () => {
   // };
 
   const fetchSalesData = async () => {
+    console.log("fwkbh")
     try {
         const response = await axiosInstanceadmin.get('/salesreport', {
             params: {
@@ -167,12 +171,12 @@ const DashboardPage = () => {
 
   const csvData = [
     ['Month/Year', 'Total Sales'],
-    ...salesData.monthlysales.map(item => [`${item.month}/${item.year}`, item.total]),
+    ...(salesData?.monthlysales?.map(item => [`${item.month}/${item.year}`, item.total]) || []),
     ['', ''],
-    ['Total Sales', salesData.totalSales],
-    ['Total Orders', salesData.totalorders]
+    ['Total Sales', salesData?.totalSales || 0],
+    ['Total Orders', salesData?.totalorders || 0]
   ];
-
+  //question mark when to check whether monthly sales is undefiend or null
   return (
     <div className="dashboard-page">
       {/* Filter Section */}
@@ -221,6 +225,14 @@ const DashboardPage = () => {
         <div className="card card-blue">
           <h3>Total Orders</h3>
           <p>{salesData.totalorders}</p>
+        </div>
+        <div className="card card-blue">
+          <h3>Total Discounts and coupons</h3>
+          <p>{salesData.totaldiscounts}</p>
+        </div>
+        <div className="card card-blue">
+          <h3>Net Amnount</h3>
+          <p>{salesData.netAmount}</p>
         </div>
       </div>
 
