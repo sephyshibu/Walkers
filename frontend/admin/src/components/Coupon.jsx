@@ -33,16 +33,59 @@ const Coupon = () => {
     fetchcoupon();
     setsuccess(false);
   }, [success]);
+  const validateform=(data)=>{
+    const errors={}
 
+    if(!data.title.trim())
+    {
+      errors.title="title can be empty"
+    }
+    if(!data.descrtiption.trim())
+      {
+        errors.descrtiption="Description can be empty"
+      }
+    if(!data.coupontype.trim())
+        {
+          errors.coupontype="Coupon Type can be empty"
+        }
+    if(!data.couponamount.trim())
+          {
+            errors.couponamount="Coupon amount can be empty"
+          }
+    if(data.couponamount<=0)
+            {
+              errors.couponamount="Coupon amount cant be 0 and negative"
+            }
+    if(!data.minprice.trim())
+            {
+              errors.minprice="Minimium amount can be empty"
+            }
+    if(data.minprice<=0)
+    {
+      errors.minprice="Minimium amount cant be 0 and negative"
+    }
+    if(!data.expiredon.trim())
+              {
+                errors.expiredon="Expired date can be empty"
+              }
+
+    seterror(errors)
+    return Object.keys(errors).length === 0
+  }
   const handleInputChange = (e) => {
     setformdata({
       ...formdata,
       [e.target.name]: e.target.value
     });
+    seterror((prevErrors) => ({
+      ...prevErrors,
+      [name]: '',
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!validateform(formdata)) return
     try {
       const response = await axiosInstanceadmin.post('/addcoupon', formdata);
       console.log("Response from add coupon", response.data);
@@ -86,6 +129,7 @@ const Coupon = () => {
       });
     }
   };
+  
 
   return (
     <div className='couponstart'>
@@ -109,6 +153,7 @@ const Coupon = () => {
                 value={formdata.title}
                 onChange={handleInputChange}
               />
+              {error.title && <p className="error-messages">{error.title}</p>}
               <label>Description: </label>
               <br></br>
               <input
@@ -119,7 +164,7 @@ const Coupon = () => {
                 value={formdata.descrtiption}
                 onChange={handleInputChange}
               />
-
+              {error.descrtiption && <p className="error-messages">{error.descrtiption}</p>}
               <label>Coupon Type: </label>
               <br></br>
               <select name="coupontype" value={formdata.coupontype} onChange={handleInputChange}>
@@ -127,7 +172,7 @@ const Coupon = () => {
                   <option value='fixed'>Fixed</option>
                   <option value='percentage'>Percentage</option>
               </select>
-
+              {error.coupontype && <p className="error-messages">{error.coupontype}</p>}
               <label>Coupon Amount: </label>
               <br></br>
               <input
@@ -138,7 +183,7 @@ const Coupon = () => {
                 value={formdata.couponamount}
                 onChange={handleInputChange}
               />
-
+              {error.couponamount && <p className="error-messages">{error.couponamount}</p>}
               <label>Min Price: </label>
               <br></br>
               <input
@@ -149,7 +194,7 @@ const Coupon = () => {
                 value={formdata.minprice}
                 onChange={handleInputChange}
               />
-
+              {error.minprice && <p className="error-messages">{error.minprice}</p>}
             <label>Expiry Date: </label>
               <br></br>
               <input
@@ -160,7 +205,7 @@ const Coupon = () => {
                 value={formdata.expiredon}
                 onChange={handleInputChange}
               />
-
+              {error.expiredon && <p className="error-messages">{error.expiredon}</p>}
               <button  className="addcoupon-btn" onClick={handleSubmit}>Add Coupon</button>
               <button
                   type="button"
