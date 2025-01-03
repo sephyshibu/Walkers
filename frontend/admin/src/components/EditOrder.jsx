@@ -89,14 +89,14 @@ import './EditOrder.css'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
-const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
+const EditOrder = ({ isOpen, selectedOrder,setIsOpen ,updateOrder}) => {
     const { id } = useParams()
 
     const [order, setOrder] = useState(null)
     const [orderStatus, setOrderStatus] = useState(null)
     const [error, setError] = useState('')
     const navigate = useNavigate()
-
+    const [editedOrder, setEditedOrder] = useState(selectedOrder);
     useEffect(() => {
         // const fetchEdit = async () => {
         //     try {
@@ -116,12 +116,15 @@ const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
     const handleSave = async (id) => {
         console.log("handle save",id)
         try {
-            await axiosInstanceadmin.put(`/updateorder/${id}`, {
+            const response=await axiosInstanceadmin.put(`/updateorder/${id}`, {
                 orderstatus: orderStatus
             })
+            console.log(response.data.order)
+            updateOrder(response.data.order);
             setIsOpen(false)
+
             toast.success('order updated successfully')
-            navigate('/admindashboard/orders')
+            // navigate('/admindashboard/orders')
           
         }
         catch (error) {
@@ -167,7 +170,8 @@ const EditOrder = ({ isOpen, selectedOrder,setIsOpen }) => {
                                 <select
                                      value={orderStatus}
                                      onChange={(e) => setOrderStatus(e.target.value)}
-                                 >
+                                 >  
+                                     <option value="">Select</option>
                                      <option value="Processing">Processing</option>
                                      <option value="Shipped">Shipped</option>
                                      <option value="Delivered">Delivered</option>

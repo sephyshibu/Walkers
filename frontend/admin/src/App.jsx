@@ -63,7 +63,7 @@ function App() {
     <Route path="orders" element={<ProtectedRoute><Orders/></ProtectedRoute>} />
     <Route path="return" element={<ProtectedRoute><Retrun/></ProtectedRoute>} />
     <Route path="coupon" element={<ProtectedRoute><Coupon/></ProtectedRoute>} />
-    <Route path="cancelorders" element={<ProtectedRoute><Cancelorder/></ProtectedRoute>} />
+    {/* <Route path="cancelorders" element={<ProtectedRoute><Cancelorder/></ProtectedRoute>} /> */}
 {/* </Route>   */}
   </Route>
 </Routes>

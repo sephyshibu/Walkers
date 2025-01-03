@@ -3,6 +3,8 @@ import { useParams } from 'react-router'
 import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
 import './EditAddress.css'
+import Navbar from './Navbar'
+import Footer from './Footer'
 const EditAddress = () => {
     const{id}=useParams()
     console.log("userid for fetch address to edit",id)
@@ -65,7 +67,10 @@ const EditAddress = () => {
         }
     }
     return (
+        <>
+         <Navbar/>
     <div className="edit-address-page">
+       
     <h2>Edit Address</h2>
     {error && <p className="error-messageadd">{error}</p>}
     <form onSubmit={handleSubmit} className="edit-address-form">
@@ -130,7 +135,10 @@ const EditAddress = () => {
         <br />
         <button type="submit" className="save-button">Save Changes</button>
     </form>
+    
 </div>
+<Footer/>
+</>
   )
 }
 

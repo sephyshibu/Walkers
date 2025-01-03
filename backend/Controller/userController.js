@@ -17,6 +17,7 @@ const wallet= require('../models/wallet')
 const coupondb=require('../models/coupon')
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const { v4: uuidv4 } = require('uuid'); 
 
 const { userInfo } = require("os");
 const razorpayInstance = new Razorpay({
@@ -798,6 +799,30 @@ const deleteorder = async (req, res) => {
 
     orderdoc.orderStatus = "Cancelled";
     orderdoc.cancelationreason = reason;
+
+    if(orderdoc.paymentstatus==="Success")
+    {
+      const userwallet=await wallet.findOne({userId:orderdoc.userId})
+      console.log("wallet",userwallet)
+      if(!userwallet)
+      {
+          return res.status(404).json({message:"Wallert not found oof thwe user"})
+      }
+  
+      const transaction = {
+          transaction_id: uuidv4(), // Generate a unique transaction ID
+          amount: orderdoc.totalprice-orderdoc.shippingFee,
+          transactionmethod: "refundcancel",
+        };
+      console.log("transaction", transaction)
+      userwallet.transactions.push(transaction);
+      userwallet.balance+=transaction.amount
+      
+      await userwallet.save();
+  
+      console.log("Refund added to wallet:", transaction);
+    }
+   
     await orderdoc.save();
 
     for (const item of orderdoc.items) {

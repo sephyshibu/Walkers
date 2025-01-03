@@ -5,9 +5,92 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, CategorySca
 import { CSVLink } from 'react-csv';
 import axiosInstanceadmin from '../axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { Page, Text, View, Document, PDFDownloadLink, StyleSheet } from '@react-pdf/renderer';
+
 import 'react-toastify/dist/ReactToastify.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement);
+
+
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+    backgroundColor: '#f8f8f8',  // Light background for the PDF
+  },
+  section: {
+    marginBottom: 20,
+  },
+  heading: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 12,
+    marginBottom: 5,
+  },
+  table: {
+    display: 'table',
+    width: '100%',
+    marginTop: 10,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: '#ccc',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    padding: 5,
+  },
+  tableCell: {
+    width: '50%',  // Equal width for each cell
+    padding: 5,
+    fontSize: 12,
+    borderRightWidth: 1,
+    borderRightColor: '#ccc',
+    textAlign: 'center',
+  },
+  tableHeader: {
+    fontWeight: 'bold',
+    backgroundColor: '#f0f0f0',
+  },
+});
+
+const SalesReportPDF = ({ data }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.heading}>Sales Report</Text>
+        <Text style={styles.text}>Total Sales: {data.totalSales}</Text>
+        <Text style={styles.text}>Total Orders: {data.totalorders}</Text>
+        <Text style={styles.text}>Total Discounts: {data.totaldiscounts}</Text>
+        <Text style={styles.text}>Net Amount: {data.netAmount}</Text>
+      </View>
+      
+      <View style={styles.section}>
+        <Text style={styles.heading}>Monthly Sales</Text>
+        
+        {/* Table Header */}
+        <View style={[styles.tableRow, styles.tableHeader]}>
+          <Text style={[styles.tableCell, { width: '50%' }]}>Month/Year</Text>
+          <Text style={[styles.tableCell, { width: '50%' }]}>Total Sales</Text>
+        </View>
+        
+        {/* Table Body */}
+        <View style={styles.table}>
+          {data.csvData.map(([monthYear, total], index) => (
+            <View key={index} style={styles.tableRow}>
+              <Text style={styles.tableCell}>{monthYear}</Text>
+              <Text style={styles.tableCell}>{total}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    </Page>
+  </Document>
+);
+
 
 const DashboardPage = () => {
   const [salesData, setSalesData] = useState({
@@ -141,18 +224,34 @@ const DashboardPage = () => {
           onChange={(e) => setToDate(e.target.value)}
         />
         <button onClick={fetchSalesData}>Apply Custom Range</button>
+        <PDFDownloadLink document={<SalesReportPDF data={{ ...salesData, csvData }} />} fileName="sales_report.pdf">
+          {({ loading }) => <button>{loading ? 'Loading PDF...' : 'Download PDF'}</button>}
+        </PDFDownloadLink>
 
         <CSVLink data={csvData} filename="sales_report.csv">
           <button>Download CSV</button>
         </CSVLink>
       </div>
 
-      <div className="dashboard-stats">
-        <div>Total Sales: {salesData.totalSales}</div>
-        <div>Total Orders: {salesData.totalorders}</div>
-        <div>Total Discounts: {salesData.totaldiscounts}</div>
-        <div>Net Amount: {salesData.netAmount}</div>
-      </div>
+
+      <div className="card-container">
+          <div className="card">
+            <h2>Total Sales</h2>
+            <p>{salesData.totalSales}</p>
+          </div>
+          <div className="card">
+            <h2>Net Amount</h2>
+            <p>{salesData.netAmount}</p>
+          </div>
+          <div className="card">
+            <h2>Discount Price</h2>
+            <p>{salesData.totaldiscounts}</p>
+          </div>
+          <div className='card'>
+            <h2>Total Orders</h2>
+            <p>{salesData.totalorders}</p>
+          </div>
+        </div>
 
       <div className="sales-chart">
         <Line data={lineData} />

@@ -70,7 +70,7 @@ useEffect(()=>{
     let filtered=[...orders]
 
     if(sortoptions==='Active'){
-        filtered=filtered.filter((order=>order.orderStatus!='Cancelled' && order.orderStatus!='Delivered' ))
+        filtered=filtered.filter((order=>order.orderStatus=='Processing' || order.orderStatus=='Shipped' ))
     }
     else if(sortoptions==='Cancelled'){
         filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
@@ -234,12 +234,14 @@ const handlereturn=async()=>{
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
                     </div>
+                  
                         <div className="order-actions">
                                 <button
                                     disabled={list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
                                     className="return-button"
                                 >
+                                   
                                     {list.isreturned ? "Returned" : "Return"}
                                 </button>
                                 <button 

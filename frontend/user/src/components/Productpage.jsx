@@ -56,6 +56,7 @@ const Productpage = () => {
 
     const fetchProducts = useCallback(async () => {
         try {
+            
             const response = await axiosInstanceuser.get('/getproducts', {
                 params: {
                     category: category,
@@ -156,7 +157,7 @@ const Productpage = () => {
         setsearchterm(query);
         throttledSearch(query);
     };
-    const shouldShowPagination =!searchterm && category === 'ALL PRODUCTS' ;
+    const shouldShowPagination =!searchterm && category === 'ALL PRODUCTS';
 
     return (
         <div className="products-user-page">

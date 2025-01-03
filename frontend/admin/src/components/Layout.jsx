@@ -95,7 +95,7 @@ const Layout = () => {
             <Link to="/admindashboard/coupon">Coupons</Link>
           </li>
 
-          <li
+          {/* <li
             className={
               location.pathname === "/admindashboard/cancelorders"
                 ? "active-link"
@@ -103,7 +103,7 @@ const Layout = () => {
             }
           >
             <Link to="/admindashboard/cancelorders">Cancel Orders</Link>
-          </li>
+          </li> */}
 
 
 

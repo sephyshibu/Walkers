@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 const Retrun = () => {
     const[cancelorders,setcancelorders]=useState([])
-    const[success,setsuccess]=useState(false)
+    const[success,setsuccess]=useState([])
    
      const [error, seterror] = useState('');
     useEffect(()=>{
@@ -40,15 +40,19 @@ const Retrun = () => {
                 //         : order
                 //     )
                 //   );
-                setcancelorders((prevOrders) => prevOrders.filter((order) => order._id !== id));
-                setsuccess(true); // Mark the success state to show the result
-                  
+                setcancelorders((prevOrders) =>
+                  prevOrders.map((order) =>
+                    order._id === id ? { ...order, refunded: true } : order
+                  )
+                );
+                setsuccess((prev) => [...prev, id]); // Track refunded orders
+                
                   
             } catch (error) {
-                
+              console.error("Error processing refund", error);
             }
     }
-
+   
     const confirmRefund = (id) => {
       Swal.fire({
         title: 'Are you sure?',
@@ -71,6 +75,7 @@ const Retrun = () => {
         }
       });
     };
+    console.log("success orders", success)
   return (
     <div>
       <h2>Cancel Orders</h2>
@@ -101,8 +106,12 @@ const Retrun = () => {
             <p>
               <strong>Total prive:</strong> {order.totalprice}
             </p>
-            
-            <button onClick={() => confirmRefund(order._id)}>Refund</button>
+          <button  disabled={success.includes(order._id) || order.refunded} 
+          onClick={() => confirmRefund(order._id)}>
+            {success.includes(order._id) || order.refunded ? 'Refunded' : 'Refund'}
+            </button>
+                  
+           
           </div>
         ))}
       </div>

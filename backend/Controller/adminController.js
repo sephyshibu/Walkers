@@ -449,8 +449,8 @@ const updatepaymentstatus=async(req,res)=>{
     console.log("id",id)
     console.log("order status", orderstatus)
 
-    await Orderdb.findByIdAndUpdate(id,{orderStatus:orderstatus})
-    res.json({ message: 'Order updated successfully' });
+    const order=await Orderdb.findByIdAndUpdate(id,{orderStatus:orderstatus})
+    res.json({ message: 'Order updated successfully' ,order});
 }
 const updateProduct = async (req, res) => {
 
@@ -482,7 +482,7 @@ const updateProduct = async (req, res) => {
 
 const cancelorderfetch=async(req,res)=>{
     try {
-        const orders= await Orderdb.find({orderStatus:"Cancelled"}
+        const orders= await Orderdb.find({orderStatus:"Cancelled",paymentstatus:"Success"}
 
         )
         .populate("userId", "username email")
@@ -760,33 +760,31 @@ const salesreport = async (req, res) => {
         orderStatus: { $in: ["Delivered"] }
       };
       const date = new Date();
-      if (filter === "today") {
-        matchQuery.orderDate = { $gte: new Date(date.setHours(0, 0, 0, 0)) }; // From start of today
-      } else if (filter === "week") {
-        const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay())); // Sunday of current week
-        matchQuery.orderDate = { $gte: startOfWeek }; // Week range
-      } else if (filter === "month") {
-        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), date.getMonth(), 1) }; // Start of the current month
-      } else if (filter === "year") {
-        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), 0, 1) }; // Start of the current year
-      } else if (fromDate && toDate) {
-        // Custom date range
+      if (fromDate && toDate) {
+        // Custom date range has higher priority
         if (isNaN(Date.parse(fromDate)) || isNaN(Date.parse(toDate))) {
           return res.status(400).json({ error: "Invalid date format provided." });
         }
         const from = new Date(fromDate);
         const to = new Date(toDate);
-        
-        // Check if fromDate is greater than toDate
+      
+        // Ensure valid date range
         if (from > to) {
-          // If fromDate is greater, send an error and show a toast message
           return res.status(400).json({ error: "From date cannot be greater than to date." });
         }
-        
-        // Valid range, set the query
+      
+        // Set matchQuery for custom range
         matchQuery.orderDate = { $gte: from, $lte: to };
+      } else if (filter === "today") {
+        matchQuery.orderDate = { $gte: new Date(date.setHours(0, 0, 0, 0)) };
+      } else if (filter === "week") {
+        const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay()));
+        matchQuery.orderDate = { $gte: startOfWeek };
+      } else if (filter === "month") {
+        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), date.getMonth(), 1) };
+      } else if (filter === "year") {
+        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), 0, 1) };
       }
-     
   
       console.log("Match query", matchQuery);
   
@@ -800,6 +798,8 @@ const salesreport = async (req, res) => {
         { $unwind: '$items' },
   
         // Calculate the item total (quantity * price)
+        { $sort: { orderDate: 1 } },
+
         {
           $addFields: {
             itemtotal: { $multiply: ["$items.quantity", "$items.price"] }

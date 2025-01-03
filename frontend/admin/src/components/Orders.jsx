@@ -12,11 +12,12 @@ const Orders = () => {
     const [error, setError] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState({});
+    const[edited, setedited]=useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
         fetchOrders();
-    }, [currentPage, itemsPerPage]);
+    }, [edited,currentPage, itemsPerPage]);
 
     const fetchOrders = async () => {
         try {
@@ -41,6 +42,7 @@ const Orders = () => {
             )).sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));  // Sort by creation date, newest first;
 
             setOrders(combinedItems);
+            setedited(false)
             setCurrentPage(responsePage);
             setTotalPages(totalPages);
         } catch (error) {
@@ -52,6 +54,7 @@ const Orders = () => {
     const handleEdit = (list) => {
         setSelectedOrder(list);
         setIsOpen(true);
+        setedited(true)
     };
 
     const handlePageChange = (newPage) => {
@@ -61,6 +64,15 @@ const Orders = () => {
     const handleItemsPerPageChange = (event) => {
         setItemsPerPage(parseInt(event.target.value));
         setCurrentPage(1);
+    };
+    const updateOrder = (updatedOrder) => {
+        console.log("updated order in order page", updatedOrder)
+        setOrders((prevOrders) =>
+            prevOrders.map((order) =>
+                order.orderid === updatedOrder.orderid ? updatedOrder : order
+            )
+        );
+        setedited(true)
     };
 
     return (
@@ -128,8 +140,8 @@ const Orders = () => {
                 </select>
             </div>
             
-            {isOpen && <EditOrder isOpen={isOpen} selectedOrder={selectedOrder} setIsOpen={setIsOpen}/>}
-        </div>
+            {isOpen && <EditOrder isOpen={isOpen} selectedOrder={selectedOrder} setIsOpen={setIsOpen} updateOrder={updateOrder}/>}
+        </div> 
     );
 };
 
