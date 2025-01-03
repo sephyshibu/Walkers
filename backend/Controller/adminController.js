@@ -753,18 +753,31 @@ const getcoupon=async(req,res)=>{
 
 const salesreport = async (req, res) => {
     try {
-      const { fromDate, toDate, period } = req.query;
+      const { fromDate, toDate ,filter} = req.query;
       console.log("Query Parameters:", req.query);
   
       const matchQuery = {
         orderStatus: { $in: ["Delivered"] }
       };
-  
-      if (fromDate && toDate) {
-        const startOfDay = new Date(fromDate).setHours(0, 0, 0, 0);
-        const endOfDay = new Date(toDate).setHours(23, 59, 59, 999);
-        matchQuery.orderDate = { $gte: new Date(startOfDay), $lte: new Date(endOfDay) };
+      const date = new Date();
+      if (filter === "today") {
+        matchQuery.orderDate = { $gte: new Date(date.setHours(0, 0, 0, 0)) }; // From start of today
+      } else if (filter === "week") {
+        const startOfWeek = new Date(date.setDate(date.getDate() - date.getDay())); // Sunday of current week
+        matchQuery.orderDate = { $gte: startOfWeek }; // Week range
+      } else if (filter === "month") {
+        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), date.getMonth(), 1) }; // Start of the current month
+      } else if (filter === "year") {
+        matchQuery.orderDate = { $gte: new Date(date.getFullYear(), 0, 1) }; // Start of the current year
+      } else if (fromDate && toDate) {
+        // Custom date range
+        if (isNaN(Date.parse(fromDate)) || isNaN(Date.parse(toDate))) {
+          return res.status(400).json({ error: "Invalid date format provided." });
+        }
+        matchQuery.orderDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
       }
+  
+      console.log("Match query", matchQuery);
   
       console.log("Final matchQuery:", JSON.stringify(matchQuery, null, 2));
   
@@ -796,7 +809,7 @@ const salesreport = async (req, res) => {
               $push: {
                 month: { $month: "$orderDate" },
                 year: { $year: "$orderDate" },
-                total: "$totalSalesAmount"
+                total: "$totalprice"
               }
             }
           }
@@ -834,7 +847,7 @@ const salesreport = async (req, res) => {
         console.log("No sales data found.");
         return res.status(200).json({ totalSalesAmount: 0, totalorders: 0, monthlysales: [], totaldiscounts: 0 });
       }
-  
+      console.log("monthlysales",salesData[0].monthlysales)
       console.log("Discount price:", salesData[0].totaldiscounts);
   
       res.status(200).json({

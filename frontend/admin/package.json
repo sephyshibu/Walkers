@@ -20,6 +20,8 @@
     "chart.js": "^4.4.7",
     "cloudinary": "^2.5.1",
     "cropperjs": "^1.6.2",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "file-saver": "^2.0.5",
     "json2csv": "^6.0.0-alpha.2",
     "jspdf": "^2.5.2",
