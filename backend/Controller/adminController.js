@@ -774,8 +774,19 @@ const salesreport = async (req, res) => {
         if (isNaN(Date.parse(fromDate)) || isNaN(Date.parse(toDate))) {
           return res.status(400).json({ error: "Invalid date format provided." });
         }
-        matchQuery.orderDate = { $gte: new Date(fromDate), $lte: new Date(toDate) };
+        const from = new Date(fromDate);
+        const to = new Date(toDate);
+        
+        // Check if fromDate is greater than toDate
+        if (from > to) {
+          // If fromDate is greater, send an error and show a toast message
+          return res.status(400).json({ error: "From date cannot be greater than to date." });
+        }
+        
+        // Valid range, set the query
+        matchQuery.orderDate = { $gte: from, $lte: to };
       }
+     
   
       console.log("Match query", matchQuery);
   

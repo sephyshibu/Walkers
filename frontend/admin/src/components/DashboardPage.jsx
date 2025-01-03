@@ -33,7 +33,7 @@ const DashboardPage = () => {
       setSalesData(response.data);
       
     } catch (error) {
-      toast.error(error.response.data.message || 'Error fetching sales data');
+      toast.error(error.response.data.error || 'Error fetching sales data');
       console.error('Error fetching sales data:', error);
     }
   };
