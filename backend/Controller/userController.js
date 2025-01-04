@@ -2192,6 +2192,31 @@ const searchoption = async (req, res) => {
   }
 };
 
+const sortoptionorders=async(req,res)=>{
+  const{userId}=req.params
+  const{status}=req.query
+
+  try {
+    let ordersdoc=await orderdb.find({userId})
+
+    if(status==="select Status")
+    {
+      const orders = await orderdb
+        .find({ userId })
+        .populate({
+          path: "addressId",
+          select: "address", // Select only the address field
+        })
+        .populate({
+          path: "items.productId",
+          select: "name", // Optional: Populate product details
+        });
+    }
+  } catch (error) {
+    
+  }
+}
+
 
 
 
@@ -2237,5 +2262,5 @@ module.exports = {
   verifyotp,
   resendotp,
   googleLogin,
-  fetchcoupon, coupondetails
+  fetchcoupon, coupondetails,sortoptionorders
 };

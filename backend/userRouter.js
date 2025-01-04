@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {searchoption,fetchwallet,coupondetails,applycoupon,fetchcoupon,returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
+const {sortoptionorders,searchoption,fetchwallet,coupondetails,applycoupon,fetchcoupon,returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 const checkusersstatus=require('./middleware/checkuserstatus')
@@ -47,7 +47,7 @@ router.get('/fetchcoupon/:userId',verifyAccessToken,fetchcoupon)
 
 router.post('/applycoupon/:userId',verifyAccessToken,applycoupon)
 router.get('/fetchcoupondetails/:couponId', verifyAccessToken,coupondetails)
-
+router.get("/fetchorderstatus/:userId",verifyAccessToken,sortoptionorders)
 router.get('/fetchwallet/:userId',verifyAccessToken,fetchwallet)
 router.get('/searchquery',verifyAccessToken,searchoption)
 

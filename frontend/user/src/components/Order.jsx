@@ -66,27 +66,28 @@ const Order = () => {
         }
     }, [userId, fetchOrders]);
         
-
 useEffect(()=>{
-    let filtered=[...orders]
-
-    if(sortoptions==='Active'){
-        filtered=filtered.filter((order=>order.orderStatus=='Processing' || order.orderStatus=='Shipped' ))
+    const fetchorderbasedonfilter=async()=>{
+        if(sortoptions)
+        {
+            try{
+                const response=await axiosInstanceuser.get(`/fetchorderstatus/${userId}/?status=${sortoptions}`)
+                setfilter(response.data.orders)
+            }
+            catch(err){
+                console.error("fetch fil;tered order")
+                seterror("failed to fetch filtered order")
+            }
+        }
+        else{
+            setfilter([])
+        }
     }
-    else if(sortoptions==='Cancelled'){
-        filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
-    }
-    else if(sortoptions==='Delivered')
-    {
-        filtered=filtered.filter((order=>order.orderStatus==='Delivered'))
-    }
-    
-    setfilter(filtered)
+    fetchorderbasedonfilter()
+   
 },[sortoptions,orders])
 
-    // if (!orders || !orders.orderdata) {
-    //     return <p>Loading order details...</p>;
-    // }
+
 const openoverlay=(orderid)=>{
     setcurrentorderid(orderid)
     setShowOverlay(true)
@@ -204,6 +205,8 @@ const handlereturn=async()=>{
             </select>
         </label>
     </div>
+
+        
     <div className="orders-list">
         {filter.length > 0 ? (
             filter.map((list) => (
