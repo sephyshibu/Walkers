@@ -398,7 +398,7 @@ const CartPage = () => {
                     <div className='coupon-list'>
                     {coupon.length > 0 ? (
                         coupon.map((couponItem) => (
-                            <div
+                            <div className='eachcoupon'
                                 key={couponItem._id}
                                 // className={`coupon-item ${selectedCoupon?._id === couponItem._id ? 'selected' : ''}`}
                                 // onClick={() =>applyCoupon(couponItem)
