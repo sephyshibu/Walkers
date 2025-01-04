@@ -73,14 +73,14 @@ const handleDelete=async(id)=>{
                 {/* Add Edit Button */}
                 <div className="address-actions">
                     <button
-                        className='button'
+                        className='buttonedit'
                         onClick={() => handleEdit(addr._id)}
                     >
                         Edit
                     </button>
 
                     <button
-                        className='button button-delete'
+                        className='buttondelete'
                         onClick={() => handleDelete(addr._id)}
                     >
                         Delete

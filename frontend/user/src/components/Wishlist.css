@@ -66,34 +66,47 @@ body {
   gap: 10px;
 }
 
-.button {
+/* .button {
   padding: 10px 20px;
   font-size: 1rem;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
-}
+} */
 
-.button:hover {
+/* .button:hover {
   transform: scale(1.05);
-}
+} */
 
-.button-delete {
+.deletebutton {
   background-color: #e74c3c;
+  padding: 2px 4px;
+  font-size: 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
   /* color: #fff; */
 }
 
-.button-delete:hover {
+.deletebutton:hover {
   background-color: #c0392b;
 }
 
-.add-to-cart {
+.addtocart {
   background-color: #3498db;
+  padding: 15px 5px;
+  font-size: 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  /* color: #fff; */
   /* color: #fff; */
 }
 
-.add-to-cart:hover {
+.addtocart:hover {
   background-color: #2980b9;
 }
 

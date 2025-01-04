@@ -14,7 +14,7 @@ const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[coupon, setcoupon]=useState([])
     const [selectedCoupon, setSelectedCoupon] = useState(null);
-      const [couponDiscount, setCouponDiscount] = useState(0);
+    const [couponDiscount, setCouponDiscount] = useState(0);
     const[usedcoupon,setusedcoupon]=useState([])
     const[couponapplied, setcouponapplied]=useState(false)
     const[error,seterror]=useState('')

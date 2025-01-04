@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './Order.css'
@@ -18,10 +18,9 @@ const Order = () => {
     const [returnOverlay, setReturnOverlay] = useState(false);
     const [returnReason, setReturnReason] = useState('');
     const [returnProductId, setReturnProductId] = useState(null);
-
-
-    useEffect(() => {
-        const fetchOrders = async () => {
+   
+    
+    const fetchOrders = useCallback(async () => {
             try {
                 const response = await axiosInstanceuser.get(`/fetchorder/${userId}`);
                 console.log("Fetched orders:", response.data.orders);
@@ -59,12 +58,14 @@ const Order = () => {
                 console.error("Error fetching orders:", err);
                 // seterror("Failed to fetch orders");
             }
-        };
+      },[userId]);
 
+      useEffect(() => {
         if (userId) {
             fetchOrders();
         }
-    }, [userId]);
+    }, [userId, fetchOrders]);
+        
 
 useEffect(()=>{
     let filtered=[...orders]
@@ -89,6 +90,7 @@ useEffect(()=>{
 const openoverlay=(orderid)=>{
     setcurrentorderid(orderid)
     setShowOverlay(true)
+ 
 }
 
 const openReturnOverlay = (orderid, productid) => {
@@ -107,6 +109,7 @@ const handleCancelOrder = async (orderId) => {
             setFeedback('Please provide a cancellation reason.');
             return;
         }
+        
 
         try {
             const response = await axiosInstanceuser.put(`/cancelorder/${orderId}`, {
@@ -115,17 +118,18 @@ const handleCancelOrder = async (orderId) => {
                 userId
             });
             console.log('Order cancelled:', response.data);
-            toast.error("ordercancelled")
-            setFeedback('Your order has been cancelled successfully.');
-            // setorder((prevorder)=>prevorder.map((order)=>order.orderId===currentorderid?{...order,orderStatus:"Cancelled"}:order))
-             // Update the orders state directly to reflect the cancelled order
-             setorder((prevOrders) =>
+            setorder((prevOrders) =>
                 prevOrders.map((order) =>
                     order.orderId === currentorderid
                         ? { ...order, orderStatus: 'Cancelled' }
                         : order
                 )
             );
+            toast.error("ordercancelled")
+            setFeedback('Your order has been cancelled successfully.');
+            // setorder((prevorder)=>prevorder.map((order)=>order.orderId===currentorderid?{...order,orderStatus:"Cancelled"}:order))
+             // Update the orders state directly to reflect the cancelled order
+            fetchOrders()
             closeOverlay()
 
         } catch (error) {
@@ -154,24 +158,7 @@ const handlereturn=async()=>{
         });
         console.log("response from return an item", response.data)
 
-        // setorder(prevOrders =>
-        //     Array.isArray(prevOrders)
-        //         ? prevOrders.map(order =>
-        //               order.orderid === currentorderid
-        //                   ? {
-        //                         ...order,
-        //                         items: Array.isArray(order.items)
-        //                             ? order.items.map(item =>
-        //                                   item.productId._id === returnProductId
-        //                                       ? { ...item, isreturned: true }
-        //                                       : item
-        //                               )
-        //                             : order.items,
-        //                     }
-        //                   : order
-        //           )
-        //         : []
-        // );
+        
         setorder((prevOrders) =>
             prevOrders.map((order) =>
                 order.orderId === currentorderid
@@ -189,6 +176,7 @@ const handlereturn=async()=>{
         
 
         toast.success("Return request sent successfully");
+        fetchOrders()
         closeReturnOverlay();
 
     }
@@ -244,6 +232,7 @@ const handlereturn=async()=>{
                                    
                                     {list.isreturned ? "Returned" : "Return"}
                                 </button>
+                             
                                 <button 
                                 disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
                                 onClick={() => openoverlay(list.orderid)}
