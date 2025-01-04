@@ -62,8 +62,12 @@ const Productpage = () => {
                     category: category,
                     page: category !== 'ALL PRODUCTS' ? 1 : currentPage,
                     limit: itemsPerPage,
+                    minPrice: minprice,
+                    maxPrice: maxprice,
+                    sortOption: sortoptions,
                 },
             });
+            
             setProducts(response.data.products);
             setfilteredproduct(response.data.products);
             setTotalPages(response.data.totalPages);
@@ -71,7 +75,7 @@ const Productpage = () => {
         } catch (error) {
             console.log('Error in fetching products', error);
         }
-    },  [currentPage, itemsPerPage, category, userId]); // Dependencies
+    },  [currentPage, itemsPerPage, category,minprice, maxprice, sortoptions,  userId]); // Dependencies
     
     useEffect(() => {
         fetchProducts();
@@ -85,25 +89,39 @@ const Productpage = () => {
             filtered=filtered.filter(product=>product.category ===category)
         }
 
-        if(minprice){
-         
-            filtered= filtered.filter(product=>product.price>=Number(minprice))
+        if (minprice) {
+            filtered = filtered.filter(product => {
+                const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
+                return adjustedPrice >= Number(minprice);
+            });
         }
-
-        if(maxprice){
-            filtered= filtered.filter(product=>product.price<=Number(maxprice))
+    
+        // Filter by max price
+        if (maxprice) {
+            filtered = filtered.filter(product => {
+                const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
+                return adjustedPrice <= Number(maxprice);
+            });
         }
-
         // Sorting logic
         if (sortoptions === 'priceLowToHigh') {
-            filtered.sort((a, b) => a.price - b.price);
+            filtered.sort((a, b) => {
+                const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
+                const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
+                return priceA - priceB;
+            });
         } else if (sortoptions === 'priceHighToLow') {
-            filtered.sort((a, b) => b.price - a.price);
+            filtered.sort((a, b) => {
+                const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
+                const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
+                return priceB - priceA;
+            });
         } else if (sortoptions === 'alphabeticalAsc') {
             filtered.sort((a, b) => a.title.localeCompare(b.title));
         } else if (sortoptions === 'alphabeticalDesc') {
             filtered.sort((a, b) => b.title.localeCompare(a.title));
         }
+        
 
         setfilteredproduct(filtered)
     },[category,minprice,maxprice,sortoptions,products])
@@ -116,7 +134,7 @@ const Productpage = () => {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
-
+    console.log("filtered product offer",filteredproduct)
 
 
     const handleDisplay = (id) => {
@@ -238,8 +256,14 @@ const Productpage = () => {
                             onClick={() => handleDisplay(product._id)}
                         />
                         <h3 className="product-title">{product.title}</h3>
-                        {product.price &&
-                        <p className="product-price">Price: Rs.{product.price}</p>}
+                        {product.finalOffer?.offeramount > 0&& (
+                            <p className="product-prev-price">Rs.{product.price}</p>
+                        )}
+                        <p className="product-price">
+                        Rs.{product.finalOffer?.offeramount ? product.price - product.finalOffer?.offeramount : product.price}
+                        </p>
+                        {/* {product.price &&
+                        <p className="product-price">Price: Rs.{product.price}</p>} */}
                         <button onClick={()=>handleaddwishlist(userId,product._id)}>Add to wishList</button>
                     </div>
                 ))

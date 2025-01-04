@@ -523,17 +523,60 @@ const googleLogin = async (req, res) => {
 // };
 const getProducts = async (req, res) => {
   try {
-    const { category, page, limit } = req.query;
-    const activeCategories = await Categorydb.find({ status: true }).select("categoryname");
-    const activeCategoryNames = activeCategories.map((category) => category.categoryname);
+    const { category, page = 1, limit = 8, minPrice, maxPrice, sortOption } = req.query;
+    console.log("Filters received:", { category, minPrice, maxPrice, sortOption });
+    // Fetch active categories and their offers
+        const activeCategories = await Categorydb.find({ status: true })
+      .select("categoryname offerId")
+      .populate("offerId", "offeramount")
+      .lean();
 
+    const activeCategoryNames = activeCategories.map((cat) => cat.categoryname);
+
+    // Create a mapping of category offers for easier lookup
+    const categoryOffers = {};
+    activeCategories.forEach((cat) => {
+      if (cat.offerId) {
+        categoryOffers[cat.categoryname] = cat.offerId;
+      }
+    });
+    console.log("category offers", categoryOffers)
+
+    // Base query to fetch products
     let query = {
       status: true,
       category: { $in: activeCategoryNames },
     };
 
-    if (category && category !== 'ALL PRODUCTS') {
-      query.category = category;
+
+    const filter = {};
+
+
+    if (category && category !== "ALL PRODUCTS") {
+      filter.category = category;
+    }
+    
+    // Filter by price range
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) {
+        filter.price.$gte = Number(minPrice);
+      }
+      if (maxPrice) {
+        filter.price.$lte = Number(maxPrice);
+      }
+    }
+
+    // Calculate sorting order
+    const sort = {};
+    if (sortOption === "priceLowToHigh") {
+      sort.price = 1; // Ascending order
+    } else if (sortOption === "priceHighToLow") {
+      sort.price = -1; // Descending order
+    } else if (sortOption === "alphabeticalAsc") {
+      sort.title = 1; // Alphabetical order (A-Z)
+    } else if (sortOption === "alphabeticalDesc") {
+      sort.title = -1; // Alphabetical order (Z-A)
     }
 
     let products;
@@ -541,33 +584,66 @@ const getProducts = async (req, res) => {
     let totalPages;
     let currentPage;
 
-    if (category && category !== 'ALL PRODUCTS') {
-      // If a specific category is selected, return all products without pagination
-      products = await Productdb.find(query);
+    if (category && category !== "ALL PRODUCTS") {
+      // Fetch all products for the specific category without pagination
+      products = await Productdb.find(query)
+        .populate("offerId", "offeramount")
+        .lean();
+
       totalProducts = products.length;
       totalPages = 1;
       currentPage = 1;
     } else {
-      // If no specific category or 'ALL PRODUCTS' is selected, use pagination
+      // Apply pagination for 'ALL PRODUCTS'
       const pageNum = parseInt(page) || 1;
       const pageSize = parseInt(limit) || 8;
       const skip = (pageNum - 1) * pageSize;
 
-      products = await Productdb.find(query).skip(skip).limit(pageSize);
-      totalProducts = await Productdb.countDocuments(query);
+      products = await Productdb.find(query)
+        .skip(skip)
+        .limit(pageSize)
+        .populate("offerId", "offeramount")
+        .lean();
+
+      // Fetch total count for pagination metadata
+      totalProducts = await Productdb.countDocuments(filter);
       totalPages = Math.ceil(totalProducts / pageSize);
       currentPage = pageNum;
     }
 
+    // Calculate the final offer for each product
+    products = products.map((product) => {
+      let finalOffer = null;
+
+      const productOffer = product.offerId;
+      const categoryOffer = categoryOffers[product.category];
+      console.log("productioffer",productOffer)
+      console.log("category offer",categoryOffer)
+      if (productOffer && categoryOffer) {
+        finalOffer =
+          productOffer.offeramount >= categoryOffer.offeramount
+            ? productOffer
+            : categoryOffer;
+      } else if (productOffer) {
+        finalOffer = productOffer;
+      } else if (categoryOffer) {
+        finalOffer = categoryOffer;
+      }
+      console.log("finaloffer", finalOffer)
+      return {
+        ...product,
+        finalOffer,
+      };
+    });
+    
     return res.status(200).json({
       products,
       currentPage,
       totalPages,
       totalProducts,
     });
-
   } catch (error) {
-    console.error("An error occurred during get product based on category", error);
+    console.error("An error occurred during getProducts:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
