@@ -3,23 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstanceadmin from '../axios';
 import './Order.css';
 import EditOrder from './EditOrder';
-
+import ReactLoading from 'react-loading'
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [error, setError] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState({});
     const[edited, setedited]=useState(false)
     const navigate = useNavigate();
-
+    const[loading,setloading]=useState(false)
     useEffect(() => {
         fetchOrders();
     }, [edited,currentPage, itemsPerPage]);
 
     const fetchOrders = async () => {
+        setloading(true)
         try {
             const response = await axiosInstanceadmin.get('/fetchorder', {
                 params: { page: currentPage, limit: itemsPerPage }
@@ -48,6 +49,8 @@ const Orders = () => {
         } catch (error) {
             console.log('Error in fetching orders:', error);
             setError('Error in fetching orders');
+        }finally{
+            setloading(false)
         }
     };
 
@@ -79,7 +82,21 @@ const Orders = () => {
         <div className="order-page">
             <h1 className='orderheadadmin'>Manage Orders</h1>
             {error && <p className="error-messages">{error}</p>}
-            
+            {loading? (
+                          <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color:"red",
+                            marginTop:"1px"
+                          }}
+                        >
+                          <ReactLoading type="spin" color="red" height={100} width={50} />
+                        </div>
+                        
+                    ):(
+                        <>
             <div className="orders-list">
                 <table className="order-table">
                     <thead>
@@ -134,12 +151,13 @@ const Orders = () => {
                     Next
                 </button>
                 <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+                    <option value="5">5 per page</option>
                     <option value="10">10 per page</option>
-                    <option value="20">20 per page</option>
-                    <option value="50">50 per page</option>
+                    <option value="15">15 per page</option>
                 </select>
             </div>
-            
+            </>
+            )}
             {isOpen && <EditOrder isOpen={isOpen} selectedOrder={selectedOrder} setIsOpen={setIsOpen} updateOrder={updateOrder}/>}
         </div> 
     );

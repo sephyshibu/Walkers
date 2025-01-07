@@ -5,6 +5,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import './Coupon.css'
 import Swal from 'sweetalert2';
+import ReactLoading from'react-loading'
+
 
 const Coupon = () => {
   const [coupon, setcoupon] = useState([]);
@@ -12,6 +14,7 @@ const Coupon = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const[create,setcreate]=useState(false)
   const [error, seterror] = useState('');
+  const[loading,setloading]=useState(false)
   const [formdata, setformdata] = useState({
     title: "",
     descrtiption: "",
@@ -23,12 +26,15 @@ const Coupon = () => {
 
   useEffect(() => {
     const fetchcoupon = async () => {
+      setloading(true)
       try {
         const response = await axiosInstanceadmin.get('/getcoupon');
         console.log("Fetched return orders", response.data.coupon);
         setcoupon(response.data.coupon.reverse());
       } catch (error) {
         console.log("Error in fetching coupons", error);
+      }finally{
+        setloading(false)
       }
     };
     fetchcoupon();
@@ -137,6 +143,20 @@ const Coupon = () => {
     <div className='couponstart'>
       <ToastContainer/>
             <h2>Available Coupons</h2>
+            {loading? (
+                                      <div
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        color:"red",
+                                        marginTop:"1px"
+                                      }}
+                                    >
+                                      <ReactLoading type="spin" color="red" height={100} width={50} />
+                                    </div>
+                                    
+                                ):(<>
             <div className='coupon-container'>
               {coupon.length > 0 ? (
                 <table className="coupon-table">
@@ -180,6 +200,8 @@ const Coupon = () => {
                 <p>No coupons available</p>
               )}
         </div>
+        </>
+        )}
         <button className="open-modal-btn" onClick={() => setModalOpen(true)}>
           Add Coupon
         </button>

@@ -6,13 +6,14 @@ import 'cropperjs/dist/cropper.css';
 import { useNavigate } from 'react-router';
 import './Product.css';
 import AddOffer from './Addoffer'
-
+import ReactLoading from 'react-loading'
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const[loading,setloading]=useState(false)
   const itemsPerPage = 5; // Display 5 items per page
   const [formData, setFormData] = useState({
     title: '',
@@ -39,6 +40,7 @@ const Products = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
+      
       try {
         const response = await axiosInstanceadmin.get('/products');
         console.log('Fetched products:', response.data); // Debug log
@@ -53,7 +55,17 @@ const Products = () => {
   }, []); // Ensure the dependency array is empty to run only on mount.
   
   const handleShowListClick = () => {
-    setShowList((prevState) => !prevState); // Toggle table visibility
+    setloading(true)
+    try{
+      setShowList((prevState) => !prevState); // Toggle table visibility
+    }
+    catch(err){
+      console.error('Error fetching products:', err);
+      setError({global:'Failed to fetch products.'});
+    }
+    finally{
+      setloading(false)
+    }
   };
   
    // Calculate products to display for the current page
@@ -413,8 +425,18 @@ const closeModal = () => {
       <button className="show-list-button" onClick={handleShowListClick}>
         {showList ? 'Hide List' : 'Show List'}
       </button>
+      {loading && (
+      <div className="loading-container" style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        color:"blue"
+      }}>
+        <ReactLoading type="spin" color="blue" height={100} width={50} />
+      </div>
+    )}
 
-      {showList && (
+      {showList && !loading && (
       <table className="product-table">
                 <thead>
                     <tr className="table-header">

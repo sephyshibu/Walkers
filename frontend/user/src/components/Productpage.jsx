@@ -11,7 +11,7 @@ import throttle from 'lodash.throttle'
 import debounce from 'lodash.debounce'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-
+import ReactLoading from 'react-loading'
 const Productpage = () => {
     const [products, setProducts] = useState([]); // Store all products
     const [sortoptions,setsortoptions]=useState('')
@@ -25,6 +25,7 @@ const Productpage = () => {
     const[maxprice,setmaxprice]=useState('')
     const userId=useSelector((state)=>state.user.user._id)
     const navigate = useNavigate();
+    const[loading,setloading]=useState(false)
     const[error,setError]=useState('')
 //       useEffect(() => {
 //     const checkUserStatus = async () => {
@@ -55,6 +56,7 @@ const Productpage = () => {
 
 
     const fetchProducts = useCallback(async () => {
+        setloading(true)
         try {
             
             const response = await axiosInstanceuser.get('/getproducts', {
@@ -74,6 +76,8 @@ const Productpage = () => {
             setCurrentPage(response.data.currentPage);
         } catch (error) {
             console.log('Error in fetching products', error);
+        }finally{
+            setloading(false)
         }
     },  [currentPage, itemsPerPage, category,minprice, maxprice, sortoptions,  userId]); // Dependencies
     
@@ -244,7 +248,19 @@ const Productpage = () => {
                 </select>
             </label>
         </div>
-
+        {loading? (
+              <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                color:"blue"
+              }}
+            >
+              <ReactLoading type="spin" color="blue" height={100} width={50} />
+            </div>
+            
+        ) :(
         <div className="products-grid">
             {filteredproduct.length > 0 ? (
                 filteredproduct.map((product) => (
@@ -271,6 +287,7 @@ const Productpage = () => {
                 <p>No products match your filters.</p>
             )}
         </div>
+         )}
         {shouldShowPagination && (
                 <div className="pagination">
                     <button className='prev-button'
@@ -288,7 +305,7 @@ const Productpage = () => {
                     </button>
                 </div>
             )}
-
+       
 
 
             <Footer />
