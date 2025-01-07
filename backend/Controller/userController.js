@@ -558,12 +558,12 @@ const getProducts = async (req, res) => {
     
     // Filter by price range
     if (minPrice || maxPrice) {
-      filter.price = {};
+      query.price = {};
       if (minPrice) {
-        filter.price.$gte = Number(minPrice);
+        query.price.$gte = Number(minPrice);
       }
       if (maxPrice) {
-        filter.price.$lte = Number(maxPrice);
+        query.price.$lte = Number(maxPrice);
       }
     }
 
@@ -587,6 +587,7 @@ const getProducts = async (req, res) => {
     if (category && category !== "ALL PRODUCTS") {
       // Fetch all products for the specific category without pagination
       products = await Productdb.find(query)
+        
         .populate("offerId", "offeramount")
         .lean();
 
@@ -605,13 +606,13 @@ const getProducts = async (req, res) => {
         .populate("offerId", "offeramount")
         .lean();
 
-      // Fetch total count for pagination metadata
-      totalProducts = await Productdb.countDocuments(filter);
+      // Fetch total count for pagination
+      totalProducts = await Productdb.countDocuments(query);
       totalPages = Math.ceil(totalProducts / pageSize);
       currentPage = pageNum;
     }
 
-    // Calculate the final offer for each product
+    // Calculate the final offer for each productsss
     products = products.map((product) => {
       let finalOffer = null;
 
@@ -1055,7 +1056,7 @@ const fetchorder = async (req, res) => {
           select: "name", // Optional: Populate product details
         });
   
-      console.log("orders", orders);
+      // console.log("orders", orders);
   
       // If no orders found
       if (!orders || orders.length === 0) {
@@ -1101,7 +1102,7 @@ const fetchorder = async (req, res) => {
             : null,
         };
       });
-      console.log(ordersData)
+      // console.log(ordersData)
   
       // Send the response
       return res.status(200).json({ orders: ordersData });
@@ -1992,11 +1993,11 @@ const removeproductfrowwishlist = async (req, res) => {
 const returnorder = async (req, res) => {
     const { userId } = req.params;
     const { productid, orderid, returnreason } = req.body;
-
+    console.log("req body", req.body)
     try {
         // Find the order
         const order = await orderdb.findOne({ _id: orderid, userId });
-
+        console.log("rewr",order)
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
@@ -2182,7 +2183,8 @@ const searchoption = async (req, res) => {
 
   try {
     const products = await Productdb.find({
-      title: { $regex: `^${query}`, $options: 'i' } // Matches strings starting with the query
+      title: { $regex: `^${query}`, $options: 'i' },
+      status:true// Matches strings starting with the query
     });
 
     res.status(200).json({ products });
@@ -2192,15 +2194,16 @@ const searchoption = async (req, res) => {
   }
 };
 
-const sortoptionorders=async(req,res)=>{
-  const{userId}=req.params
-  const{status}=req.query
-
+const sortoptionorders = async (req, res) => {
+  const { userId } = req.params;
+  const { status } = req.query;
+  console.log("query",status)
   try {
-    let ordersdoc=await orderdb.find({userId})
+    // Fetch orders for the user
+    let ordersdoc = await orderdb.find({ userId });
 
-    if(status==="select Status")
-    {
+    if (status === "All") {
+      // If no specific status is selected, fetch all orders
       const orders = await orderdb
         .find({ userId })
         .populate({
@@ -2211,11 +2214,94 @@ const sortoptionorders=async(req,res)=>{
           path: "items.productId",
           select: "name", // Optional: Populate product details
         });
+
+      const ordersData = orders.map((order) => {
+        const address = order.addressId?.address?.find(
+          (addr) => addr._id.toString() === order.addressId._id.toString()
+        );
+
+        return {
+          orderId: order._id,
+          items: order.items.map((item) => ({
+            productId: item.productId,
+            title: item.title,
+            quantity: item.quantity,
+            price: item.price,
+            isreturned: item.isreturned,
+            returnstatus: item.returnstatus,
+            refundstatus: item.refundstatus,
+            returnreason: item.returnreason,
+          })),
+          totalPrice: order.totalprice,
+          orderStatus: order.orderStatus,
+          cancellationReason: order.cancelationreason || null,
+          orderDate: order.orderDate,
+          deliveryDate: order.deliverydate,
+          paymentMethod: order.paymentmethod,
+          paymentStatus: order.paymentstatus,
+          address: address
+            ? {
+                addressname: address.addressname,
+                streetAddress: address.streetAddress,
+                pincode: address.pincode,
+                state: address.state,
+                phonenumber: address.phonenumber,
+              }
+            : null,
+        };
+      });
+
+      return res.status(200).json({ orders: ordersData });
+    } else if (status === "Processing" || status === "Shipped" || status === "Cancelled" || status === "Delivered") {
+      // Filter orders based on the status
+      const filteredOrders = ordersdoc.filter((order) => order.orderStatus === status);
+
+      const filteredOrdersData = filteredOrders.map((order) => {
+        const address = order.addressId?.address?.find(
+          (addr) => addr._id.toString() === order.addressId._id.toString()
+        );
+
+        return {
+          orderId: order._id,
+          items: order.items.map((item) => ({
+            productId: item.productId,
+            title: item.title,
+            quantity: item.quantity,
+            price: item.price,
+            isreturned: item.isreturned,
+            returnstatus: item.returnstatus,
+            refundstatus: item.refundstatus,
+            returnreason: item.returnreason,
+          })),
+          totalPrice: order.totalprice,
+          orderStatus: order.orderStatus,
+          cancellationReason: order.cancelationreason || null,
+          orderDate: order.orderDate,
+          deliveryDate: order.deliverydate,
+          paymentMethod: order.paymentmethod,
+          paymentStatus: order.paymentstatus,
+          address: address
+            ? {
+                addressname: address.addressname,
+                streetAddress: address.streetAddress,
+                pincode: address.pincode,
+                state: address.state,
+                phonenumber: address.phonenumber,
+              }
+            : null,
+        };
+      });
+      console.log("backedn filtered orders",filteredOrdersData)
+
+      return res.status(200).json({ orders: filteredOrdersData });
+    } else {
+      return res.status(400).json({ error: "Invalid status value" });
     }
   } catch (error) {
-    
+    console.error("Error fetching orders:", error);
+    return res.status(500).json({ error: "Failed to fetch orders" });
   }
-}
+};
 
 
 

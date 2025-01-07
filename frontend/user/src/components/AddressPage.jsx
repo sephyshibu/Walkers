@@ -69,7 +69,7 @@ const handleDelete=async(id)=>{
                 <p><strong>State:</strong> {addr.state}</p>
                 <p><strong>Phone Number:</strong> {addr.phonenumber}</p>
                 <p><strong>Status:</strong> {addr.status ? "default address" : "Not default Address"}</p>
-
+                
                 {/* Add Edit Button */}
                 <div className="address-actions">
                     <button

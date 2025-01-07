@@ -495,42 +495,87 @@ const cancelorderfetch=async(req,res)=>{
     }
 }
 
-const getreturneditems = async (req,res) => {
-    try {
-      const orders = await Orderdb.find(
-        { "items.isreturned": true }, // Find orders with returned items
-        { "items.$": 1, userId: 1, _id: 1 } // Select only the returned items, userId, and orderId
-      )
-        .populate("userId", "username email") // Optionally populate userId with additional user details like name
-        .populate("items.productId") // Optionally populate productId with additional product details like title
-        .exec();
+// const getreturneditems = async (req,res) => {
+//     try {
+//       const orders = await Orderdb.find(
+//         { "items.isreturned": true }, // Find orders with returned items
+//         { "items.$": 1, userId: 1, _id: 1 } // Select only the returned items, userId, and orderId
+//       )
+//         .populate("userId", "username email") // Optionally populate userId with additional user details like name
+//         .populate("items.productId") // Optionally populate productId with additional product details like title
+//         .exec();
 
 
-      console.log("return", orders)
+//       console.log("return", orders)
 
-      const returnedItems = orders.map(order => {
-        return order.items.map(item => ({
-          orderId: order._id,
-          userId: order.userId,
-          productId: item.productId,
-          title: item.title,
-          quantity: item.quantity,
-          price: item.price,
-          isreturned: item.isreturned,
-          returnstatus: item.returnstatus,
-          refundstatus: item.refundstatus,
-          returnreason: item.returnreason,
-          refundDate:item.refundDate
-        }));
-      }).flat(); // Flatten the array of items
+//       const returnedItems = orders.map(order => {
+//         return order.items.map(item => ({
+//           orderId: order._id,
+//           userId: order.userId,
+//           productId: item.productId,
+//           title: item.title,
+//           quantity: item.quantity,
+//           price: item.price,
+//           isreturned: item.isreturned,
+//           returnstatus: item.returnstatus,
+//           refundstatus: item.refundstatus,
+//           returnreason: item.returnreason,
+//           refundDate:item.refundDate
+//         }));
+//       }).flat(); // Flatten the array of items
   
-      console.log(returnedItems);
-      return res.status(200).json(returnedItems);
-    } catch (err) {
-      console.error("Error fetching returned items:", err);
-      return [];
-    }
-  };
+//       console.log("items",returnedItems);
+//       return res.status(200).json(returnedItems);
+//     } catch (err) {
+//       console.error("Error fetching returned items:", err);
+//       return [];
+//     }
+//   };
+const getreturneditems = async (req, res) => {
+  try {
+    const orders = await Orderdb.aggregate([
+      { $match: { "items.isreturned": true } }, // Match orders with returned items
+      {
+        $project: {
+          userId: 1,
+          _id: 1,
+          returnedItems: {
+            $filter: {
+              input: "$items", // Access the `items` array
+              as: "item",
+              cond: { $eq: ["$$item.isreturned", true] }, // Filter items where `isreturned` is true
+            },
+          },
+        },
+      },
+    ])
+      .exec();
+
+    console.log("return", orders);
+
+    const returnedItems = orders.map(order => {
+      return order.returnedItems.map(item => ({
+        orderId: order._id,
+        userId: order.userId,
+        productId: item.productId,
+        title: item.title,
+        quantity: item.quantity,
+        price: item.price,
+        isreturned: item.isreturned,
+        returnstatus: item.returnstatus,
+        refundstatus: item.refundstatus,
+        returnreason: item.returnreason,
+        refundDate: item.refundDate,
+      }));
+    }).flat(); // Flatten the array of items
+
+    console.log("items", returnedItems);
+    return res.status(200).json(returnedItems);
+  } catch (err) {
+    console.error("Error fetching returned items:", err);
+    return res.status(500).json({ error: "Error fetching returned items" });
+  }
+};
 
 const cancelorderrefund=async(req,res)=>{
     const{id}=req.params

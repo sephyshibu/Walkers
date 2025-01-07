@@ -10,6 +10,7 @@ const Coupon = () => {
   const [coupon, setcoupon] = useState([]);
   const [success, setsuccess] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const[create,setcreate]=useState(false)
   const [error, seterror] = useState('');
   const [formdata, setformdata] = useState({
     title: "",
@@ -90,6 +91,7 @@ const Coupon = () => {
       const response = await axiosInstanceadmin.post('/addcoupon', formdata);
       console.log("Response from add coupon", response.data);
       setModalOpen(false); // Close the modal after submission
+      setsuccess(true)
       toast.success(response.data.message);
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {
@@ -134,7 +136,50 @@ const Coupon = () => {
   return (
     <div className='couponstart'>
       <ToastContainer/>
-      
+            <h2>Available Coupons</h2>
+            <div className='coupon-container'>
+              {coupon.length > 0 ? (
+                <table className="coupon-table">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+              
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Min Price</th>
+                      <th>Created On</th>
+                      <th>Expiry Date</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {coupon.map((item) => (
+                      <tr key={item._id}>
+                        <td>{item.title}</td>
+                      
+                        <td>{item.coupontype}</td>
+                        <td>{item.couponamount}</td>
+                        <td>{item.minprice}</td>
+                        <td>{new Date(item.createdon).toLocaleDateString()}</td>
+                        <td>{new Date(item.expiredon).toLocaleDateString()}</td>
+                        <td>{item.isblocked ? 'Blocked' : 'Active'}</td>
+                        <td>
+                                    <button className={item.isblocked ? "block-button" : "unblock-button"}
+                                    onClick={()=>toggleActive(item._id,item.isblocked)}>
+                                        {item.isblocked?"Block":"UnBlock"}
+                                    </button>
+                                </td>
+                      
+                      
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p>No coupons available</p>
+              )}
+        </div>
         <button className="open-modal-btn" onClick={() => setModalOpen(true)}>
           Add Coupon
         </button>
@@ -218,50 +263,6 @@ const Coupon = () => {
               </form>
               </div>
               </div>)}
-            <h2>Available Coupons</h2>
-            <div className='coupon-container'>
-              {coupon.length > 0 ? (
-                <table className="coupon-table">
-                  <thead>
-                    <tr>
-                      <th>Title</th>
-              
-                      <th>Type</th>
-                      <th>Amount</th>
-                      <th>Min Price</th>
-                      <th>Created On</th>
-                      <th>Expiry Date</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {coupon.map((item) => (
-                      <tr key={item._id}>
-                        <td>{item.title}</td>
-                      
-                        <td>{item.coupontype}</td>
-                        <td>{item.couponamount}</td>
-                        <td>{item.minprice}</td>
-                        <td>{new Date(item.createdon).toLocaleDateString()}</td>
-                        <td>{new Date(item.expiredon).toLocaleDateString()}</td>
-                        <td>{item.isblocked ? 'Blocked' : 'Active'}</td>
-                        <td>
-                                    <button className={item.isblocked ? "block-button" : "unblock-button"}
-                                    onClick={()=>toggleActive(item._id,item.isblocked)}>
-                                        {item.isblocked?"Block":"UnBlock"}
-                                    </button>
-                                </td>
-                      
-                      
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <p>No coupons available</p>
-              )}
-        </div>
     </div>
   
   );

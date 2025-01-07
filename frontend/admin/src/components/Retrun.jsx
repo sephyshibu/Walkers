@@ -21,7 +21,7 @@ const Return = () => {
   }, [success]);
 
   const handleFunction = async (id, actiontype, productId) => {
-    console.log("handleFunction Id", id);
+    console.log("handleFunction product Id", productId);
     console.log("handle Action type", actiontype);
     try {
       const response = await axiosInstanceadmin.patch(`/updatestatus/${id}`, { actiontype, productId });
@@ -74,9 +74,9 @@ const Return = () => {
               <td>{new Date(item.refundDate).toLocaleDateString()}</td>
               <td>
                 <div className="action-buttons">
-                  <button disabled={item.returnstatus==="Accepted"} className="accept-btn" onClick={() => handleFunction(item.orderId, "Accepted", item.productId._id)}>Accept</button>
-                  <button disabled={item.returnstatus==="Rejected"} className="reject-btn" onClick={() => handleFunction(item.orderId, "Rejected", item.productId._id)}>Reject</button>
-                  <button disabled={item.refundstatus===true} className="refund-btn" onClick={() => handleFunction(item.orderId, "Refund", item.productId._id)}>Refund</button>
+                  <button disabled={item.returnstatus==="Accepted" || item.returnstatus==="Rejected"} className="accept-btn" onClick={() => handleFunction(item.orderId, "Accepted", item.productId)}>Accept</button>
+                  <button disabled={item.returnstatus==="Rejected"|| item.refundstatus===true} className="reject-btn" onClick={() => handleFunction(item.orderId, "Rejected", item.productId)}>Reject</button>
+                  <button disabled={item.refundstatus===true || item.returnstatus!="Accepted"} className="refund-btn" onClick={() => handleFunction(item.orderId, "Refund", item.productId)}>Refund</button>
                 </div>
               </td>
             </tr>

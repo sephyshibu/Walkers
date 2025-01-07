@@ -102,7 +102,7 @@ const DashboardPage = () => {
   });
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [filter, setFilter] = useState(''); // Default filter is "month"
+  const [filter, setFilter] = useState('month'); // Default filter is "month"
 
   const fetchSalesData = async () => {
     try {
@@ -223,7 +223,7 @@ const DashboardPage = () => {
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
         />
-        <button onClick={fetchSalesData}>Apply Custom Range</button>
+        {/* <button onClick={fetchSalesData}>Apply Custom Range</button> */}
         <PDFDownloadLink document={<SalesReportPDF data={{ ...salesData, csvData }} />} fileName="sales_report.pdf">
           {({ loading }) => <button>{loading ? 'Loading PDF...' : 'Download PDF'}</button>}
         </PDFDownloadLink>
