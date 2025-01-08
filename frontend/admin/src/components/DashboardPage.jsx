@@ -136,6 +136,8 @@ const DashboardPage = () => {
           borderColor: '#FF6384',
           fill: false,
           tension: 0.4,  // Makes the line smoother
+          pointRadius: 6, // Default point size
+          pointHoverRadius: 10, // Point size on hover
         }]
       };
     }

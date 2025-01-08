@@ -10,12 +10,13 @@ import { useSelector } from "react-redux";
 import { persistor } from "../app/store";
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-
+import ReactLoading from 'react-loading'
 
 
 const ProductDisplay = () => {
   const userId=useSelector((state)=>state.user.user._id)
   const { id } = useParams();
+  const[loading,setloading]=useState(false)
   const [error, setError] = useState("");
   const [existingImages, setExistingImages] = useState([]);
   const[variantslist,setvariantslist]=useState([])
@@ -39,6 +40,7 @@ const ProductDisplay = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setloading(true)
       try {
 
         // setSelectedVariant(null);
@@ -102,6 +104,8 @@ const ProductDisplay = () => {
       }
         setError("Failed to fetch product details.");
 
+      }finally{
+        setloading(false)
       }
     };
     
@@ -201,6 +205,17 @@ const ProductDisplay = () => {
     <div className="product-display-page">
       <Navbar/>
       <ToastContainer/>
+      {loading?(<div
+                  style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      color:"red",
+                      marginTop:"1px"
+                      }}
+                      >
+                <ReactLoading type="spin" color="red" height={100} width={50} />
+                </div>):(
     <div className="product-display-container">
       {error && <p className="error-messagecartadd ">{error}</p>}
       {!error && (
@@ -333,8 +348,9 @@ const ProductDisplay = () => {
             </div>
         </>
       )}
+         
       </div>
-     
+       )}
     </div>
   );
 };

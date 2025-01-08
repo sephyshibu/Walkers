@@ -144,15 +144,14 @@ const Coupon = () => {
       <ToastContainer/>
             <h2>Available Coupons</h2>
             {loading? (
-                                      <div
-                                      style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        color:"red",
-                                        marginTop:"1px"
-                                      }}
-                                    >
+                      <div
+                          style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              color:"red",
+                              marginTop:"1px"
+                              }}>
                                       <ReactLoading type="spin" color="red" height={100} width={50} />
                                     </div>
                                     

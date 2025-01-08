@@ -24,10 +24,10 @@
     align-items: center;
     flex-direction: column;
     text-align: center;
-    /* background-color: #ffffff; */
+    background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
-    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     width: 100%;
     margin-top: 200px;
    
@@ -112,19 +112,8 @@
   }
   
   /* Google Login Button */
-  .google-btn {
-    margin-top: 15px;
-    padding: 1px;
-   
-    border: none;
-    border-radius: 5px;
-    color: white;
-    cursor: pointer;
-  }
   
-  .google-btn:hover {
-    background-color: #7891b9;
-  }
+ 
   
   /* Messages */
   .error-message, .success-message {

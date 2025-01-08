@@ -6,15 +6,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 import './Wishlist.css'
+import ReactLoading from 'react-loading'
+
+
 const WishList = () => {
   const navigate=useNavigate()
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const userId = useSelector((state) => state.user.user._id);
   const [error, setError] = useState('');
   const [wishlistshow, setWishlistShow] = useState([]);
 
+
   useEffect(() => {
     const fetchWishlist = async () => {
+      setLoading(true)
       try {
         const response = await axiosInstanceuser.get(`/fetchwishlist/${userId}`);
         console.log('Fetched wishlist', response.data);
@@ -45,6 +50,9 @@ const WishList = () => {
   const handleAddToCart=async(id)=>{
     navigate(`/products/display/${id}`)
 }
+const handleDisplay = (id) => {
+  navigate(`/products/display/${id}`);
+};
 
   return (
     <div className="wishlist-page-container">
@@ -52,6 +60,18 @@ const WishList = () => {
       <ToastContainer />
       <h2 className="wishlist-page-title">WishList</h2>
       {error && <p className="error-message">{error}</p>}
+      {loading?(
+                <div
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color:"red",
+                        marginTop:"1px"
+                        }}
+                >
+                <ReactLoading type="spin" color="red" height={100} width={50} />
+                </div>):(<>
       {wishlistshow.length === 0 && (
         <div className="empty-wishlist">
           <p>No wishlist found. Start adding your favorite items!</p>
@@ -60,13 +80,21 @@ const WishList = () => {
           </button>
         </div>
       )}
+      
       <div className="wishlist-grid">
         {Array.isArray(wishlistshow) && wishlistshow.length > 0 ? (
           wishlistshow.map((wish, index) => (
             <div key={index} className="wishlist-item">
+               <img
+                            src={wish.images[0]}
+                            alt={wish.title}
+                            className="wish-image"
+                            onClick={() => handleDisplay(wish._id)}
+                        />
               <div className="wishlist-details"> 
+             
                 <h3 className="wishlist-title">{wish.title}</h3>
-                <p className="wishlist-price">Price: Rs. {wish.price}</p>
+               
               </div>
               <div className="wishlist-actions">
                 <button
@@ -84,6 +112,8 @@ const WishList = () => {
           <p className="no-wishlist-message">No wishlist found.</p>
         )}
       </div>
+      </>
+      )}
     </div>
   );
 };

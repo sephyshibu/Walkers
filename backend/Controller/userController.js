@@ -345,16 +345,17 @@ const googleLogin = async (req, res) => {
         return res.status(403).json({ message: "User is Blocked by admin" });
       }
       const token = jwt.sign({ email: email }, process.env.JWT_SECRET, {
-        expiresIn: "2m",
+        expiresIn: "15m",
       });
       const refresh = jwt.sign(
         { email: email },
         process.env.JWT_REFRESH_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "7d" }
       );
       console.log("Access Token", token);
       console.log("refresh token", refresh);
-
+      
+      console.log("wallet created")
       return res
         .status(200)
         .json({ message: "googele lgoin successfull", user, token });
@@ -366,13 +367,20 @@ const googleLogin = async (req, res) => {
       });
 
       await user.save();
-      const token = jwt.sign({ email: newuser.email }, process.env.JWT_SECRET, {
-        expiresIn: "2m",
+      const newwallet=new wallet({
+        userId:user._id
+      })
+      console.log("newuser wallet",newwallet)
+
+      await newwallet.save();
+      
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
+        expiresIn: "15m",
       });
       const refresh = jwt.sign(
-        { email: newuser.email },
+        { email: user.email },
         process.env.JWT_REFRESH_SECRET,
-        { expiresIn: "15m" }
+        { expiresIn: "7d" }
       );
       console.log("Access Token", token);
       console.log("refresh token", refresh);

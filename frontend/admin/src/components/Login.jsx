@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {useNavigate} from 'react-router-dom'
 // import axiosInstance from '../axios'
-// import walkerslogo from '../images/Walkers-logo.png'
-// import walker from '../images/Walkers.png'
+import walkerslogo from '../images/Walkers-logo.png'
+import walker from '../images/Walkers.png'
 import axiosInstanceadmin from "../axios";
 import {useDispatch} from 'react-redux'
 import {loginAdmin} from '../Slices/adminSlice'
@@ -57,13 +57,15 @@ const login=()=>{
     
     return(
         <div className="adminlogin-container">
-            {/* <div className="adminlogo-container">
+            {/* <div>
+            <div className="adminlogo-container">
                 <img className="adminlogopng" src={walkerslogo} alt="Company Logo" />    
             </div>
-            <div className="adminlogo-container1">
-                 <img className="adminheadingpng"  src={walker} alt="Company Logo" /> 
+           
             </div> */}
+            
             <form className="adminlogin-form">
+                <h1>Admin Login</h1>
                 <input type='email'
                     className="adminform-input"
                     placeholder='enter the username'

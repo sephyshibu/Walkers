@@ -70,7 +70,7 @@ const Return = () => {
                                 <tr>
                                   <th>Order ID</th>
                                   <th>Product Name</th>
-                                  <th>User Name</th>
+                                 
                                   <th>Quantity</th>
                                   <th>Price</th>
                                   <th>Return Status</th>
@@ -84,7 +84,7 @@ const Return = () => {
                                   <tr key={index} className="order-row">
                                     <td>{item.orderId}</td>
                                     <td>{item.title || 'Product Name'}</td>
-                                    <td>{item.userId.username}</td>
+                                    
                                     <td>{item.quantity}</td>
                                     <td>₹{item.price}</td>
                                     <td>{item.returnstatus}</td>
