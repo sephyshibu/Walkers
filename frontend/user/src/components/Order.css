@@ -60,6 +60,7 @@ h1 {
     align-items: center;
     margin-bottom: 10px;
     font-weight: bold;
+    gap: 20px;
 }
 
 .order-details {
@@ -68,13 +69,14 @@ h1 {
     color: #555;
     margin-bottom: 15px;
     display: flex;
-    flex-direction: row; /* Stack the details vertically */
-    gap: 80px; /* Space between each detail */
+    justify-content: space-evenly; /* Distribute space evenly */
+    padding: 0 20px;               /* Add equal space inside the parent */
+    gap: 380px; /* Space between each detail */
 }
 
 .highlighted-details {
-    background-color: #f3f3f3; /* Light gray background */
-    padding: 10px;
+    /* background-color: #f3f3f3; Light gray background */
+    max-width: 450px;
     border-radius: 5px;
     margin-bottom: 10px;
 }
@@ -83,6 +85,9 @@ h1 {
     font-weight: bold;
     
 }
+.productprices{
+    font-size: 20px;
+}
 
 .delivery-date {
     font-weight: bold;
@@ -90,12 +95,17 @@ h1 {
 }
 
 .other-details {
-    font-size: 14px;
+    font-size: 18px;
     color: #555;
     padding: 10px;
+    /* text-align: center; */
+    display: flex; /* Corrected to flex */
+    margin-left: 90px;
+    flex-direction: column; /* Stack the content vertically */
     border-radius: 5px;
     margin-bottom: 10px;
 }
+
 
 
 button {

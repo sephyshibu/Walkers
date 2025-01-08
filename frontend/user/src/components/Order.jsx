@@ -224,23 +224,27 @@ const handlereturn=async()=>{
         {orders.length > 0 ? (
             orders.map((list) => (
                 <div key={list.orderid} className="order-card">
-                    <div className="order-header">
-                        <span>Status: {list.orderStatus}</span>
-                    </div>
+                    
                     
                     <div className="order-details">
                     <div className="highlighted-details">
                         <div className="product-title">Product title:{list.title}</div>
-                        <div className="delivery-date">Delivery Date: {new Date(list.deliverydate).toLocaleDateString()}</div>
+                        <div className='productprices'>Product price:{list.price}</div>
+                        <div className='productprices'>OrderId:{list.orderid}</div>
                     </div>
                         {/* <div>Product price:{list.price}</div>
                         <div>Product quantity:{list.quantity}</div> */}
                     <div className="other-details">   
                         <div>Order Date: {new Date(list.orderdate).toLocaleDateString()}</div>
-                        <div>Product price:{list.price}</div>
+                        <div className="delivery-date">Delivery Date: {new Date(list.deliverydate).toLocaleDateString()}</div>
                         <div>Total Price: Rs. {list.totalprice}</div>
+                        <div>Payment Method: {list.paymentmethod}</div>
+                        <div>Payment Status: {list.paymentstatus}</div>
                     </div>   
                     </div>
+                    <div className="order-header">
+                        <span>Status: {list.orderStatus}</span>
+                    
                   
                         <div className="order-actions">
                                 <button
@@ -260,6 +264,7 @@ const handlereturn=async()=>{
                                 Cancel
                             </button>
 
+                        </div>
                         </div>
                         {/* {returnOverlay && (
                             <div className="overlay">

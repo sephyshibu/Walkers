@@ -2194,8 +2194,15 @@ const searchoption = async (req, res) => {
   const { query } = req.query; // Get the search query from the request
 
   try {
+    const words = query.trim().split(/\s+/); // Split by spaces
+
+    // Create a regex pattern that looks for the first letter of each word in the title
+    const regex = words
+      .map(word => `(?=.*\\b${word}\\w*)`) // Match the first letter of each word followed by any characters
+      .join(''); // Join them into a single regex pattern
+
     const products = await Productdb.find({
-      title: { $regex: `^${query}`, $options: 'i' },
+      title: { $regex: regex, $options: 'i' },
       status:true// Matches strings starting with the query
     });
 
