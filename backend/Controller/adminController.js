@@ -1005,6 +1005,11 @@ const salesreport = async (req, res) => {
     const{offertype, offeramount, expiredon}=req.body
     console.log("req body", req.body)
     try {
+        const today=new Date()
+        const expiredondate=new Date(expiredon)
+        if(today>expiredondate){
+          return res.status(400).json({error:"expired date is less than today date"})
+        }
         const newoffer= new offerdb({offertype, offeramount, expiredon})
         console.log("newoffer", newoffer)
         await newoffer.save()

@@ -155,6 +155,7 @@ const ProductDisplay = () => {
   //  alert("the product is out of stock")
   //   return
   //  }
+  console.log("userId", userId)
   if (!userId) {
     toast.error("Please login");
   }else{

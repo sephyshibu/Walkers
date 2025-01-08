@@ -42,7 +42,8 @@ const Coupon = () => {
   }, [success]);
   const validateform=(data)=>{
     const errors={}
-
+    const today = new Date();
+    const expirationDate = new Date(data.expiredon);
     if(!data.title.trim())
     {
       errors.title="title can be empty"
@@ -73,8 +74,13 @@ const Coupon = () => {
     }
     if(!data.expiredon.trim())
               {
-                errors.expiredon="Expired date can be empty"
+                errors.expiredon="Expired date cant be empty"
               }
+    if(expirationDate < today)
+                {
+                  errors.expiredon="Expired date cant be less than todays date"
+                }
+  
 
     seterror(errors)
     return Object.keys(errors).length === 0
@@ -184,9 +190,9 @@ const Coupon = () => {
                         <td>{new Date(item.expiredon).toLocaleDateString()}</td>
                         <td>{item.isblocked ? 'Blocked' : 'Active'}</td>
                         <td>
-                                    <button className={item.isblocked ? "block-button" : "unblock-button"}
+                                    <button className={item.isblocked ? "unblock-button" : "block-button"}
                                     onClick={()=>toggleActive(item._id,item.isblocked)}>
-                                        {item.isblocked?"Block":"UnBlock"}
+                                        {item.isblocked?"Unblock":"Block"}
                                     </button>
                                 </td>
                       
@@ -231,7 +237,7 @@ const Coupon = () => {
                 onChange={handleInputChange}
               />
               {error.descrtiption && <p className="error-messages">{error.descrtiption}</p>}
-              <label>Coupon Type: </label>
+              <label>Coupon: </label>
               <br></br>
               <select name="coupontype" value={formdata.coupontype} onChange={handleInputChange}>
               <option value="">Select</option> {/* Explicit value for the default option */}

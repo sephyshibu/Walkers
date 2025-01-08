@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axiosInstanceadmin from '../axios';
 import './AddOffer.css'; // Import the CSS file
-
+import{ToastContainer, toast} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddOffer = ({ isOpen, onRequestClose, productId }) => {
     const [offerData, setOfferData] = useState({
@@ -51,6 +52,14 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
 
     const handleAddOffer = async () => {
         const validationErrors = validateForm();
+        const today = new Date();
+        const expirationDate = new Date(offerData.expiredon);
+
+        if (expirationDate < today) {
+            validationErrors.expiredon = "Expiration date must be today or later.";
+            setErrors(validationErrors);
+            return;
+        }
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
@@ -65,6 +74,7 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
 
             onRequestClose(); // Close Modal
         } catch (error) {
+            
             console.error('Error adding offer:', error);
         }
     };
@@ -80,6 +90,8 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
     }
 
     return (
+        <>
+         <ToastContainer/>
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
@@ -90,7 +102,7 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
             <h2 className="modal-title">Add Offer</h2>
             <form className="form-container">
                 <div className="form-group">
-                    <label htmlFor="offertype">Offer Type:</label>
+                    <label htmlFor="offertype">Offer:</label>
                     <select
                         id="offertype"
                         name="offertype"
@@ -173,6 +185,7 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
                 </tbody>
             </table>
         </Modal>
+        </>
     );
 };
 

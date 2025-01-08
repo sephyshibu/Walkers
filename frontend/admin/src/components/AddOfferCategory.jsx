@@ -49,12 +49,36 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
         }
         return newErrors;
     };
+    
+    const handleAddOffer = async (e) => {
+        e.preventDefault(); // Prevent form default submission
+        const validationErrors = validateForm();
+        const today = new Date();
+        const expirationDate = new Date(offerData.expiredon);
 
-    const handleAddOffer = async () => {
+        if (expirationDate < today) {
+            validationErrors.expiredon = "Expiration date must be today or later.";
+            setErrors(validationErrors);
+            return;
+        }
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return;
+        }
         try {
+            // const response = await axiosInstanceadmin.post('/offers', offerData);
+            // const offerId = response.data._id;
+            // await axiosInstanceadmin.put(`/category/${categoryId}/offer`, { offerId });
+            
+            // onRequestClose();
+
             const response = await axiosInstanceadmin.post('/offers', offerData);
             const offerId = response.data._id;
+
+            // Associate the offer with the category
             await axiosInstanceadmin.put(`/category/${categoryId}/offer`, { offerId });
+
+            // Only close the modal if everything succeeds
             onRequestClose();
         } catch (error) {
             console.error('Error adding offer:', error);
@@ -75,6 +99,7 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             ariaHideApp={false}
+            
             style={{
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.75)',
@@ -88,7 +113,7 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
                 <h2>Add Offer</h2>
                 <Form>
                     <FormGroup>
-                        <Label htmlFor="offertype">Offer Type:</Label>
+                        <Label htmlFor="offertype">Offer:</Label>
                         <Select
                             id="offertype"
                             name="offertype"

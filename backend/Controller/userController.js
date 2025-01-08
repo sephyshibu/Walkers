@@ -664,6 +664,8 @@ const checkout = async (req, res) => {
   console.log("selected coupon",selectedCoupon)
 
   try {
+
+    
     // Find cart and populate product details
     const cart = await cartdb.findOne({ userId }).populate({
       path: "items.productId",

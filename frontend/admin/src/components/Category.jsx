@@ -38,6 +38,7 @@ const Category = () => {
       const closeModal = () => {
         setIsModalOpen(false);
         setSelectedCategoryId(null);
+        
       };
       
 
