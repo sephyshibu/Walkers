@@ -446,10 +446,41 @@ const addProduct = async (req, res) => {
 const updatepaymentstatus=async(req,res)=>{
     const{id}=req.params
     const{orderstatus}=req.body
-    console.log("id",id)
+    console.log("order id",id)
     console.log("order status", orderstatus)
 
     const order=await Orderdb.findByIdAndUpdate(id,{orderStatus:orderstatus})
+    const orderdoc = await Orderdb.findById(id);
+    console.log("orderdoc",orderdoc)
+      if(orderdoc.paymentstatus==="Success" && orderstatus==="Cancelled")
+        {
+          const userwallet=await wallet.findOne({userId:orderdoc.userId})
+          console.log("wallet",userwallet)
+          if(!userwallet)
+          {
+              return res.status(404).json({message:"Wallert not found oof thwe user"})
+          }
+      
+          const transaction = {
+              transaction_id: uuidv4(), // Generate a unique transaction ID
+              amount: orderdoc.totalprice,
+              transactionmethod: "refundcancel",
+            };
+          console.log("transaction", transaction)
+          userwallet.transactions.push(transaction);
+          userwallet.balance+=transaction.amount
+          
+          await userwallet.save();
+
+          for (const item of orderdoc.items) {
+                await Productdb.findByIdAndUpdate(item.productId, {
+                  $inc: { availableQuantity: item.quantity },
+                });
+              }
+          
+      
+          console.log("Refund added to wallet:", transaction);
+          }
     res.json({ message: 'Order updated successfully' ,order});
 }
 const updateProduct = async (req, res) => {

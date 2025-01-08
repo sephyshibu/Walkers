@@ -96,7 +96,7 @@ const AddOfferCategory = ({ isOpen, onRequestClose, categoryId }) => {
                             onChange={handleInputChange}
                         >
                             <option value="fixed">Fixed</option>
-                            <option value="percentage">Percentage</option>
+                            {/* <option value="percentage">Percentage</option> */}
                         </Select>
                     </FormGroup>
                     <FormGroup>

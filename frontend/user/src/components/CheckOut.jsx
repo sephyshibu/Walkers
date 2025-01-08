@@ -59,6 +59,7 @@ const CheckOut = () => {
                         totalprice: Math.max(0, prevCart.totalprice - couponResponse.data.coupondoc.couponamount),
                     }));
                 }
+              
 
             } catch (error) {
                 if (error.response?.status === 403 && error.response?.data?.action === "logout") {
@@ -79,7 +80,7 @@ const CheckOut = () => {
         
     },[userId,dispatch])
     console.log('this is default ',defaultaddress)
-
+    console.log("cart", cart)
     const handleAddress=()=>{
             navigate('/account')
     }
@@ -117,12 +118,15 @@ const CheckOut = () => {
             <div key={item.productId} className="order-item">
               <span>{item.title}</span>
               <span>{item.title} (x{item.quantity})</span>
-              <span>${(item.price * item.quantity).toFixed(2)}</span>
+              <span>Rs{(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
           <hr />
           {couponDiscount > 0 && <p>Coupon Discount: -Rs. {couponDiscount.toFixed(2)}</p>}
-                    <h4>Total Price: Rs. {cart.totalprice.toFixed(2)}</h4>
+          <p>Tax:40</p>
+          <p>Shipping Feee: 60</p>
+                    <h4> Total Price: Rs.
+                    {(40 +60+ cart.totalprice).toFixed(2)}</h4>
           <button type='button'
             onClick={handleproccedtopayment}
             className="place-order-button">Procced to payment</button>

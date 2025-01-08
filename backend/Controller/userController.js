@@ -891,7 +891,7 @@ const deleteorder = async (req, res) => {
       console.log("wallet",userwallet)
       if(!userwallet)
       {
-          return res.status(404).json({message:"Wallert not found oof thwe user"})
+          return res.status(404).json({message:"Wallert not found of thwe user"})
       }
   
       const transaction = {
@@ -1140,7 +1140,9 @@ const fetchcart = async (req, res) => {
         price: item.price,
       })),
       totalprice: cart.totalprice,
+     
     };
+    console.log("cart", cart)
 
     return res.status(200).json(cart);
   } catch (error) {

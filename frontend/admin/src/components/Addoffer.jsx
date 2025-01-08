@@ -99,7 +99,7 @@ const AddOffer = ({ isOpen, onRequestClose, productId }) => {
                         className="form-input"
                     >
                         <option value="fixed">Fixed</option>
-                        <option value="percentage">Percentage</option>
+                        {/* <option value="percentage">Percentage</option> */}
                     </select>
                 </div>
                 <div className="form-group">

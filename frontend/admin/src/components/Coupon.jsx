@@ -236,7 +236,7 @@ const Coupon = () => {
               <select name="coupontype" value={formdata.coupontype} onChange={handleInputChange}>
               <option value="">Select</option> {/* Explicit value for the default option */}
                   <option value='fixed'>Fixed</option>
-                  <option value='percentage'>Percentage</option>
+                  {/* <option value='percentage'>Percentage</option> */}
               </select>
               {error.coupontype && <p className="error-messages">{error.coupontype}</p>}
               <label>Coupon Amount: </label>
