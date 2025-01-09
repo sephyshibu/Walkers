@@ -39,6 +39,7 @@ const Coupon = () => {
     };
     fetchcoupon();
     setsuccess(false);
+   
   }, [success]);
   const validateform=(data)=>{
     const errors={}
@@ -48,6 +49,10 @@ const Coupon = () => {
     {
       errors.title="title can be empty"
     }
+    else if (!/^[a-zA-Z0-9 ]+$/.test(data.title)) {
+      errors.title = "Title can only contain letters, numbers, and spaces (no special characters)";
+    }
+   
     if(!data.descrtiption.trim())
       {
         errors.descrtiption="Description can be empty"
@@ -282,7 +287,9 @@ const Coupon = () => {
               <button
                   type="button"
                   className="close-modal-btn"
-                  onClick={() => setModalOpen(false)}
+                  onClick={() => {
+                    setModalOpen(false);
+                  seterror('')}}
                 >
                   Close
                 </button>   
