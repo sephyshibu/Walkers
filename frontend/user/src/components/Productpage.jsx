@@ -280,7 +280,10 @@ const Productpage = () => {
                         </p>
                         {/* {product.price &&
                         <p className="product-price">Price: Rs.{product.price}</p>} */}
-                        <button onClick={()=>handleaddwishlist(userId,product._id)}>Add to wishList</button>
+                    <div className='buttonactions'>
+                        <button className="wishbutton" onClick={()=>handleaddwishlist(userId,product._id)}>Add to wishList</button>
+                        <button className="viewproduct" onClick={()=>handleDisplay(product._id)}>View Product</button>
+                    </div>
                     </div>
                 ))
             ) : (

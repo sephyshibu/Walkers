@@ -211,15 +211,30 @@
 .product-card:hover .product-image {
   transform: scale(1.05); /* didnt chnage */
 }
-.product-card button:hover {
-  background: #1abc9c;
+.product-card .wishbutton:hover {
+  background: #2de3be;
 }
-.product-card button {
-  padding: 10px 20px;
+.buttonactions{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.product-card .wishbutton {
+  padding: 15px 12px;
   background: #16a085;
   color: #ffffff;
   border: none;
-  border-radius: 8px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.viewproduct{
+  padding: 15px 12px;
+  background: rgb(192, 94, 9);
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
   cursor: pointer;
   transition: background 0.3s ease;
 }

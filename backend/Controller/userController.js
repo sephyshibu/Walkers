@@ -1920,7 +1920,7 @@ const addwishlist = async (req, res) => {
     const product = await Productdb.findById(productId);
     console.log(productId);
     if (!product) {
-      res.status(400).json({ message: "Product Not Found" });
+      return res.status(400).json({ message: "Product Not Found" });
     }
 
     let wishlist = await wishlistdb.findOne({ userId });
@@ -1951,7 +1951,7 @@ const addwishlist = async (req, res) => {
     // }
     
 
-    res.status(200).json({ message: "added to wishlist" });
+   return res.status(200).json({ message: "added to wishlist" });
   } catch (err) {
     res.status(500).json({ message: "Server error", err });
   }
@@ -1970,10 +1970,10 @@ const fetchwishlist = async (req, res) => {
     const wishlist = await wishlistdb.findOne({ userId }).populate("products");
     console.log(wishlist);
     if (!wishlist) {
-      res.status(400).json({ messgae: "wishlist not found" });
+      return res.status(400).json({ messgae: "wishlist not found" });
     }
 
-    res.status(200).json(wishlist);
+    return res.status(200).json(wishlist);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
