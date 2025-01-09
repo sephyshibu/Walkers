@@ -894,6 +894,7 @@ const salesreport = async (req, res) => {
             orderDate: { $first: "$orderDate" }, // Order date (first occurrence)
             monthlysales: { // Gather monthly sales data for later reporting
               $push: {
+                date:{$toDate:"$orderDate"},
                 month: { $month: "$orderDate" },
                 year: { $year: "$orderDate" },
                 total: "$totalprice"

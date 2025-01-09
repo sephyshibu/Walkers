@@ -147,32 +147,38 @@ const DashboardPage = () => {
     // Collect all sales data points
     salesData.monthlysales.forEach(saleGroup => {
       saleGroup.forEach(item => {
-        const month = item.month;
-        const year = item.year;
+        // const month = item.month;
+        // const year = item.year;
+        const orderDate = new Date(item.date); 
+        console.log("order date",orderDate)
         const total = item.total;
-        const key = `${month}/${year}`;
+        // const key = `${month}/${year}`;
         
         // Store each sale as an individual data point
-        allSales.push({ key, total, month, year });
+        allSales.push({ date: orderDate, total });
       });
     });
   
     // Sort all sales by month/year to ensure proper plotting order
-    allSales.sort((a, b) => {
-      if (a.year === b.year) {
-        return a.month - b.month;
-      } else {
-        return a.year - b.year;
-      }
-    });
+    // allSales.sort((a, b) => {
+    //   if (a.year === b.year) {
+    //     return a.month - b.month;
+    //   } else {
+    //     return a.year - b.year;
+    //   }
+    // });
+    allSales.sort((a, b) => a.date - b.date);
   
     // Create labels (unique month/year format) for x-axis
+    // const formattedLabels = allSales.map(item => {
+    //   const monthNames = [
+    //     "January", "February", "March", "April", "May", "June", "July", "August", 
+    //     "September", "October", "November", "December"
+    //   ];
+    //   return `${monthNames[item.month - 1]} ${item.year}`;
+    // });
     const formattedLabels = allSales.map(item => {
-      const monthNames = [
-        "January", "February", "March", "April", "May", "June", "July", "August", 
-        "September", "October", "November", "December"
-      ];
-      return `${monthNames[item.month - 1]} ${item.year}`;
+      return item.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     });
   
     // Create the sales data for y-axis (one total for each sale)
