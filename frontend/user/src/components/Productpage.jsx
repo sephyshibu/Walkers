@@ -85,50 +85,50 @@ const Productpage = () => {
         fetchProducts();
     },[fetchProducts]);
 
-    // useEffect(()=>{
-    //     let filtered=[...products]
+    useEffect(()=>{
+        let filtered=[...products]
 
-    //     if(category && category!=='ALL PRODUCTS')
-    //     {
-    //         filtered=filtered.filter(product=>product.category ===category)
-    //     }
+        if(category && category!=='ALL PRODUCTS')
+        {
+            filtered=filtered.filter(product=>product.category ===category)
+        }
 
-    //     if (minprice) {
-    //         filtered = filtered.filter(product => {
-    //             const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
-    //             return adjustedPrice >= Number(minprice);
-    //         });
-    //     }
+        // if (minprice) {
+        //     filtered = filtered.filter(product => {
+        //         const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
+        //         return adjustedPrice >= Number(minprice);
+        //     });
+        // }
     
-    //     // Filter by max price
-    //     if (maxprice) {
-    //         filtered = filtered.filter(product => {
-    //             const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
-    //             return adjustedPrice <= Number(maxprice);
-    //         });
-    //     }
-    //     // Sorting logic
-    //     if (sortoptions === 'priceLowToHigh') {
-    //         filtered.sort((a, b) => {
-    //             const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
-    //             const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
-    //             return priceA - priceB;
-    //         });
-    //     } else if (sortoptions === 'priceHighToLow') {
-    //         filtered.sort((a, b) => {
-    //             const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
-    //             const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
-    //             return priceB - priceA;
-    //         });
-    //     } else if (sortoptions === 'alphabeticalAsc') {
-    //         filtered.sort((a, b) => a.title.localeCompare(b.title));
-    //     } else if (sortoptions === 'alphabeticalDesc') {
-    //         filtered.sort((a, b) => b.title.localeCompare(a.title));
-    //     }
+        // // Filter by max price
+        // if (maxprice) {
+        //     filtered = filtered.filter(product => {
+        //         const adjustedPrice = product.finalOffer?.offeramount ? product.price - product.finalOffer.offeramount : product.price;
+        //         return adjustedPrice <= Number(maxprice);
+        //     });
+        // }
+        // Sorting logic
+        if (sortoptions === 'priceLowToHigh') {
+            filtered.sort((a, b) => {
+                const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
+                const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
+                return priceA - priceB;
+            });
+        } else if (sortoptions === 'priceHighToLow') {
+            filtered.sort((a, b) => {
+                const priceA = a.finalOffer?.offeramount ? a.price - a.finalOffer.offeramount : a.price;
+                const priceB = b.finalOffer?.offeramount ? b.price - b.finalOffer.offeramount : b.price;
+                return priceB - priceA;
+            });
+        } else if (sortoptions === 'alphabeticalAsc') {
+            filtered.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (sortoptions === 'alphabeticalDesc') {
+            filtered.sort((a, b) => b.title.localeCompare(a.title));
+        }
         
 
-    //     setfilteredproduct(filtered)
-    // },[category,minprice,maxprice,sortoptions,products])
+        setfilteredproduct(filtered)
+    },[category,sortoptions,products])
 
     // const handlePageChange = (newPage) => {
     //         console.log("next new page", newPage)

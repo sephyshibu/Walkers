@@ -100,7 +100,8 @@ h1 {
     padding: 10px;
     /* text-align: center; */
     display: flex; /* Corrected to flex */
-    margin-left: 90px;
+    margin-left: 20px;
+    margin-right: 20px;
     flex-direction: column; /* Stack the content vertically */
     border-radius: 5px;
     margin-bottom: 10px;

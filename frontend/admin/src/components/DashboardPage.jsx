@@ -246,7 +246,7 @@ const DashboardPage = () => {
             <p>{salesData.netAmount}</p>
           </div>
           <div className="card">
-            <h2>Discount Price</h2>
+            <h2>Discount and Coupon Price</h2>
             <p>{salesData.totaldiscounts}</p>
           </div>
           <div className='card'>

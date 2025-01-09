@@ -644,6 +644,7 @@ const getProducts = async (req, res) => {
         finalOffer,
       };
     });
+    console.log("display products",products)
     
     return res.status(200).json({
       products,
