@@ -47,7 +47,7 @@ const Coupon = () => {
     const expirationDate = new Date(data.expiredon);
     if(!data.title.trim())
     {
-      errors.title="title can be empty"
+      errors.title="title cant be empty"
     }
     else if (!/^[a-zA-Z0-9 ]+$/.test(data.title)) {
       errors.title = "Title can only contain letters, numbers, and spaces (no special characters)";
@@ -55,11 +55,11 @@ const Coupon = () => {
    
     if(!data.descrtiption.trim())
       {
-        errors.descrtiption="Description can be empty"
+        errors.descrtiption="Description cant be empty"
       }
     if(!data.coupontype.trim())
         {
-          errors.coupontype="Coupon Type can be empty"
+          errors.coupontype="Coupon Type cant be empty"
         }
     if(!data.couponamount.trim())
           {

@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {sortoptionorders,searchoption,fetchwallet,coupondetails,applycoupon,fetchcoupon,returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
+const {retryupdateproduct,verifyretrypayment,sortoptionorders,searchoption,fetchwallet,coupondetails,applycoupon,fetchcoupon,returnorder,removeproductfrowwishlist,fetchwishlist,verifyPayment,updatepasswordemail,forgetpasswordresendotp,forgetpasswordverifyotp,checkemail,updateuserdetail,deleteitem,deleteorder,checkout,placingorder,fetchdefaultaddress,changepassword,updateStatus,deleteaddress,updateaddress,fetechspecificaddress,fetchaddress,addaddress,updatecartminus,updatecartplus,fetchcart,addcart,refreshToken,categoryname,fetchrecom,getProducts,signup,verifyotp,resendotp,googleLogin, login, fetchproductdetails, fetchorder, addwishlist}=require('./Controller/userController')
 const passport = require('passport')
 const verifyAccessToken =require( './middleware/verifyaccessToken')
 const checkusersstatus=require('./middleware/checkuserstatus')
@@ -50,8 +50,8 @@ router.get('/fetchcoupondetails/:couponId', verifyAccessToken,coupondetails)
 router.get("/fetchorderstatus/:userId",verifyAccessToken,sortoptionorders)
 router.get('/fetchwallet/:userId',verifyAccessToken,fetchwallet)
 router.get('/searchquery',verifyAccessToken,searchoption)
-
-
-
+router.post('/verifyretrypayment',verifyAccessToken,verifyretrypayment)
+// router.post('/retrypayment',verifyAccessToken,retrypayment)
+router.post('/updateProductQuantities',verifyAccessToken,retryupdateproduct)
 
 module.exports=router

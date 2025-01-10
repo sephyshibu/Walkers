@@ -19,8 +19,9 @@ const Order = () => {
     const [returnReason, setReturnReason] = useState('');
     const [returnProductId, setReturnProductId] = useState(null);
     const[loading,setloading]=useState(false)
-    
+   
     const fetchOrders = useCallback(async () => {
+  
         setloading(true)
             try {
                 const response = await axiosInstanceuser.get(`/fetchorder/${userId}`);
@@ -32,6 +33,7 @@ const Order = () => {
                     
                     order.items.map((item)=>({
                         ...item,
+                        cartId:order.cartId,
                         addressId:order.addressId,
                         orderid:order.orderId, 
                         userId:order.userId,
@@ -43,10 +45,12 @@ const Order = () => {
                         orderdate:order.orderDate, 
                         deliverydate:order.deliveryDate,
                         productId:item.productId,
+                        quantity:item.quantity,
                         isreturned:item.isreturned,
                         returnstatus:item.returnstatus,
                         refundstatus:item.refundstatus,
-                        returnreason:item.returnreason
+                        returnreason:item.returnreason,
+                        razorpay_order_id:order.razorpay_order_id,
                     }))
                     
                 ))
@@ -64,11 +68,12 @@ const Order = () => {
       },[userId]);
 
       useEffect(() => {
+       
         if (userId) {
             fetchOrders();
         }
     }, [userId, fetchOrders]);
-        
+    
 
 // useEffect(()=>{
 //     let filtered=[...orders]
@@ -189,6 +194,70 @@ const handlereturn=async()=>{
    
 }
 
+const handleRetryPayment=async(orderid,razorpayid,totalprice,cartId)=>{
+    console.log("reqbody",orderid,razorpayid,totalprice,cartId)
+    console.log("userId",userId)
+try {
+    // const response=await axiosInstanceuser.post('/retrypayment',{orderid,razorpayid})
+    // if (response.data.success) {
+    //     toast.success('Payment retried successfully!');
+    //     navigate('/thankyoupage');
+    // } else {
+    //     toast.error('Retry payment failed. Please try again.');
+    // }
+
+        const options={
+            key:"rzp_test_qp0MD1b9oAJB0i",
+            amount:totalprice,
+            currency:"INR",
+            name: "Your Company Name",
+            description: "Order Payment",
+            order_id: razorpayid,
+            handler:async(response)=>{
+                console.log("verifyresponse",response)
+                try{
+                    const verifyResponse = await axiosInstanceuser.post('/verifyretrypayment', {
+                        cartId,userId,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_order_id: razorpayid,
+                        razorpay_signature: response.razorpay_signature,
+                      }); 
+                      
+                      if (verifyResponse.data.success) {
+                        toast.success('Payment successful!');
+                        navigate('/thankyoupage');
+                      } else {
+                        toast.error('Payment verification failed');
+                      }
+                }
+                catch (error) {
+                    console.error('Payment verification error:', error);
+                    // toast.error('Payment verification failed. Please try again.');
+                  }
+
+            },
+            prefill:{
+                id: userId
+            },
+            theme: {
+              color: "#3399cc",
+            },
+        }
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+        rzp.on("payment failed",(response)=>{
+            console.error("payment failed",response)
+            toast.error("payment failed")
+        })
+   
+
+    
+} catch (error) {
+    console.error('Error retrying payment:', error);
+    toast.error('Retry payment failed. Please try again.');
+}
+}
+
     // const { orderid,deliverydate, orderStatus, orderdata, totalprice } = orders;
 
     return (
@@ -240,6 +309,9 @@ const handlereturn=async()=>{
                         <div>Total Price: Rs. {list.totalprice}</div>
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
+                        <div>razorpay iD:{list.razorpay_order_id}</div>
+                        <div>cart iD:{list.cartId}</div>
+                       
                     </div>   
                     </div>
                     <div className="order-header">
@@ -247,6 +319,11 @@ const handlereturn=async()=>{
                     
                   
                         <div className="order-actions">
+                            {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
+                            <button onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)} className="retry-button">
+                                Retry Payment
+                            </button>
+                        )}
                                 <button
                                     disabled={list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}

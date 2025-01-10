@@ -1084,6 +1084,7 @@ const fetchorder = async (req, res) => {
   
         return {
           orderId: order._id,
+          cartId:order.cartId,
           items: order.items.map((item) => ({
             productId: item.productId,
             title: item.title,
@@ -1101,7 +1102,7 @@ const fetchorder = async (req, res) => {
           deliveryDate: order.deliverydate,
           paymentMethod: order.paymentmethod,
           paymentStatus: order.paymentstatus,
-         
+          razorpay_order_id:order.razorpay_order_id,
           address: address
             ? {
                 addressname: address.addressname,
@@ -1480,7 +1481,17 @@ const placingorder = async (req, res) => {
       totalprice,
     });
 
+    
+
     const saveorder = await neworder.save();
+    if (paymentstatus === "Pending") {
+      return res.status(202).json({
+        success: false,
+        message: "Payment is pending. Please complete the payment.",
+        orderId: razorpayidorder,
+        orderDetails: saveorder,
+      });
+    }
 
     if (paymentmethod === "COD") {
       const cartdoc = await cartdb.findOne({ _id: cartId, userId });
@@ -1491,7 +1502,7 @@ const placingorder = async (req, res) => {
       }
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       orderId: razorpayidorder,
       orderDetails: saveorder,
@@ -1499,12 +1510,78 @@ const placingorder = async (req, res) => {
 
     // res.status(201).json({message:"order placed successfully",orderId:saveorder._id})
   } catch (error) {
+
     console.error("Error placing order:", error);
-    res.status(500).json({ message: "Failed to place order" });
+    return res.status(500).json({ message: "Failed to place order" });
   }
 };
+const verifyretrypayment=async(req,res)=>{
+  console.log("dfs")
+  try {
+    const {
+      userId,
+      cartId,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    } = req.body;
+    console.log("signaturee", razorpay_signature);
+    console.log("razorpay orderid", razorpay_order_id);
+    console.log("razorpay payment", razorpay_payment_id);
+
+    // Generate signature for verification
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+    console.log("expected signature", expectedSignature);
+    if (expectedSignature === razorpay_signature) {
+      // Update Razorpay fields and payment status in the order
+      await orderdb.findOneAndUpdate(
+        { razorpay_order_id: razorpay_order_id },
+        {
+          paymentstatus: "Success",
+          orderStatus: "Processing",
+        },
+        { new: true }
+      );
+
+      const cartdoc = await cartdb.findOne({ _id: cartId, userId }).populate('items.productId');
+      if (cartdoc) {
+        console.log("dhfbuhdbf")
+        // Update product quantities
+        for (const item of cartdoc.items) {
+          await Productdb.findByIdAndUpdate(
+            item.productId._id,
+            { $inc: { availableQuantity: -item.quantity } }
+          );
+          console.log("product",)
+        }
+
+        // Delete the cart
+        await cartdb.deleteOne({ _id: cartId });
+      } else {
+       
+        console.log(`No cart found for userId: ${userId}`);
+      }
+      return res.status(200).json({ success: true, message: "Payment verified" });
+    } 
+    else {
+      console.log("Invalid signature detected.");
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed: Invalid signature.",
+      });
+    }
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    return res.status(500).json({success:false, message: "Payment verification failed" });
+  }
+}
 
 const verifyPayment = async (req, res) => {
+  console.log("dfs")
   try {
     const {
       userId,
@@ -1539,18 +1616,53 @@ const verifyPayment = async (req, res) => {
       if (cartdoc) {
         await cartdb.deleteOne({ _id: cartId });
       } else {
+       
         console.log(`No cart found for userId: ${userId}`);
       }
-      res.status(200).json({ success: true, message: "Payment verified" });
-    } else {
-      res.status(400).json({ success: false, message: "Invalid signature" });
+      return res.status(200).json({ success: true, message: "Payment verified" });
+    } 
+    else {
+      console.log("Invalid signature detected.");
+      return res.status(400).json({
+        success: false,
+        message: "Payment verification failed: Invalid signature.",
+      });
     }
   } catch (error) {
     console.error("Error verifying payment:", error);
-    res.status(500).json({ message: "Payment verification failed" });
+    return res.status(500).json({success:false, message: "Payment verification failed" });
   }
 };
+const retryupdateproduct=async(req,res)=>{
+  console.log("fdsf")
+  try {
+    const { cartId } = req.body;
+    console.log("cartid",cartId)
+    // Fetch the cart items
+    const cart = await cartdb.findById(cartId).populate('items.productId');
+    console.log("carttt",cart)
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
 
+    // Update product quantities
+    for (const item of cart.items) {
+      await Productdb.findByIdAndUpdate(
+        item.productId._id,
+        { $inc: { availableQuantity: item.quantity } }
+      );
+    }
+    console.log("finished")
+
+    // Clear the cart
+    // await cartdb.findByIdAndDelete(cartId);
+
+    res.status(200).json({ message: "Product quantities updated successfully" });
+  } catch (error) {
+    console.error("Error updating product quantities:", error);
+    res.status(500).json({ message: "Failed to update product quantities" });
+  }
+}
 const addcart = async (req, res) => {
   const { userId, title, productId, quantity, availableQuantity, price } =
     req.body;
@@ -2322,7 +2434,21 @@ const sortoptionorders = async (req, res) => {
     return res.status(500).json({ error: "Failed to fetch orders" });
   }
 };
+const retrypayment=async(req,res)=>{
+  const{orderid,razorpayid}=req.body
+  console.log("req body",orderid,razorpayid)
 
+  try {
+    const orderdoc=await orderdb.findOne({_id:orderid,razorpay_order_id:razorpayid})
+    console.log("order doc retry payment",orderdoc)
+    if (!orderdoc) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+  } catch (error) {
+    
+  }
+}
 
 
 
@@ -2367,6 +2493,6 @@ module.exports = {
   login,
   verifyotp,
   resendotp,
-  googleLogin,
-  fetchcoupon, coupondetails,sortoptionorders
+  googleLogin,verifyretrypayment,
+  fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct
 };

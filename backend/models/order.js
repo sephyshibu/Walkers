@@ -12,7 +12,7 @@ const OrderSchema = new mongoose.Schema({
     addressId: { type: mongoose.Schema.Types.ObjectId, ref: "address", required: true },
     paymentmethod:{ type: String, enum:['Card', 'RazorPay', 'COD'], required:true},
     paymentstatus:{ type: String, enum:['Pending', 'Success', 'Failed'], required:true},
-    orderStatus: {type: String,enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],default: 'Processing',},
+    orderStatus: {type: String,enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled','Pending'],default: 'Processing',},
     cancelationreason:{type:String, default:null},
     items:[
         {
