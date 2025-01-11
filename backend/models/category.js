@@ -16,6 +16,10 @@ const CategorySchema= new mongoose.Schema({
                 ref:"offer",
                 default:null
         },
+    totalcount:{
+        type:Number,
+        default:0
+    }
     
 })
 

@@ -1411,19 +1411,37 @@ const fetchrecom = async (req, res) => {
       .json({ message: "Failed to fetch product recommendations" });
   }
 };
+const products=async(req,res)=>{
+  try {
+    const productdoc=await Productdb.find({status:true})
+                                    .sort({totalcount:-1})
+                                    .limit(4)
+
+    console.log("list of products", productdoc);
+    return res
+    .status(200)
+    .json({ message: "success in fetching product", productdoc });
+  } catch (error) {
+    console.error("Error fetching product:", error);
+    return res.status(500).json({ message: "Failed to fetch category names" });
+  }
+}
 const categoryname = async (req, res) => {
   try {
-    const categories = await Categorydb.find({ status: true });
+    const categories = await Categorydb.find({ status: true })
+                                      .sort({totalcount:-1})
+                                      .select('categoryname')
+                                      .limit(3);
 
     const categorynames = categories.map((item) => item.categoryname);
     console.log("list of categories", categorynames);
 
-    res
+    return res
       .status(200)
       .json({ message: "success in fetching category name", categorynames });
   } catch (error) {
-    console.error("Error fetching category names:", err);
-    res.status(500).json({ message: "Failed to fetch category names" });
+    console.error("Error fetching category names:", error);
+    return res.status(500).json({ message: "Failed to fetch category names" });
   }
 };
 const addaddress = async (req, res) => {
@@ -1603,6 +1621,22 @@ const verifyretrypayment=async(req,res)=>{
         },
         { new: true }
       );
+      const cartdocupdate=await cartdb.findById(cartId).populate('items.productId')
+      console.log("cart update after successs payamnet",cartdocupdate)
+
+      for(const item of cartdocupdate.items)
+      {
+        await Productdb.findByIdAndUpdate(
+          item.productId._id,
+          {$inc:{totalcount:item.quantity}}
+        )
+
+        await Categorydb.findOneAndUpdate(
+            {categoryname:item.productId.category},
+            {$inc:{totalcount:item.quantity}}
+        )
+      }
+      console.log("finished");
 
       const cartdoc = await cartdb.findOne({ _id: cartId, userId }).populate('items.productId');
       if (cartdoc) {
@@ -1668,6 +1702,22 @@ const verifyPayment = async (req, res) => {
         },
         { new: true }
       );
+      const cartdocupdate=await cartdb.findById(cartId).populate('items.productId')
+      console.log("cart update after successs payamnet",cartdocupdate)
+
+      for(const item of cartdocupdate.items)
+      {
+        await Productdb.findByIdAndUpdate(
+          item.productId._id,
+          {$inc:{totalcount:item.quantity}}
+        )
+
+        await Categorydb.findOneAndUpdate(
+            {categoryname:item.productId.category},
+            {$inc:{totalcount:item.quantity}}
+        )
+      }
+      console.log("finished");
 
       const cartdoc = await cartdb.findOne({ _id: cartId, userId });
       if (cartdoc) {
@@ -2550,7 +2600,7 @@ module.exports = {
   login,
   verifyotp,
   resendotp,
-  fetchparticularorder,
+  fetchparticularorder,products,
   googleLogin,verifyretrypayment,
   fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct
 };

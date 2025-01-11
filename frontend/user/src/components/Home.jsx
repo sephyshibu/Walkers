@@ -9,20 +9,16 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import axiosInstanceuser from '../axios';
 import { useNavigate } from 'react-router';
-import pic1 from '../images/pic1.jpg'
-import pic5 from '../images/pic5.jpeg'
-import pic6 from '../images/pic6.jpeg'
-import pic4 from '../images/pic4.jpg'
-import banner1 from '../images/Business.png'
-import banner2 from '../images/Business 1.png'
+
 
 
 const Home = () => {
   
   const [formdata,setformdata]=useState([])
+  const [products, setProducts] = useState([]);
   const [startIndex, setStartIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
-  // const banners = [banner1, banner2]; // Array of banner images
+  
 
   const banners = [
     '../images/video.mp4'
@@ -35,15 +31,12 @@ const Home = () => {
       try {
         const response=await axiosInstanceuser.get('/fetchcategory')
         const category=response.data.categorynames
+        const responseproduct=await axiosInstanceuser.get('/fetchbestproducts')
+        const products=responseproduct.data.productdoc
         setformdata(category)
+        setProducts(products)
         console.log("List of categories",category)
-       
-     
-
-      
-        
-  
-        
+        console.log("List of products",products)
       } catch (error) {
         console.log("error in fetching category name")
       }
@@ -63,12 +56,9 @@ const Home = () => {
   const handleClick=(name)=>{
       navigate(`/product?category=${name}`)
   }
-  const categoryIcons = {
-    "Solar Panels": faSun,
-    "Fencing Accessories": faHome,
-    "Battery Chargers": faBatteryFull,
-    "Bushes": faLeaf
-  };
+  console.log("best seller prduct",products)
+
+
 
   // const currentCategories = formdata.slice(startIndex, startIndex + 3);
   // const handleNext = () => {
@@ -83,15 +73,11 @@ const Home = () => {
   //   }
   // };
   
+const handleDisplay=async(id)=>{
+  navigate(`/products/display/${id}`)
 
-  const categoryImages = {
-    "Solar Panels": pic1,
-    "Fencing Accessories": pic4,
-    "Battery Chargers": pic5,
-    "Solar Lights":pic6
-   
-    
-};
+}
+
 
 
   return (
@@ -99,11 +85,7 @@ const Home = () => {
       <Navbar />
       <div className="products-user-page">
       <div className="banner">
-        {/* <img
-          className="banner-image"
-          src={banners[currentSlide]}
-          alt={`Banner ${currentSlide + 1}`}
-        /> */}
+        
 
       <video
           key={currentSlide} // Forces re-render on slide change
@@ -123,30 +105,35 @@ const Home = () => {
       </div>
 
       <div className="about-category">
-        <h2 className='category-titles'>Product Categories</h2>
+        <h2 className='category-titles'>Best Seller Categories</h2>
         <div className="category-grid">
-         {/* {currentCategories.map((item,index)=>(
-          <div key={index} className='category-card' onClick={()=>handleClick(item)}>
-            <div className="image-containers">
-              <img 
-                        src={categoryImages[item]} 
-                        alt={item} 
-                        className="category-images" 
-              />
-             <div className="category-names">{item}</div>
-             
-        </div> 
-          </div>
-         ))} */}
-          {Object.entries(categoryIcons).map(([category, icon]) => (
+        
+          {formdata.map((category) => (
             <div key={category} className='category-card' onClick={() => handleClick(category)}>
-              <div className="image-containers">
-                <FontAwesomeIcon icon={icon} />
-              </div>
               <div className="category-names">{category}</div>
             </div>
           ))}
           
+        </div>
+
+
+        <div className='bestproducts'>
+          <h2 className='bestproducts-title'>Best Products</h2>
+          <div className='product-grid'>
+            {products.map((product)=>(
+              <div key={product._id} className='products-card'>
+                <img 
+                    src={product.images[0]}
+                    alt={product.title}
+                    className="products-image"
+                    onClick={() => handleDisplay(product._id)}/>
+                 <h3 className="products-title">{product.title}</h3>
+                 <p className="products-price">
+                        Rs.{product.price}
+                        </p>
+              </div>
+            ))}
+          </div>
         </div>
         {/* <div className="category-grid-controls">
     <button onClick={handlePrev} disabled={startIndex === 0}>

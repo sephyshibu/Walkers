@@ -134,7 +134,8 @@ const Productpage = () => {
     //         console.log("next new page", newPage)
     //         setCurrentPage(newPage);
         
-    // };
+    // };(
+console.log("products", products)
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };

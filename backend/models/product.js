@@ -25,6 +25,10 @@ const ProductSchema= new mongoose.Schema({
         required:true,
         default:true
         },
+    totalcount:{
+        type:Number,
+        default:0
+    },
     variants:[
         {
             name:{type:String, required:true},

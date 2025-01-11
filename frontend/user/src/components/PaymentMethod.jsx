@@ -227,7 +227,7 @@ const PaymentMethod = () => {
                         key: "rzp_test_qp0MD1b9oAJB0i",
                         amount: totalprice,
                         currency: "INR",
-                        name: "Your Company Name",
+                        name: "Walkers Solar",
                         description: "Order Payment",
                         order_id: orderId,
                         handler: async (response) => {
