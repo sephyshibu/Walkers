@@ -1051,6 +1051,63 @@ const fetchaddress = async (req, res) => {
   }
 };
 
+// const fetchparticularorder=async(req,res)=>{
+//   const{orderId}=req.params
+//   console.log("fetch order",orderId)
+
+//   try {
+//     const order = await orderdb.findById(orderId).select(
+//       "items orderStatus paymentstatus paymentmethod deliverydate orderDate"
+//     ); // Use .select() to fetch only specific fields
+//     console.log("orderdoc", order);
+//     console.log("orderdoc",order)
+//     return res.status(200).json({order})
+//   } catch (error) {
+//     console.error("An error occurred while fetching orders:", error);
+//       res.status(500).json({ message: "Internal server error" });
+//   }
+// }
+
+const fetchparticularorder = async (req, res) => {
+  const { orderId } = req.params;
+  console.log("fetch order", orderId);
+
+  try {
+    const order = await orderdb.findById(orderId).lean(); // `lean` gives a plain JS object
+    console.log("orderdoc", order);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Remove `reason` from each item in the `items` array
+    const filteredItems = order.items.map(({ returnreason, ...rest }) => rest);
+
+    // Create the filtered order object
+    const filteredOrder = {
+      items: filteredItems,
+      orderStatus: order.orderStatus,
+      paymentStatus: order.paymentstatus,
+      paymentMethod: order.paymentmethod,
+      deliveryDate: order.deliverydate,
+      orderDate: order.orderDate,
+      userId:order.userId,
+      orderId:order._id,
+      totalprice:order.totalprice,
+      shippingFee:order.shippingFee,
+      tax:order.tax
+
+    };
+    const invoiceUrl = `/download/invoice/${orderId}`;
+
+    return res.status(200).json({filteredOrder,invoiceUrl});
+  } catch (error) {
+    console.error("An error occurred while fetching orders:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 const fetchorder = async (req, res) => {
     const { userId } = req.params;
   
@@ -2493,6 +2550,7 @@ module.exports = {
   login,
   verifyotp,
   resendotp,
+  fetchparticularorder,
   googleLogin,verifyretrypayment,
   fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct
 };

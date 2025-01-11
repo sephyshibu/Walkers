@@ -3,6 +3,8 @@ import Navbar from './Navbar';
 import AboutUs from './AboutUs';
 import Footer from './Footer';
 import './Home.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSun, faHome, faBatteryFull, faLeaf } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axiosInstanceuser from '../axios';
@@ -61,20 +63,25 @@ const Home = () => {
   const handleClick=(name)=>{
       navigate(`/product?category=${name}`)
   }
-
-
-  const currentCategories = formdata.slice(startIndex, startIndex + 3);
-  const handleNext = () => {
-    if (startIndex + 3 < formdata.length) {
-      setStartIndex(startIndex + 1);
-    }
+  const categoryIcons = {
+    "Solar Panels": faSun,
+    "Fencing Accessories": faHome,
+    "Battery Chargers": faBatteryFull,
+    "Bushes": faLeaf
   };
+
+  // const currentCategories = formdata.slice(startIndex, startIndex + 3);
+  // const handleNext = () => {
+  //   if (startIndex + 3 < formdata.length) {
+  //     setStartIndex(startIndex + 1);
+  //   }
+  // };
   
-  const handlePrev = () => {
-    if (startIndex > 0) {
-      setStartIndex(startIndex - 1);
-    }
-  };
+  // const handlePrev = () => {
+  //   if (startIndex > 0) {
+  //     setStartIndex(startIndex - 1);
+  //   }
+  // };
   
 
   const categoryImages = {
@@ -118,7 +125,7 @@ const Home = () => {
       <div className="about-category">
         <h2 className='category-titles'>Product Categories</h2>
         <div className="category-grid">
-         {currentCategories.map((item,index)=>(
+         {/* {currentCategories.map((item,index)=>(
           <div key={index} className='category-card' onClick={()=>handleClick(item)}>
             <div className="image-containers">
               <img 
@@ -130,17 +137,25 @@ const Home = () => {
              
         </div> 
           </div>
-         ))}
+         ))} */}
+          {Object.entries(categoryIcons).map(([category, icon]) => (
+            <div key={category} className='category-card' onClick={() => handleClick(category)}>
+              <div className="image-containers">
+                <FontAwesomeIcon icon={icon} />
+              </div>
+              <div className="category-names">{category}</div>
+            </div>
+          ))}
           
         </div>
-        <div className="category-grid-controls">
+        {/* <div className="category-grid-controls">
     <button onClick={handlePrev} disabled={startIndex === 0}>
       Previous
     </button>
     <button onClick={handleNext} disabled={startIndex + 3 >= formdata.length}>
       Next
     </button>
-  </div>
+  </div> */}
       </div>
       <Footer/>
     </div>

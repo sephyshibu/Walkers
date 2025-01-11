@@ -52,7 +52,7 @@
   }
   
   /* Button for placing the order */
-  button {
+  .paymentm {
     background-color: #ff9900;
     color: white;
     border: none;

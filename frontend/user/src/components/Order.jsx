@@ -5,10 +5,204 @@ import './Order.css'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import ReactLoading from 'react-loading'
+import{Page,Text,View,Document,PDFDownloadLink,StyleSheet} from '@react-pdf/renderer'
+
+const styles = StyleSheet.create({
+    page: {
+      padding: 30,
+      fontSize: 12,
+      fontFamily: 'Helvetica',
+    },
+    section: {
+      marginBottom: 20,
+    },
+    heading: {
+      fontSize: 24,
+      marginBottom: 10,
+      fontWeight: 'bold',
+      color: '#333',
+    },
+    subheading: {
+      fontSize: 18,
+      marginBottom: 10,
+      color: '#555',
+    },
+    text: {
+      marginBottom: 5,
+      color: '#333',
+    },
+    table: {
+      display: 'table',
+      width: 'auto',
+      borderStyle: 'solid',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      marginBottom: 10,
+    },
+    tableRow: {
+      flexDirection: 'row',
+      borderBottomColor: '#ccc',
+      borderBottomWidth: 1,
+    },
+    tableCell: {
+      flexGrow: 1,
+      padding: 8,
+      textAlign: 'center',
+    },
+    tableHeader: {
+      backgroundColor: '#f3f3f3',
+      fontWeight: 'bold',
+    },
+    companyHeader: {
+      marginBottom: 20,
+      borderBottomWidth: 2,
+      borderBottomColor: '#333',
+      paddingBottom: 10,
+    },
+    companyName: {
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 5,
+    },
+    companyDetails: {
+      fontSize: 10,
+      color: '#666',
+    },
+    summaryTable: {
+      display: 'table',
+      width: '50%',
+      borderStyle: 'solid',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      marginBottom: 10,
+      alignSelf: 'flex-center',
+    },
+    summaryRow: {
+      flexDirection: 'row',
+      borderBottomColor: '#ccc',
+      borderBottomWidth: 1,
+    },
+    summaryLabel: {
+      flexGrow: 1,
+      padding: 5,
+      textAlign: 'center',
+      fontWeight: 'bold',
+    },
+    summaryValue: {
+      flexGrow: 1,
+      padding: 5,
+      textAlign: 'right',
+    },
+  });
+  
+  const Invoice = ({ orders }) => {
+    console.log("dfsdf");
+    const {
+      orderId,
+      userId,
+      items = [],
+      totalprice,
+      tax,
+      shippingFee,
+      orderDate,
+      deliveryDate,
+      paymentStatus,
+      paymentMethod,
+      orderStatus,
+    } = orders;
+  
+    console.log("order", orders);
+  
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          {/* Company Header */}
+          <View style={styles.companyHeader}>
+            <Text style={styles.companyName}>Walker's Fencing</Text>
+            <Text style={styles.companyDetails}>St.Peters Junction Pathanamthitta | Phone: (+91) 7356645787 | Email: walkeersgroup@gmail.com</Text>
+          </View>
+  
+          {/* Invoice Details */}
+          <View style={styles.section}>
+            <Text style={styles.heading}>Invoice</Text>
+            <Text style={styles.text}>Invoice Number: INV-{orderId}</Text>
+            <Text style={styles.text}>Order ID: {orderId}</Text>
+            <Text style={styles.text}>User ID: {userId}</Text>
+            <Text style={styles.text}>Order Status: {orderStatus}</Text>
+            <Text style={styles.text}>Payment Method: {paymentMethod}</Text>
+            <Text style={styles.text}>Payment Status: {paymentStatus}</Text>
+            <Text style={styles.text}>
+              Order Date: {new Date(orderDate).toLocaleDateString()}
+            </Text>
+            <Text style={styles.text}>
+              Delivery Date: {new Date(deliveryDate).toLocaleDateString()}
+            </Text>
+          </View>
+  
+          {/* Table Header */}
+          <View style={styles.section}>
+            <Text style={styles.subheading}>Order Details</Text>
+            <View style={[styles.table, styles.tableHeader]}>
+              <View style={styles.tableRow}>
+                
+                <Text style={styles.tableCell}>Title</Text>
+                <Text style={styles.tableCell}>Quantity</Text>
+                <Text style={styles.tableCell}>Price</Text>
+              </View>
+            </View>
+  
+            {/* Table Body */}
+            <View style={styles.table}>
+              {items.length > 0 ? (
+                items.map((item, index) => (
+                  <View key={index} style={styles.tableRow}>
+                    
+                    <Text style={styles.tableCell}>{item.title}</Text>
+                    <Text style={styles.tableCell}>{item.quantity}</Text>
+                    <Text style={styles.tableCell}>{item.price}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.text}>No items available for this order.</Text>
+              )}
+            </View>
+          </View>
+  
+          {/* Summary Section */}
+          <View style={styles.section}>
+            <Text style={styles.subheading}>Summary</Text>
+            <View style={styles.summaryTable}>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Tax:</Text>
+                <Text style={styles.summaryValue}>Rs. {tax}</Text>
+              </View>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Shipping Fee:</Text>
+                <Text style={styles.summaryValue}>Rs. {shippingFee}</Text>
+              </View>
+              <View style={styles.summaryRow}>
+                <Text style={styles.summaryLabel}>Total Price:</Text>
+                <Text style={styles.summaryValue}>Rs. {totalprice}</Text>
+              </View>
+            </View>
+          </View>
+  
+          {/* Thank You Note */}
+          <View style={styles.section}>
+            <Text style={styles.text}>Thank you for your business!</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  };
+
 const Order = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const[reason,setReason]=useState('')
     const [sortoptions,setsortoptions]=useState('')
+    const [pdfLinks, setPdfLinks] = useState({});
+    const [selectedOrder, setSelectedOrder] = useState(null); // To track the selected order
     const [orders, setorder] = useState([])
     const[error,seterror]=useState('')
     const[currentorderid,setcurrentorderid]=useState(null)
@@ -193,6 +387,38 @@ const handlereturn=async()=>{
     }
    
 }
+const handleDownloadPDF = async (orderId) => {
+    console.log("orderId", orderId)
+    try {
+        const response = await axiosInstanceuser.get(`/order/${orderId}`); // Adjust the API endpoint accordingly
+        const orderDetails = response.data.filteredOrder;
+        console.log("orderDetails", orderDetails)
+        // Trigger the PDF generation
+        setPdfLinks((prevLinks) => ({
+            ...prevLinks,
+            [orderId]: (
+                <PDFDownloadLink
+                    document={<Invoice orders={orderDetails} />}
+                    fileName={`invoice_${orderId}.pdf`}
+                >
+                    {({ loading }) =>
+                        loading ? 'Generating PDF...' : 'Download Invoice'
+                    }
+                </PDFDownloadLink>
+            ),
+        }));
+
+
+      
+
+        toast.success('PDF ready for download!');
+        // Optionally render or store the `pdfLink` for the user to click
+        // console.log('PDF generated:', pdfLink);
+    } catch (error) {
+        console.error('Error fetching order details for PDF:', error);
+        toast.error('Failed to generate PDF. Please try again.');
+    }
+};
 
 const handleRetryPayment=async(orderid,razorpayid,totalprice,cartId)=>{
     console.log("reqbody",orderid,razorpayid,totalprice,cartId)
@@ -258,11 +484,18 @@ try {
 }
 }
 
-    // const { orderid,deliverydate, orderStatus, orderdata, totalprice } = orders;
+const handleOrderClick = (orderId) => {
+    if (selectedOrder === orderId) {
+      setSelectedOrder(null); // If the order is already selected, hide the details
+    } else {
+      setSelectedOrder(orderId); // Otherwise, show the details for the selected order
+    }
+  };
 
     return (
 <div className="order-page">
     <ToastContainer />
+ 
         <h1>Your Orders</h1>
         {error && <div className="error-messages">{error}</div>}
         {/* <div className="filters">
@@ -292,57 +525,85 @@ try {
     <div className="orders-list">
         {orders.length > 0 ? (
             orders.map((list) => (
-                <div key={list.orderid} className="order-card">
-                    
+                <div key={list.orderid} className="order-card" onClick={()=>handleOrderClick(list.orderid)}>
+                <div  className='order-content'>
                     
                     <div className="order-details">
                     <div className="highlighted-details">
-                        <div className="product-title">Product title:{list.title}</div>
-                        <div className='productprices'>Product price:{list.price}</div>
+                        <div className="product-title">{list.title}</div>
+                        <div className='productprices'>Product price:Rs.{list.price}</div>
                         <div className='productprices'>OrderId:{list.orderid}</div>
+                        <span className="order-status">Status: {list.orderStatus}</span>
                     </div>
+                    {/* <div className="order-header" >
+                    
+                        </div>  */}
                         {/* <div>Product price:{list.price}</div>
                         <div>Product quantity:{list.quantity}</div> */}
-                    <div className="other-details">   
+                    {selectedOrder===list.orderid && (
+                    <div className="other-details"> 
+                       
                         <div>Order Date: {new Date(list.orderdate).toLocaleDateString()}</div>
                         <div className="delivery-date">Delivery Date: {new Date(list.deliverydate).toLocaleDateString()}</div>
                         <div>Total Price: Rs. {list.totalprice}</div>
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
-                        <div>razorpay iD:{list.razorpay_order_id}</div>
-                        <div>cart iD:{list.cartId}</div>
-                       
+                        
+                
                     </div>   
+                        )}
                     </div>
-                    <div className="order-header">
-                        <span>Status: {list.orderStatus}</span>
-                    
-                  
+                </div>
+                   
+                                    
                         <div className="order-actions">
+                        {/* <div>
+                            {downloadLink}
+                        </div> */}
                             {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
                             <button onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)} className="retry-button">
                                 Retry Payment
                             </button>
                         )}
-                                <button
+                         <button
+                                        onClick={() => handleDownloadPDF(list.orderid)}
+                                        className="download-button"
+                                    >
+                                        Generate PDF
+                                    </button>
+                                    {/* Display the download link for the specific order */}
+                                    {pdfLinks[list.orderid] && (
+                                        <div>{pdfLinks[list.orderid]}</div>
+                                    )}
+                                 <button
                                     disabled={list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
                                     className="return-button"
                                 >
                                    
                                     {list.isreturned ? "Returned" : "Return"}
-                                </button>
+                                </button> 
                              
-                                <button 
+                                 <button 
                                 disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
                                 onClick={() => openoverlay(list.orderid)}
                                 className="action-button"
                             >
                                 Cancel
-                            </button>
+                            </button> 
+                            
 
                         </div>
-                        </div>
+                        {/* <PDFDownloadLink
+                            document={<Invoice orders={list} />}
+                            fileName={`invoice_${list.orderid}.pdf`}
+                            >
+                            {({ loading }) => <button>{loading ? 'Loading PDF...' : 'Download PDF'}</button>}
+                        </PDFDownloadLink> */}
+                        {/* <button onClick={() => handleDownloadPDF(list.orderid)}>
+                            Download PDF
+                        </button> */}
+                        
                         {/* {returnOverlay && (
                             <div className="overlay">
                                 <div className="overlay-content">
@@ -365,7 +626,7 @@ try {
                             </div>
                         )} */}
                         
-                    
+                       
                         </div>    
                     
             

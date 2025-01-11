@@ -43,17 +43,28 @@ h1 {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 15px;
     display: flex;
-    align-items: center; /* Align items vertically center */
-    justify-content: space-between; /* Distribute space between items */
+    align-items: center;
+    justify-content: space-between;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     width: 100%;
-    margin-bottom: 20px; /* Space between items */
+    margin-bottom: 20px;
 }
+.order-status {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
 .order-card:hover{
     transform: scale(1.03);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
 }
+.order-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
 .order-header {
     display: flex;
     justify-content: space-between;
@@ -64,71 +75,100 @@ h1 {
 }
 
 .order-details {
-    line-height: 1.6;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 15px;
     display: flex;
-    justify-content: space-evenly; /* Distribute space evenly */
-    padding: 0 20px;               /* Add equal space inside the parent */
-    gap: 380px; /* Space between each detail */
-}
-
-.highlighted-details {
-    /* background-color: #f3f3f3; Light gray background */
-    max-width: 450px;
+    flex-wrap: wrap; /* Ensures content adjusts on smaller screens */
+    justify-content: space-between; /* Proper alignment between cards */
+    align-items: flex-start; /* Align items to the top */
+    padding: 20px;
+    gap: 20px; /* Space between cards */
+    border: 1px solid #ddd; /* Optional: Add border for clarity */
     border-radius: 5px;
-    margin-bottom: 10px;
+    background-color: #ffffff;
+}
+.highlighted-details {
+    flex: 1; /* Allow it to take available space */
+    max-width: 400px; /* Set a fixed max-width */
+    min-width: 300px; /* Maintain a minimum width for smaller screens */
+    margin-right: 20px; /* Space to the next section */
+    line-height: 25px;
+    font-size: 14px;
+    color: #333;
 }
 
 .product-title {
     font-weight: bold;
-    
+    margin-bottom: 5px;
 }
-.productprices{
-    font-size: 20px;
+
+.productprices {
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.order-status {
+    font-size: 14px;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.other-details {
+    flex: 1; /* Adjust width automatically */
+    max-width: 400px;
+    min-width: 300px;
+    font-size: 14px;
+    color: #555;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 10px; /* Space below highlighted details */
+    transition: background-color 0.3s ease;
 }
 
 .delivery-date {
     font-weight: bold;
-   
+    margin-bottom: 5px;
 }
 
-.other-details {
-    font-size: 18px;
-    color: #555;
-    padding: 10px;
-    /* text-align: center; */
-    display: flex; /* Corrected to flex */
-    margin-left: 20px;
-    margin-right: 20px;
-    flex-direction: column; /* Stack the content vertically */
-    border-radius: 5px;
-    margin-bottom: 10px;
+/* Add responsiveness */
+@media (max-width: 768px) {
+    .order-details {
+        flex-direction: column; /* Stack vertically on smaller screens */
+    }
+
+    .highlighted-details,
+    .other-details {
+        max-width: 100%;
+        margin-right: 0; /* Remove side margins */
+    }
 }
 
 
 
-button {
-    padding: 6px 12px;  /* Smaller padding */
+.retry-button,.download-button,.return-button,.action-button {
+    padding: 10px 9px;  /* Smaller padding */
     font-size: 12px;  /* Smaller font size */
-    border: none;
-    border-radius: 5px;
+    background-color: #ff9900;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    width: 70%;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
-
-button.action-button {
+.action-button {
     background-color: #007bff;
     color: #fff;
 }
 
-button.action-button.secondary {
+.action-button.secondary {
     background-color: #6c757d;
     color: #fff;
 }
 
-button.return-button {
+.return-button {
     background-color: #28a745;
     color: #fff;
 }
@@ -140,10 +180,11 @@ button:disabled {
 
 .order-actions {
     display: flex;
-    justify-content: flex-start;  /* Align buttons to the left */
-    gap: 10px;  /* Add space between buttons */
-    margin-top: 10px;  /* Add spacing above the button group */
-}
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
 
 .overlay {
     position: fixed;

@@ -307,7 +307,7 @@ const PaymentMethod = () => {
                 </div>
             </div>
             <ToastContainer />
-            <button onClick={handlePlaceOrder} disabled={!selectedmethod}>
+            <button className='paymentm' onClick={handlePlaceOrder} disabled={!selectedmethod}>
                 Place Order
             </button>
         </div>
