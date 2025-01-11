@@ -91,7 +91,19 @@ body {
     margin-top: 15px;
     color: #444;
   }
-  
+  .manageaddress{
+    width: 100%;
+    padding: 15px;
+    background: #ff9900;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: bounceIn 0.8s ease-in;
+  }
   /* Place Order Button */
   .place-order-button {
     width: 100%;

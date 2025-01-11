@@ -225,6 +225,7 @@
   background: #16a085;
   color: #ffffff;
   border: none;
+  font-size: 18px;
   border-radius: 25px;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -234,6 +235,7 @@
   background: rgb(192, 94, 9);
   color: #ffffff;
   border: none;
+  font-size: 18px;
   border-radius: 25px;
   cursor: pointer;
   transition: background 0.3s ease;

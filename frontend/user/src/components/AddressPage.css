@@ -58,18 +58,19 @@
 }
 
 .buttonedit {
-  padding: 8px 12px;
+  padding: 10px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
   font-size: 13px;
-  color: #111;
-  background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+  color: white;
+  background: linear-gradient(to bottom, #96f595, #2dd85d);
   border: 1px solid #adb1b8;
   border-color: #adb1b8 #a2a6ac #8d9096;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
-  cursor: pointer;
-  text-align: center;
+ 
+  /* text-align: center;
   text-decoration: none;
-  vertical-align: middle;
+  vertical-align: middle; */
   margin-right: 5px;
 }
 
@@ -77,18 +78,21 @@
   background: linear-gradient(to bottom, #e7eaf0, #d9dce1);
 }
 .buttondelete{
-  background: linear-gradient(to bottom, #f7f8fa, #e7e9ec);
+  background: linear-gradient(to bottom, #c65c52, #ee3b0a);
   border: 1px solid #adb1b8;
   border-color: #adb1b8 #a2a6ac #8d9096;
-  border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
-  padding: 8px 12px;
+  padding: 10px 30px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
   font-size: 13px;
+  color: white;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
+  font-size: 13px;
+  
 }
 
-.buttondelete {
-  color: #111;
-}
+
 
 /* .button-add {
   background: linear-gradient(to bottom, #f7dfa5, #f0c14b);

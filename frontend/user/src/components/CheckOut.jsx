@@ -109,7 +109,7 @@ const CheckOut = () => {
                 ) : (
                     <p>No default address found. Please add an address.</p>
                 )}
-                <button type='button' onClick={handleAddress}>Manage Address</button>
+                <button type='button' className='manageaddress' onClick={handleAddress}>Manage Address</button>
         </div>
         <div className="order-summary-section">
           <h4>Order Summary</h4>

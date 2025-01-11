@@ -347,7 +347,7 @@ const CartPage = () => {
                 <div key={item.productId} className="cart-item">
                     {/* <h1>{item.productId}</h1> */}
                     <h4 className='producttitlecart'>{item.title}</h4>
-                    <p>Price: Rs{item.price.toFixed(2)}</p>
+                    <p className='productpricecart'>Price: Rs{item.price.toFixed(2)}</p>
                     <div className="quantity-control">
                                     <button className="minus" onClick={() => updateQuantityMinus(item.productId, item.quantity - 1)} disabled={item.quantity <= 1}>-</button>
                                     <span>{item.quantity}</span>
