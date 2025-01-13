@@ -11,6 +11,8 @@ import { persistor } from "../app/store";
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import ReactLoading from 'react-loading'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 
 const ProductDisplay = () => {
@@ -36,7 +38,10 @@ const ProductDisplay = () => {
     availableQuantity:""
   });
   const navigate=useNavigate()
-
+ useEffect(() => {
+    AOS.init({ duration: 1000 }); // Initialize AOS with desired options
+    AOS.refresh(); // Ensure AOS is refreshed
+  }, []); // Add dependencies for when AOS should recalculate
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -317,8 +322,9 @@ const ProductDisplay = () => {
           </div>
           </div>   
 
+          <h2 className="customer-head" data-aos="fade-up">Customer Reviews</h2>
           <div className="reviews-section">
-            <h2>Customer Reviews</h2>
+            
             <div className="review">
               <p><strong>John Doe:</strong> Great product! Totally worth the price.</p>
               <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐</p>
@@ -329,9 +335,9 @@ const ProductDisplay = () => {
             </div>
           </div>
 
-
+          <h2 className="recom-head" data-aos="fade-up">Recommended Products</h2>
           <div className="recommendations-section">
-            <h2>Recommended Products</h2>
+           
             <div className="recommendations-container">
               {recommendations.map((product, index) => (
                 <div className="recommendation-card" key={index}>

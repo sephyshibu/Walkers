@@ -186,13 +186,14 @@ console.log("products", products)
         <div className="products-user-page">
             <Navbar />
             <ToastContainer/>
-            <div className="banner">
-                <img src={banner1} alt="" />
-            </div>
             <header className="page-header">
                 <h1 className="page-title">Our Exclusive Products</h1>
                 <p className="page-subtitle">Explore our collection of premium products</p>
             </header>
+            <div className="banner">
+                <img src={banner1} alt="" />
+            </div>
+           
 
             <div className="search-options">
                 <input
