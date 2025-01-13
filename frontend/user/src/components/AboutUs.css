@@ -14,8 +14,9 @@
 
 .about-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  /* justify-content: space-between;
+  align-items: center; */
+  flex-wrap: wrap; /* Enables wrapping for small screens */
   gap: 30px;
   padding: 20px;
   transition: all 0.3s ease;
@@ -25,6 +26,7 @@
 .image-column {
   flex: 1;
   display: flex;
+  flex-wrap: wrap; /* Wraps images on smaller screens */
   flex-direction: column;
   gap: 20px;
 }
@@ -105,11 +107,15 @@
 
 /* Main Heading (ABOUT US) */
 .about-title {
-  font-size: 2.5rem;
+  
   color: #333;
-  margin-bottom: 20px; /* Spacing below the main heading */
   font-weight: bold;
-  text-align: center; /* Align to the left */
+  text-align: center; 
+  padding: 50px 20px;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+  position: relative;
 }
 
 /* Subheading Styling */
@@ -125,7 +131,7 @@
 .pargarph-about {
   line-height: 1.6;
   font-size: 1.1rem;
-  margin-bottom: 30px; /* Proper spacing below the paragraph */
+  margin-bottom: 80px; /* Proper spacing below the paragraph */
   text-align: left; /* Left alignment */
 } 
 
@@ -155,15 +161,60 @@
   transform: translateY(-10px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+.feature-heading{
+  color:#084c61 ;
+  text-align: center;
+  padding: 50px 20px;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  position: relative;
+}
 
 .feature-card h3 {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
-  margin-bottom: 10px; /* Space between title and description */
+  color: white;
+  margin-bottom: 40px; /* Space between title and description */
 }
 
 .feature-card p {
   font-size: 1rem;
-  color: #777;
+  color: white;
+}
+@media (max-width: 768px) {
+  .about-title,
+  .feature-heading {
+    font-size: 1.8rem;
+  }
+
+  .about-content {
+    flex-direction: column; /* Stack content vertically */
+  }
+
+  .image-slide {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-title,
+  .feature-heading {
+    font-size: 1.5rem;
+  }
+
+  .image-slide {
+    width: 100px;
+    height: 100px;
+  }
+
+  .subheading {
+    font-size: 1.2rem;
+  }
+
+  .pargarph-about {
+    font-size: 1rem;
+  }
 }

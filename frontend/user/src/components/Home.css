@@ -33,7 +33,7 @@ body {
 }
 
 .banner-video {
-  width: 100%;
+  width: 100vw;
   height: auto;
   object-fit: cover;
   
@@ -85,6 +85,8 @@ to {
   padding: 250px 120px;
   text-align: center;
   overflow: hidden;
+  width: 100vw;
+  height: 800px;
 }
 
 .details-title h1 {
@@ -287,7 +289,7 @@ to {
   cursor: not-allowed;
 }
 .bestproducts {
-  background-color: #041548;
+  background-color: #0c2262;
   color: white;
   width: 100vw; /* Ensures full-screen width */
   margin-bottom: 330px;
@@ -307,6 +309,7 @@ to {
   letter-spacing: 2px;
   position: relative;
 }
+
 
 .bestproducts-title::after {
   content: '';

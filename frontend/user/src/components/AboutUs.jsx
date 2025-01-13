@@ -11,6 +11,7 @@ const AboutUs = () => {
         { title: 'Cost-Effective Solutions', description: 'We offer competitive pricing and financing options.' },
         { title: '24/7 Customer Support', description: 'Our dedicated team is available around the clock.' },
     ];
+    const colors = ['#177e89', '#084c61', '#0077b6']
     useEffect(() => {
         const section = document.getElementById("about-us-section");
         const imageSlides = document.querySelectorAll(".image-slide");
@@ -53,12 +54,12 @@ const AboutUs = () => {
                         batteries, and advanced inverters, we illuminate homes, businesses,
                         and communities worldwide.
                     </p>
-                    <h2>Why Choose Us?</h2>
+                    <h2 className='feature-heading'>Why Choose Us?</h2>
                     <div className="features-container">
                         {features.map((feature, index) => (
-                            <div className="feature-card" key={index}>
-                                <h3>{feature.title}</h3>
-                                <p>{feature.description}</p>
+                            <div className="feature-card" key={index}  style={{ backgroundColor: colors[index % colors.length] }}>
+                                <h3 className='featuretitle'>{feature.title}</h3>
+                                <p className='featuredescription'>{feature.description}</p>
                             </div>
                         ))}
                     </div>

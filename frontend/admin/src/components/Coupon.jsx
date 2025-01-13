@@ -219,14 +219,14 @@ const Coupon = () => {
         (<div className="modal-overlay">
         <div className="modal-content">
           <h2>Add Coupon</h2>
-            <form className="product-form">
+            <form className="coupon-form">
               <label>Title: </label>
               <br></br>
               <input
                 type="text"
                 name="title"
                 placeholder="Title"
-                className="input-groupss"
+                className="input-groupsss"
                 value={formdata.title}
                 onChange={handleInputChange}
               />
@@ -237,14 +237,14 @@ const Coupon = () => {
                 type="text"
                 name="descrtiption"
                 placeholder="Description"
-                className="input-groupss"
+                className="input-groupsss"
                 value={formdata.descrtiption}
                 onChange={handleInputChange}
               />
               {error.descrtiption && <p className="error-messages">{error.descrtiption}</p>}
               <label>Coupon: </label>
               <br></br>
-              <select name="coupontype" value={formdata.coupontype} onChange={handleInputChange}>
+              <select className="input-groupsss" name="coupontype" value={formdata.coupontype} onChange={handleInputChange}>
               <option value="">Select</option> {/* Explicit value for the default option */}
                   <option value='fixed'>Fixed</option>
                   {/* <option value='percentage'>Percentage</option> */}
@@ -256,7 +256,7 @@ const Coupon = () => {
                 type="Number"
                 name="couponamount"
                 placeholder="Coupon Amount"
-                className="input-groupss"
+                className="input-groupsss"
                 value={formdata.couponamount}
                 onChange={handleInputChange}
               />
@@ -267,7 +267,7 @@ const Coupon = () => {
                 type="Number"
                 name="minprice"
                 placeholder="minprice"
-                className="input-groupss"
+                className="input-groupsss"
                 value={formdata.minprice}
                 onChange={handleInputChange}
               />
@@ -278,7 +278,7 @@ const Coupon = () => {
                 type="Date"
                 name="expiredon"
                 placeholder="Expiry date"
-                className="input-groupss"
+                className="input-groupsss"
                 value={formdata.expiredon}
                 onChange={handleInputChange}
               />
