@@ -10,6 +10,7 @@
     text-align: center;
     color: #444;
     margin-bottom: 20px;
+    font-size: 1.8rem;
 }
 
 .error-messages {
@@ -215,14 +216,25 @@
     margin-top: 20px;
 }
 .pdf-link{
-    padding: 10px 9px;  
+    padding: 19px 9px;  
     font-size: 15px;  
     font-weight: bold;
     cursor: pointer;
     position: relative;
-    top: -80px;
+    top: 0px;
     animation: none;
-    left: 390px;
+    left: 0px;
+}
+@media (max-width: 768px) {
+    .pdf-link {
+        display: block; /* Show on small screens */
+        margin-top: 15px;
+        text-align: center; /* Optional, to center the link */
+    }
+
+    .order-actions {
+        flex-direction: column; /* Stack actions vertically */
+    }
 }
 .action-button {
     background-color: #007bff;
@@ -294,4 +306,46 @@ textarea.reason-textarea {
 
 .order-card:not(:last-child) {
     border-bottom: 2px dashed #ccc;
+}
+@media (max-width: 1024px) {
+    .order-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .highlighted-details,
+    .other-details {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ordertitle {
+        font-size: 1.5rem;
+    }
+
+    .highlighted-details,
+    .other-details {
+        font-size: 0.95rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ordertitle {
+        font-size: 1.2rem;
+    }
+
+    .order-card {
+        padding: 10px;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
 }

@@ -534,7 +534,11 @@ const handleOrderClick = (orderId) => {
                         <div className='productprices'>Product price:Rs.{list.price}</div>
                         <div className='productprices'>OrderId:{list.orderid}</div>
                         <span className="order-status">Status: {list.orderStatus}</span>
+                        {pdfLinks[list.orderid] && (
+                                        <div className='pdf-link'>{pdfLinks[list.orderid]}</div>
+                                    )}
                     </div>
+                    
                     {/* <div className="order-header" >
                     
                         </div>  */}
@@ -557,9 +561,7 @@ const handleOrderClick = (orderId) => {
                    
                                     
                         <div className="order-actions">
-                                {pdfLinks[list.orderid] && (
-                                        <div className='pdf-link'>{pdfLinks[list.orderid]}</div>
-                                    )}
+                                
                                 {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
                                 <button className='retry-button' onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)}>
                                     Retry Payment
