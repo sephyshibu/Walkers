@@ -221,12 +221,22 @@ const CartPage = () => {
                 setMessage(response.data.message);
                 navigate('/checkout', { state: { couponId: selectedCoupon?._id } });
             }
-        } catch (error) {
-            if (error.response && error.response.status === 400) {
-                setMessage(
-                    `Checkout failed: ${error.response.data.message}`)
+        } catch (err) {
+            if (err.response && err.response.status === 400) {
+                toast.error(
+                    `Checkout failed: ${err.response.data.message}`)
                 
-            } else {
+            }
+            else if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+                                                   toast.error("Your account is inactive. Logging out.");
+                                                   localStorage.removeItem("userId"); // Clear the local storage
+                                                    await persistor.purge(); // Clear persisted Redux state
+                                                   navigate('/login'); // Redirect to the product display page
+                        }else  if (err.response && err.response.data.message) {
+                                                   toast.error(err.response.data.message); // Custom server error message
+                        } 
+                       
+                        else {
                 console.error("Checkout error:", error);
                 setMessage("An error occurred during checkout.");
                 

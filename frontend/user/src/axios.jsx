@@ -14,6 +14,8 @@ axiosInstanceuser.interceptors.request.use(
   (config)=>{
     const state=store.getState()
     const token=state.token?.token
+    const user=state.user?.user
+    console.log("user in axios",user)
   console.log("axiios",token)
   console.log("state",state)
   if (typeof token !== 'string') {
@@ -29,6 +31,10 @@ axiosInstanceuser.interceptors.request.use(
 
    
   }
+  if(user?._id){
+    config.headers['user-id']=user._id
+  }
+  
   console.log("axios config",config)
   return config
  

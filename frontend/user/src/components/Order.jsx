@@ -253,8 +253,15 @@ const Order = () => {
                  console.log("Combined Orders",combinedItems)
                  setorder(combinedItems)
 
-            } catch (err) {
-                console.error("Error fetching orders:", err);
+            }  catch (error) {
+                    if (error.response?.status === 403 && error.response?.data?.action === "logout") {
+                      toast.error("Your account is inactive. Logging out.")
+                      localStorage.removeItem("userId")
+                      // await persistor.purge() // Uncomment if you have persistor configured
+                      // navigate('/login') // Uncomment if you have navigation configured
+                    } else if (error.response && error.response.data.message) {
+                      setError(error.response.data.message)
+                    }
                 // seterror("Failed to fetch orders");
             }finally{
                 setloading(false)

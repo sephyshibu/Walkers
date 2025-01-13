@@ -281,9 +281,13 @@ const PaymentMethod = () => {
             console.error('Failed to place order:', error);
             if (error.response && error.response.data.message) {
                 toast.error(error.response.data.message);
-            } else {
+            } 
+            
+           
+            else {
                 toast.error('Error placing the order. Please try again.');
-            }
+                                }
+                    
         }
     }
 

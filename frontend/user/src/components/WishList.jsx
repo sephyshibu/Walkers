@@ -24,8 +24,15 @@ const WishList = () => {
         const response = await axiosInstanceuser.get(`/fetchwishlist/${userId}`);
         console.log('Fetched wishlist', response.data);
         setWishlistShow(response.data.products);
-      } catch (err) {
-        console.log('Error in fetching wishlist', err);
+      }  catch (error) {
+              if (error.response?.status === 403 && error.response?.data?.action === "logout") {
+                toast.error("Your account is inactive. Logging out.")
+                localStorage.removeItem("userId")
+                // await persistor.purge() // Uncomment if you have persistor configured
+                // navigate('/login') // Uncomment if you have navigation configured
+              } else if (error.response && error.response.data.message) {
+                setError(error.response.data.message)
+              }
       }finally {
         setLoading(false);
     }

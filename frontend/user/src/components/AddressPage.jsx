@@ -3,6 +3,8 @@ import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './AddressPage.css'
 import { useNavigate } from 'react-router'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Address from './Address'
 // import address from '../../../../backend/models/address';
 const AddressPage = () => {
@@ -18,9 +20,18 @@ const AddressPage = () => {
                 setaddressshow(response.data.address)
             }
             catch (err) {
-                console.log("Error in fetching address", err);
-                // seterror("Failed to fetch address");
-        }
+                       if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+                                       toast.error("Your account is inactive. Logging out.");
+                                       localStorage.removeItem("userId"); // Clear the local storage
+                                       await persistor.purge(); // Clear persisted Redux state
+                                       navigate('/login'); // Redirect to the product display page
+                                   }else  if (err.response && err.response.data.message) {
+                                       seterror(err.response.data.message); // Custom server error message
+                                   } 
+                                   else {
+                                       seterror("Failed to add to cart");
+                                   }
+                                }
 
     }
     fetchaddress()
@@ -49,7 +60,9 @@ const handleDelete=async(id)=>{
 }
 
   return (
+
     <div className="address-page-container" style={{ padding: "20px" }}>
+        <ToastContainer/>
       <h2  className="address-page-title">User Addresses</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div className="address-grid" style={{ display: "grid", gap: "20px", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))" }}>

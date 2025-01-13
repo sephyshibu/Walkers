@@ -74,8 +74,18 @@ const Productpage = () => {
             setfilteredproduct(response.data.products);
             setTotalPages(response.data.totalPages);
             setCurrentPage(response.data.currentPage);
-        } catch (error) {
-            console.log('Error in fetching products', error);
+        } catch (err) {
+           if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+                           toast.error("Your account is inactive. Logging out.");
+                           localStorage.removeItem("userId"); // Clear the local storage
+                            await persistor.purge(); // Clear persisted Redux state
+                           navigate('/login'); // Redirect to the product display page
+                       }else  if (err.response && err.response.data.message) {
+                           seterror(err.response.data.message); // Custom server error message
+                       } 
+                       else {
+                           seterror("Failed to add to cart");
+                       }
         }finally{
             setloading(false)
         }
