@@ -296,7 +296,7 @@ const CartPage = () => {
         );
     
         if (originalTotalPrice < couponItem.minprice) {
-            setMessage(`Minimum cart value for this coupon is Rs.${couponItem.minprice}`);
+            toast.success(`Minimum cart value for this coupon is Rs.${couponItem.minprice}`);
             return;
         }
     
@@ -316,7 +316,7 @@ const CartPage = () => {
                 }));
     
                 setSelectedCoupon(couponItem);
-                setMessage(`Coupon applied successfully! You saved Rs.${discount}`);
+                toast.success(`Coupon applied successfully! You saved Rs.${discount}`);
             } else {
                 setMessage(response.data.message || "Failed to apply coupon.");
             }

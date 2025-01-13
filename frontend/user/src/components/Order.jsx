@@ -557,24 +557,22 @@ const handleOrderClick = (orderId) => {
                    
                                     
                         <div className="order-actions">
-                        {/* <div>
-                            {downloadLink}
-                        </div> */}
-                            {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
-                            <button onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)} className="retry-button">
-                                Retry Payment
-                            </button>
-                        )}
-                         <button
+                                {pdfLinks[list.orderid] && (
+                                        <div className='pdf-link'>{pdfLinks[list.orderid]}</div>
+                                    )}
+                                {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
+                                <button className='retry-button' onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)}>
+                                    Retry Payment
+                                </button>
+                                    )}
+                                    <button
                                         onClick={() => handleDownloadPDF(list.orderid)}
                                         className="download-button"
                                     >
                                         Generate PDF
                                     </button>
                                     {/* Display the download link for the specific order */}
-                                    {pdfLinks[list.orderid] && (
-                                        <div>{pdfLinks[list.orderid]}</div>
-                                    )}
+                                    
                                  <button
                                     disabled={list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
@@ -594,37 +592,6 @@ const handleOrderClick = (orderId) => {
                             
 
                         </div>
-                        {/* <PDFDownloadLink
-                            document={<Invoice orders={list} />}
-                            fileName={`invoice_${list.orderid}.pdf`}
-                            >
-                            {({ loading }) => <button>{loading ? 'Loading PDF...' : 'Download PDF'}</button>}
-                        </PDFDownloadLink> */}
-                        {/* <button onClick={() => handleDownloadPDF(list.orderid)}>
-                            Download PDF
-                        </button> */}
-                        
-                        {/* {returnOverlay && (
-                            <div className="overlay">
-                                <div className="overlay-content">
-                                    <h3>Return Product</h3>
-                                    <textarea
-                                        placeholder="Enter return reason"
-                                        value={returnReason}
-                                        onChange={(e) => setReturnReason(e.target.value)}
-                                        className="reason-textarea"
-                                    ></textarea>
-                                    <div className="overlay-buttons">
-                                        <button onClick={handlereturn} className="action-button">
-                                            Submit
-                                        </button>
-                                        <button onClick={closeReturnOverlay} className="action-button secondary">
-                                            Close
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )} */}
                         
                        
                         </div>    
