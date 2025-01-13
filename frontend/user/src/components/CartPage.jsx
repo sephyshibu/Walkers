@@ -406,7 +406,7 @@ const CartPage = () => {
                                 // }
                             >
                                 <h4>{couponItem.title}</h4>
-                                <p>Type: {couponItem.coupontype}</p>
+                               
                                 <p>Amount: Rs.{couponItem.couponamount}</p>
                                 <p>Min Price: Rs.{couponItem.minprice}</p>
                                 <p>Expires On: {new Date(couponItem.expiredon).toLocaleDateString()}</p>
