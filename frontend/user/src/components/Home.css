@@ -4,7 +4,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  
+  box-sizing: border-box; /* Ensures padding is included in dimensions */
   
 }
 
@@ -77,6 +77,65 @@ to {
   background-color: #f9f9f9;
   animation: fadeIn 1.5s ease-out;
 }
+
+
+.details {
+  background-color: #041548;
+  color: white;
+  padding: 250px 120px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.details-title h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.numbers {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.number {
+  flex: 1;
+  padding: 20px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.number:hover {
+  transform: scale(1.1);
+}
+
+.number-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #ffd700;
+}
+
+.number-paragraph {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .numbers {
+    flex-direction: column;
+  }
+
+  .number {
+    margin-bottom: 20px;
+  }
+}
+
+
+
 .about-products {
   margin-top: 40px;
 }
@@ -115,6 +174,7 @@ to {
   padding: 0 5%;
   max-width: 1200px;
   margin: 0 auto;
+  margin-bottom: 130px;
 }
 
 /* Update the category-card class */
@@ -226,13 +286,23 @@ to {
   background-color: #bdc3c7;
   cursor: not-allowed;
 }
+.bestproducts {
+  background-color: #041548;
+  color: white;
+  width: 100vw; /* Ensures full-screen width */
+  margin-bottom: 330px;
+  padding: 80px 50px; /* Adjusted padding */
+  overflow: hidden; /* Hides any overflow content */
+  position: relative; /* Ensures it remains in place */
+  box-sizing: border-box; /* Includes padding in width calculation */
+}
+
 
 .bestproducts-title{
   text-align: center;
   padding: 50px 20px;
   font-size: 2.5rem;
   margin-bottom: 40px;
-  color: #2c3e50;
   font-weight: 300;
   letter-spacing: 2px;
   position: relative;

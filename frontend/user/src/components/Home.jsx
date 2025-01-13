@@ -21,6 +21,42 @@ const Home = () => {
     AOS.init({ duration: 1000 }); // Initialize AOS with desired options
     AOS.refresh(); // Ensure AOS is refreshed
   }, [formdata, products]); // Add dependencies for when AOS should recalculate
+  const [numbers, setNumbers] = useState({
+    years: 0,
+    projects: 0,
+    customers: 0,
+  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = document.querySelector(".details");
+      const sectionPosition = section.getBoundingClientRect().top;
+      const screenPosition = window.innerHeight / 1.3;
+
+      if (sectionPosition < screenPosition) {
+        const startCounting = () => {
+          let interval = setInterval(() => {
+            setNumbers((prev) => {
+              const updated = {
+                years: Math.min(prev.years + 1, 28),
+                projects: Math.min(prev.projects + 5, 100),
+                customers: Math.min(prev.customers + 10, 200),
+              };
+              if (updated.years === 28 && updated.projects === 100 && updated.customers === 200) {
+                clearInterval(interval);
+              }
+              return updated;
+            });
+          }, 40);
+        };
+        startCounting();
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   
   useEffect(() => {
     const fetchCategoryName = async () => {
@@ -69,6 +105,26 @@ const Home = () => {
       <div id="about-us-section" className="aboutsection" data-aos="zoom-in">
         <AboutUs />
       </div>
+
+      <div className="details">
+      <div className="details-title">
+        <h1>We Are Experts In The World Of Solar And Renewable Energy</h1>
+      </div>
+      <div className="numbers">
+        <div className="number">
+          <h2 className="number-title">{numbers.years}+</h2>
+          <p className="number-paragraph">Years of Experience</p>
+        </div>
+        <div className="number">
+          <h2 className="number-title">{numbers.projects}+</h2>
+          <p className="number-paragraph">Projects Completed</p>
+        </div>
+        <div className="number">
+          <h2 className="number-title">{numbers.customers}+</h2>
+          <p className="number-paragraph">Happy Customers</p>
+        </div>
+      </div>
+    </div>
       <div className="about-category" data-aos="fade-up">
         <h2 className="category-titles">Best Seller Categories</h2>
         <div className="category-grid">
@@ -78,7 +134,8 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <div className="bestproducts" data-aos="fade-right">
+        </div>
+        <div className="bestproducts" data-aos="fade-up">
           <h2 className="bestproducts-title">Best Products</h2>
           <div className="product-grid" data-aos="fade-right">
             {products.map((product) => (
@@ -95,7 +152,7 @@ const Home = () => {
             ))}
           </div>
         </div>
-      </div>
+    
       <Footer />
     </div>
   );

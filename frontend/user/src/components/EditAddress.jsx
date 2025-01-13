@@ -5,6 +5,10 @@ import { useNavigate } from 'react-router'
 import './EditAddress.css'
 import Navbar from './Navbar'
 import Footer from './Footer'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
+
 const EditAddress = () => {
     const{id}=useParams()
     console.log("userid for fetch address to edit",id)
@@ -19,6 +23,12 @@ const EditAddress = () => {
 
     })
     const[error,seterror]=useState('')
+
+    useEffect(() => {
+        AOS.init({ duration: 1000 }); // Initialize AOS with desired options
+        AOS.refresh(); // Ensure AOS is refreshed
+      }, []); // Add dependencies for when AOS should recalculate
+      
 
     useEffect(()=>{
         const fetchspecificaddress=async()=>{
@@ -72,8 +82,8 @@ const EditAddress = () => {
     <div className="edit-address-page">
        
     <h2>Edit Address</h2>
-    {error && <p className="error-messageadd">{error}</p>}
-    <form onSubmit={handleSubmit} className="edit-address-form">
+    {error && <p className="error-messageadd" data-aos="fade-in">{error}</p>}
+    <form onSubmit={handleSubmit} className="edit-address-form" data-aos="fade-up">
         <label>
             Address Name:
             <input
@@ -133,7 +143,7 @@ const EditAddress = () => {
                 </label>
 
         <br />
-        <button type="submit" className="save-button">Save Changes</button>
+        <button type="submit" className="save-button" data-aos="zoom-in">Save Changes</button>
     </form>
     
 </div>

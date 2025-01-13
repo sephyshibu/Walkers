@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
+  animation: fadeIn 1.2s ease-in-out;
 }
 
 .address-page-title {
@@ -11,6 +12,7 @@
   margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
+  text-align: center;
 }
 
 .error-message {
@@ -32,13 +34,15 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-  background: #fff;
-  transition: box-shadow 0.3s ease;
+  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   position: relative;
+  animation: slideUp 0.8s ease-in-out;
 }
 
 .address-card:hover {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .address-card h3 {
@@ -57,56 +61,35 @@
   color: #565959;
 }
 
-.buttonedit {
+.buttonedit,
+.buttondelete {
   padding: 10px 30px;
   border-radius: 25px;
+  border:none;
   cursor: pointer;
-  transition: background 0.3s ease;
   font-size: 13px;
   color: white;
+  transition: transform 0.3s ease, background 0.3s ease;
+  margin-right: 10px;
+}
+
+.buttonedit {
   background: linear-gradient(to bottom, #96f595, #2dd85d);
-  border: 1px solid #adb1b8;
-  border-color: #adb1b8 #a2a6ac #8d9096;
- 
-  /* text-align: center;
-  text-decoration: none;
-  vertical-align: middle; */
-  margin-right: 5px;
 }
 
 .buttonedit:hover {
-  background: linear-gradient(to bottom, #e7eaf0, #d9dce1);
+  background: linear-gradient(to bottom, #68d68b, #1ba94b);
+  transform: scale(1.05);
 }
-.buttondelete{
+
+.buttondelete {
   background: linear-gradient(to bottom, #c65c52, #ee3b0a);
-  border: 1px solid #adb1b8;
-  border-color: #adb1b8 #a2a6ac #8d9096;
-  padding: 10px 30px;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 13px;
-  color: white;
-  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset;
-  font-size: 13px;
-  
 }
 
-
-
-/* .button-add {
-  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
-  border-color: #a88734 #9c7e31 #846a29;
-  color: #111;
-  width: 100%;
-  margin-top: 20px;
-  padding: 10px;
-  font-size: 16px;
+.buttondelete:hover {
+  background: linear-gradient(to bottom, #b24b3f, #d63306);
+  transform: scale(1.05);
 }
-
-.button-add:hover {
-  background: linear-gradient(to bottom, #f5d78e, #eeb933);
-} */
 
 .default-badge {
   position: absolute;
@@ -117,12 +100,7 @@
   padding: 2px 8px;
   font-size: 12px;
   border-radius: 10px;
-}
-
-.address-actions {
-  margin-top: 15px;
-  display: flex;
-  justify-content: flex-start;
+  animation: bounce 1s infinite ease-in-out;
 }
 
 .add-address-card {
@@ -135,18 +113,21 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease;
+  animation: popUp 1s ease-in-out;
 }
 
 .add-address-card:hover {
   background: #e7eaf0;
   border-color: #007185;
+  transform: translateY(-5px);
 }
 
 .add-address-card .icon {
   font-size: 48px;
   color: #007185;
   margin-bottom: 10px;
+  animation: rotate 2s linear infinite;
 }
 
 .add-address-card .text {
@@ -155,3 +136,51 @@
   text-align: center;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes popUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

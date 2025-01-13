@@ -6,7 +6,7 @@
     min-height: 100vh;
 }
 
-h1 {
+.ordertitle{
     text-align: center;
     color: #444;
     margin-bottom: 20px;

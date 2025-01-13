@@ -290,7 +290,7 @@ const PaymentMethod = () => {
     return (
         <div className='payemnt-page-container'>
             <Navbar />
-            <h2>Payment Method</h2>
+            <h2 className='paymentmethodtilte'>Payment Method</h2>
             <div className='payment-method'>
                 <div className={`payement-card ${selectedmethod === 'Card' ? 'selected' : ""}`}
                     onClick={() => handlePaymentSelect('Card')}>

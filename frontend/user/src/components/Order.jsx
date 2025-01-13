@@ -496,7 +496,7 @@ const handleOrderClick = (orderId) => {
 <div className="order-page">
     <ToastContainer />
  
-        <h1>Your Orders</h1>
+        <h1 className='ordertitle'>Your Orders</h1>
         {error && <div className="error-messages">{error}</div>}
         {/* <div className="filters">
         <label>
