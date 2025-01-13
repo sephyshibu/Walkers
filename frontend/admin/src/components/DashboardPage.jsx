@@ -103,6 +103,7 @@ const DashboardPage = () => {
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [filter, setFilter] = useState('month'); // Default filter is "month"
+  const [heading, setHeading] = useState('Monthly Sales');
 
   const fetchSalesData = async () => {
     try {
@@ -114,33 +115,61 @@ const DashboardPage = () => {
         },
       });
       setSalesData(response.data);
-      
+      updateHeading()
     } catch (error) {
       toast.error(error.response.data.error || 'Error fetching sales data');
       console.error('Error fetching sales data:', error);
     }
   };
 
+  const updateHeading = () => {
+    switch (filter) {
+      case 'year':
+        setHeading('Yearly Sales');
+        break;
+      case 'month':
+        setHeading('Monthly Sales');
+        break;
+      case 'week':
+        setHeading('Weekly Sales');
+        break;
+      case 'today':
+        setHeading('Today’s Sales');
+        break;
+      default:
+        if (fromDate && toDate) {
+          setHeading(`Sales from ${new Date(fromDate).toLocaleDateString()} to ${new Date(toDate).toLocaleDateString()}`);
+        } else {
+          setHeading('Custom Date Range');
+        }
+    }
+  };
+
+
+
   useEffect(() => {
     fetchSalesData();
   }, [filter, fromDate, toDate]);
   console.log("sales data",salesData)
+
+
   const generateLineData = () => {
-    if (!salesData.monthlysales || salesData.monthlysales.length === 0) {
-      return {
-        labels: [],
-        datasets: [{
-          label: 'Sales',
-          data: [],
-          backgroundColor: '#FF6384',
-          borderColor: '#FF6384',
-          fill: false,
-          tension: 0.4,  // Makes the line smoother
-          pointRadius: 6, // Default point size
-          pointHoverRadius: 10, // Point size on hover
-        }]
-      };
-    }
+    // if (!salesData.monthlysales || salesData.monthlysales.length === 0) {
+    //   <h2>{heading}</h2>
+    //   return {
+    //     labels: [],
+    //     datasets: [{
+    //       label: 'Sales',
+    //       data: [],
+    //       backgroundColor: '#FF6384',
+    //       borderColor: '#FF6384',
+    //       fill: false,
+    //       tension: 0.4,  // Makes the line smoother
+    //       pointRadius: 6, // Default point size
+    //       pointHoverRadius: 10, // Point size on hover
+    //     }]
+    //   };
+    // }
   
     const allSales = [];
   
@@ -152,40 +181,25 @@ const DashboardPage = () => {
         const orderDate = new Date(item.date); 
         console.log("order date",orderDate)
         const total = item.total;
-        // const key = `${month}/${year}`;
-        
-        // Store each sale as an individual data point
+    
         allSales.push({ date: orderDate, total });
       });
     });
   
-    // Sort all sales by month/year to ensure proper plotting order
-    // allSales.sort((a, b) => {
-    //   if (a.year === b.year) {
-    //     return a.month - b.month;
-    //   } else {
-    //     return a.year - b.year;
-    //   }
-    // });
+
     allSales.sort((a, b) => a.date - b.date);
   
-    // Create labels (unique month/year format) for x-axis
-    // const formattedLabels = allSales.map(item => {
-    //   const monthNames = [
-    //     "January", "February", "March", "April", "May", "June", "July", "August", 
-    //     "September", "October", "November", "December"
-    //   ];
-    //   return `${monthNames[item.month - 1]} ${item.year}`;
-    // });
+   
     const formattedLabels = allSales.map(item => {
       return item.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
     });
   
     // Create the sales data for y-axis (one total for each sale)
     const groupedData = allSales.map(item => item.total);
-  
+ 
     return {
       labels: formattedLabels,  // Labels for the x-axis
+      
       datasets: [
         {
           label: 'Sales',
@@ -262,7 +276,30 @@ const DashboardPage = () => {
         </div>
 
       <div className="sales-chart">
-        <Line data={lineData} />
+        <h2>{heading}</h2>
+        <Line
+          data={lineData}
+          options={{
+            responsive: true,
+            plugins: {
+              legend: { display: true },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: 'Date',
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: 'Sales Price',
+                },
+              },
+            },
+          }}
+        />
       </div>
 
       <ToastContainer />
