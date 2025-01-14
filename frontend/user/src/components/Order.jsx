@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         <Page size="A4" style={styles.page}>
           {/* Company Header */}
           <View style={styles.companyHeader}>
-            <Text style={styles.companyName}>Walker's Fencing</Text>
+            <Text style={styles.companyName}>Walkes Solar</Text>
             <Text style={styles.companyDetails}>St.Peters Junction Pathanamthitta | Phone: (+91) 7356645787 | Email: walkeersgroup@gmail.com</Text>
           </View>
   
@@ -151,6 +151,7 @@ const styles = StyleSheet.create({
                 <Text style={styles.tableCell}>Title</Text>
                 <Text style={styles.tableCell}>Quantity</Text>
                 <Text style={styles.tableCell}>Price</Text>
+                <Text style={styles.tableCell}>isreturned</Text>
               </View>
             </View>
   
@@ -163,6 +164,7 @@ const styles = StyleSheet.create({
                     <Text style={styles.tableCell}>{item.title}</Text>
                     <Text style={styles.tableCell}>{item.quantity}</Text>
                     <Text style={styles.tableCell}>{item.price}</Text>
+                    <Text style={styles.tableCell}>{item.isreturned?"Yes":"No"}</Text>
                   </View>
                 ))
               ) : (
@@ -589,6 +591,7 @@ const handleOrderClick = (orderId) => {
                                     <button
                                         onClick={() => handleDownloadPDF(list.orderid)}
                                         className="download-button"
+                                        disabled={list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.ordeStatus==="Cancelled"}
                                     >
                                         Generate PDF
                                     </button>

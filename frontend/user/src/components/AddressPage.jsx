@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import { persistor } from '../app/store';
 import 'react-toastify/dist/ReactToastify.css'
 import Address from './Address'
+import Navbar from './Navbar'
 // import address from '../../../../backend/models/address';
 const AddressPage = () => {
     const userId=useSelector((state)=>state.user.user._id)
@@ -63,6 +64,7 @@ const handleDelete=async(id)=>{
   return (
 
     <div className="address-page-container" style={{ padding: "20px" }}>
+        <Navbar/>
         <ToastContainer/>
       <h2  className="address-page-title">User Addresses</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}

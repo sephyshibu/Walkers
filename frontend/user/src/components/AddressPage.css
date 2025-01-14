@@ -7,14 +7,23 @@
 }
 
 .address-page-title {
-  font-size: 28px;
-  color: #131921;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
   text-align: center;
+  padding: 50px 20px;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: #2c3e50;
+  font-weight: 300;
+  letter-spacing: 2px;
+  position: relative;
 }
-
+.address-page-title::after{
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background-color: #3498db;
+  margin: 20px auto 0;
+}
 .error-message {
   color: #d00;
   background-color: #fff;

@@ -1,61 +1,193 @@
-/* AccountDetail.css */
-
-.accountdetail-page {
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --background-color: #f9f9f9;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --text-light: #777777;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  .accountdetail-page {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #f9f9f9;
+ 
+    background-color: var(--background-color);
     padding: 20px;
-}
-
-.accountdetail-container {
-    background: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+  }
+  
+  .accountdetail-container {
+    background: var(--card-background);
+    box-shadow: var(--box-shadow);
+    border-radius: var(--border-radius);
     width: 100%;
-    max-width: 400px;
-    padding: 20px;
+    max-width: 900px;
+    padding: 30px;
     text-align: center;
-}
-
-.accountdetail-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.accountdetail-card {
-    background: #f3f3f3;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
+  }
+  
+  .accountdetail-title {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    position: relative;
+  }
+  
+  .accountdetail-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: var(--primary-color);
+    margin: 10px auto 0;
+  }
+  
+  .accountdetail-card {
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 25px;
     text-align: left;
-}
-
-.accountdetail-card p {
-    font-size: 16px;
-    margin: 10px 0;
-    color: #555;
-}
-
-.accountdetail-card strong {
-    color: #333;
-}
-
-.edit-button {
-    background-color: #007bff;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .accountdetail-card p {
+    font-size: 1rem;
+    margin: 15px 0;
+    color: var(--text-color);
+  }
+  
+  .accountdetail-card strong {
+    color: var(--secondary-color);
+    font-weight: 600;
+  }
+  
+  .edit-button {
+    background-color: var(--primary-color);
     color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
     border: none;
-    border-radius: 5px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.edit-button:hover {
-    background-color: #0056b3;
-}
+    transition: var(--transition);
+  }
+  
+  .edit-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .overlay-content {
+    background: var(--card-background);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 400px;
+    box-shadow: var(--box-shadow);
+  }
+  
+  .overlay-content h2 {
+    color: var(--secondary-color);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+  }
+  
+  .overlay-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .overlay-content label {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-size: 0.9rem;
+    color: var(--text-light);
+  }
+  
+  .overlay-content input {
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .overlay-content input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .overlay-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .save-button, .cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .save-button {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .save-button:hover {
+    background-color: #2980b9;
+  }
+  
+  .cancel-button {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .cancel-button:hover {
+    background-color: #c0392b;
+  }
+  
+  @media (max-width: 480px) {
+    .accountdetail-container {
+      padding: 20px;
+    }
+  
+    .overlay-content {
+      padding: 20px;
+    }
+  
+    .accountdetail-title {
+      font-size: 1.5rem;
+    }
+  
+    .edit-button, .save-button, .cancel-button {
+      padding: 10px 15px;
+      font-size: 0.9rem;
+    }
+  }

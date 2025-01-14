@@ -3,6 +3,8 @@ import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './Address.css'
 import { useNavigate } from 'react-router'
+import Navbar from './Navbar'
+import Footer from './Footer'
 const Address = () => {
     const userId=useSelector((state)=>state.user.user._id)
     const navigate=useNavigate()
@@ -129,7 +131,10 @@ const Address = () => {
 
 
   return (
+    <>
+            <Navbar/>
       <div className="address-container">
+
         <h2 className="form-title">Add New Address</h2>
         {error.global && <p className="error-message">{error.global}</p>}
         
@@ -193,7 +198,10 @@ const Address = () => {
           </button>
 
         </form>
+
       </div>
+              <Footer/>
+              </>
     
   )
 }

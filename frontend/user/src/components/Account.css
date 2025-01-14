@@ -36,7 +36,8 @@
   .sidebar ul li:hover, .sidebar ul li.active {
     background-color: #34495e;
     color: white;
-    border-radius: 4px;
+    border-radius: 25px;
+    
   }
   
   .content-container {

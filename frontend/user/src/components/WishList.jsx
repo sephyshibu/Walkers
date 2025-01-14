@@ -111,7 +111,7 @@ const handleDisplay = (id) => {
                   Remove
                 </button>
                 <button className="addtocart" 
-                onClick={()=>handleAddToCart(wish._id)}>Add to Cart</button>
+                onClick={()=>handleAddToCart(wish._id)}>View Product</button>
               </div>
             </div>
           ))

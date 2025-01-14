@@ -2,9 +2,10 @@
 
 /* Container Styling */
 .address-container {
-    max-width: 500px;
+    max-width: 900px;
     margin: 50px auto;
     padding: 30px;
+    margin-top: 145px;
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
