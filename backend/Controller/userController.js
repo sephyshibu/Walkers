@@ -2458,7 +2458,7 @@ const applycoupon=async(req,res)=>{
 }
 const searchoption = async (req, res) => {
   const { query } = req.query; // Get the search query from the request
-
+  console.log("query",query)
   try {
     const words = query.trim().split(/\s+/); // Split by spaces
 
@@ -2466,13 +2466,24 @@ const searchoption = async (req, res) => {
     const regex = words
       .map(word => `(?=.*\\b${word}\\w*)`) // Match the first letter of each word followed by any characters
       .join(''); // Join them into a single regex pattern
-
-    const products = await Productdb.find({
-      title: { $regex: regex, $options: 'i' },
-      status:true// Matches strings starting with the query
-    });
-
-    res.status(200).json({ products });
+     
+     
+      const activeCategories = await Categorydb.find({ status: true }).select('_id categoryname');
+      console.log("actii",activeCategories)
+      const activeCategorynames = activeCategories.map(category => category.categoryname);
+      console.log("active category name",activeCategorynames)
+      
+      const products = await Productdb.find({
+        title: { $regex: regex, $options: 'i' },
+        status: true,
+        category: { $in: activeCategorynames }, // Ensure product belongs to active category
+      });
+  console.log("poredfa",products)
+      if (products.length === null) {
+        return res.status(404).json({ message: "No products found." });
+      }
+  
+      res.status(200).json({ products });
   } catch (error) {
     console.error("Error in search endpoint:", error);
     res.status(500).json({ message: "Server error while searching products." });
