@@ -137,7 +137,7 @@ const Home = () => {
         </div>
         <div className="bestproducts" data-aos="fade-up">
           <h2 className="bestproducts-title">Best Products</h2>
-          <div className="product-grid" data-aos="fade-right">
+          <div className="product-grid" data-aos="fade-up">
             {products.map((product) => (
               <div key={product._id} className="products-card" data-aos="fade-up">
                 <img

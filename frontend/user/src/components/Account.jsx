@@ -78,14 +78,14 @@ const Account = () => {
                 </li>
 
                 <li 
-                className={activesection==="detail"?"active":""}
+                className={activesection==="accountdetail"?"active":""}
                 onClick={()=>setactivesection("accountdetail")}>
                     Account Details
 
                 </li>
 
                 <li 
-                className={activesection==="detail"?"active":""}
+                className={activesection==="wallet"?"active":""}
                 onClick={()=>setactivesection("wallet")}>
                    Wallet
                 </li>

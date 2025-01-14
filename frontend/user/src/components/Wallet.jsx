@@ -58,49 +58,53 @@ const Wallet = () => {
 
   return (
     <div className="wallet-container">
-      <ToastContainer/>
-      <h2 className="wallet-title">Your Wallet</h2>
-      {wallet && (
-        <>
-          <div className="wallet-balance">
-            <h3>Current Balance</h3>
-            <p className="balance-amount">Rs. {wallet.balance.toFixed(2)}</p>
-          </div>
-          <button 
-            onClick={() => setShowTransactions(!showTransactions)}
-            className="toggle-transactions-btn"
-          >
-            {showTransactions ? 'Hide Transaction History' : 'Show Transaction History'}
-          </button>
-          {showTransactions && (
-            <div className="wallet-transactions">
-              <h3>Transaction History</h3>
-              {wallet.transactions.length > 0 ? (
-                <ul className="transaction-list">
-                  {wallet.transactions.reverse().map((transaction) => (
-                    <li key={transaction.transaction_id} className="transaction-item">
-                      <div className="transaction-info">
-                        <span className="transaction-date">{formatDate(transaction.createdAt)}</span>
-                        <span className="transaction-method">
-                          {formatTransactionMethod(transaction.transactionmethod)}
-                        </span>
-                      </div>
-                      <span className={`transaction-amount ${transaction.amount >= 0 ? 'positive' : 'negative'}`}>
-                        {transaction.amount >= 0 ? '+' : '-'}Rs. {Math.abs(transaction.amount).toFixed(2)}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="no-transactions">No transactions yet.</p>
-              )}
-            </div>
-          )}
-        </>
-      )}
-    </div>
-  )
-}
+  <ToastContainer />
+  <h2 className="wallet-title">Your Wallet</h2>
+  {wallet && (
+    <>
+      <div className="wallet-balance">
+        <h3>Current Balance</h3>
+        <p className="balance-amount">Rs. {wallet.balance.toFixed(2)}</p>
+      </div>
+
+      <div className="wallet-transactions">
+        <h3>Transaction History</h3>
+        {wallet.transactions.length > 0 ? (
+          <table className="transaction-table">
+            <thead>
+              <tr>
+                <th>Transaction Date</th>
+                <th>Transaction Method</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {wallet.transactions.reverse().map((transaction) => (
+                <tr key={transaction.transaction_id} className="transaction-item">
+                  <td className="transaction-date">{formatDate(transaction.createdAt)}</td>
+                  <td className="transaction-method">
+                    {formatTransactionMethod(transaction.transactionmethod)}
+                  </td>
+                  <td
+                    className={`transaction-amount ${
+                      transaction.amount >= 0 ? 'positive' : 'negative'
+                    }`}
+                  >
+                    {transaction.amount >= 0 ? '+' : '-'}Rs. {Math.abs(transaction.amount).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="no-transactions">No transactions yet.</p>
+        )}
+      </div>
+    </>
+  )}
+</div>
+
+)}
 
 export default Wallet
 

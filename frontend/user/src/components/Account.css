@@ -1,50 +1,76 @@
 .account-container {
-    display: flex;
-    flex-direction: row;
-    margin-top: 145px; /* Adjust based on the navbar height */
-    height: calc(100vh - 60px); /* Subtract navbar height */
-    font-family: Arial, sans-serif;
+  display: flex;
+  color: white;
+  flex-direction: row;
+  margin-top: 145px; /* Adjust based on the navbar height */
+  height: calc(100vh - 60px); /* Subtract navbar height */
+  font-family: Arial, sans-serif;
+}
 
-  }
-  
-  .sidebar {
-    flex: 0 0 250px; /* Fixed width for the sidebar */
-    background-color: #f5f5f5;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100%; /* Full height for the sidebar */
-  }
-  
-  .sidebar h2 {
-    font-size: 28px;
+.sidebar {
+  flex: 0 0 250px; /* Fixed width for the sidebar */
+  background-color: #2c3e50;
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: 100%; /* Full height for the sidebar */
+  position: relative;
+}
+
+.sidebar h2 {
+  font-size: 28px;
   margin-bottom: 60px;
-  }
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  padding: 12px 25px; /* Reduced padding for better pill shape */
+  margin-bottom: 15px;
+  cursor: pointer;
   
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
+  transition: background-color 0.3s, border-radius 0.3s;
+  border-top-left-radius: 20px; /* Round the top right corner */
+  border-bottom-left-radius: 20px; /* Round the bottom right corner */
+  display: inline-block; /* Make it behave like a block element */
+  width: 100%; /* Make each list item take up the full width */
+  position: relative;
+  /* z-index: 1; Ensure it stays above the background */
+}
+
+.sidebar ul li.active {
+  background-color: white;
+  color: #2c3e50;
+}
+
+.sidebar ul li.active:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -30px; /* Adjust this to make the pill look connected to the page */
+  width: 60px;
+  height: 100%;
+  background-color: white; /* Match background color */
+  border-top-right-radius: -10px; /* Round the top right corner */
+  /* border-bottom-right-radius: 20px;  */
+}
+
+.sidebar  li:hover {
+  background-color: white;
+  color:#2c3e50;
+  border-radius: 25px;
   
-  .sidebar ul li {
-    padding: 20px 25px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    color: #34495e;
-    transition: background-color 0.3s;
-  }
+
+
   
-  .sidebar ul li:hover, .sidebar ul li.active {
-    background-color: #34495e;
-    color: white;
-    border-radius: 25px;
-    
-  }
-  
-  .content-container {
-    flex: 1; /* Take up the remaining space */
-    padding: 20px;
-    /* overflow-y: auto;  */
-    background-color: #fff;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  }
-  
+}
+
+.content-container {
+  flex: 1; /* Take up the remaining space */
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
