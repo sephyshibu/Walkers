@@ -259,15 +259,15 @@ const DashboardPage = () => {
       <div className="card-container">
           <div className="card">
             <h2>Total Sales</h2>
-            <p>{salesData.totalSales}</p>
+            <p>Rs. {salesData.totalSales}</p>
           </div>
           <div className="card">
             <h2>Net Amount</h2>
-            <p>{salesData.netAmount}</p>
+            <p>Rs. {salesData.netAmount}</p>
           </div>
           <div className="card">
             <h2>Discount and Coupon Price</h2>
-            <p>{salesData.totaldiscounts}</p>
+            <p>Rs {salesData.totaldiscounts}</p>
           </div>
           <div className='card'>
             <h2>Total Orders</h2>

@@ -134,7 +134,7 @@ const EditAddress = () => {
             />
         </label>
         <label className='status-label'>
-                    Status:
+                    set as default address:
                     <input
                         type="checkbox"
                         checked={address.status}

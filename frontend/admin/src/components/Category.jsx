@@ -108,7 +108,7 @@ const Category = () => {
 
         {error && <p className="error-messages">{error}</p>}
         <div className="category-list">
-            <h2>Existing Categories</h2>
+           
             <table className="category-table">
                 <thead>
                     <tr>

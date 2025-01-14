@@ -358,7 +358,9 @@ const ProductDisplay = () => {
          
       </div>
        )}
+        <Footer/>
     </div>
+   
   );
 };
 

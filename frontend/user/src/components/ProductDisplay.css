@@ -1,13 +1,13 @@
 .product-display-page {
   font-family: 'Roboto', sans-serif;
-  background-color: #f4f4f4;
+  background-color: white;
   color: #333;
-  margin-top: 190px; /* Adjust for navbar height */
+  margin-top: 0px; /* Adjust for navbar height */
 }
 
 .product-display-container {
   max-width: 1200px;
-  margin: auto;
+ margin: auto;
   padding: 20px;
   background-color: #fff;
   border-radius: 8px;
@@ -18,6 +18,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
+  margin: 190px auto;
   margin-bottom: 40px;
 }
 
@@ -26,7 +27,7 @@
 }
 
 .main-image-container {
-  background-color: #fafafa;
+  background-color: white;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;

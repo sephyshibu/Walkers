@@ -153,7 +153,7 @@ const Coupon = () => {
   return (
     <div className='couponstart'>
       <ToastContainer/>
-            <h2>Available Coupons</h2>
+            <h2 className='appliedcoupontitle'>Available Coupons</h2>
             {loading? (
                       <div
                           style={{
