@@ -2,8 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import './Order.css'
+import { persistor } from '../app/store';
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from 'react-router';
 import ReactLoading from 'react-loading'
 import{Page,Text,View,Document,PDFDownloadLink,StyleSheet} from '@react-pdf/renderer'
 
@@ -213,7 +215,7 @@ const Order = () => {
     const [returnReason, setReturnReason] = useState('');
     const [returnProductId, setReturnProductId] = useState(null);
     const[loading,setloading]=useState(false)
-   
+    const navigate=useNavigate()
     const fetchOrders = useCallback(async () => {
   
         setloading(true)
@@ -257,10 +259,10 @@ const Order = () => {
                     if (error.response?.status === 403 && error.response?.data?.action === "logout") {
                       toast.error("Your account is inactive. Logging out.")
                       localStorage.removeItem("userId")
-                      // await persistor.purge() // Uncomment if you have persistor configured
-                      // navigate('/login') // Uncomment if you have navigation configured
+                      await persistor.purge() // Uncomment if you have persistor configured
+                      navigate('/login') // Uncomment if you have navigation configured
                     } else if (error.response && error.response.data.message) {
-                      setError(error.response.data.message)
+                      seterror(error.response.data.message)
                     }
                 // seterror("Failed to fetch orders");
             }finally{
@@ -438,6 +440,16 @@ try {
     // } else {
     //     toast.error('Retry payment failed. Please try again.');
     // }
+    const preVerifyResponse = await axiosInstanceuser.post('/preverifypayment', {
+      cartId,
+      userId,
+      orderid,
+    });
+
+    if (!preVerifyResponse.data.success) {
+      toast.error(preVerifyResponse.data.message || 'Pre-verification failed');
+      return;
+    }
 
         const options={
             key:"rzp_test_qp0MD1b9oAJB0i",
@@ -450,7 +462,7 @@ try {
                 console.log("verifyresponse",response)
                 try{
                     const verifyResponse = await axiosInstanceuser.post('/verifyretrypayment', {
-                        cartId,userId,
+                        cartId,userId,orderid,
                         razorpay_payment_id: response.razorpay_payment_id,
                         razorpay_order_id: razorpayid,
                         razorpay_signature: response.razorpay_signature,
@@ -460,7 +472,7 @@ try {
                         toast.success('Payment successful!');
                         navigate('/thankyoupage');
                       } else {
-                        toast.error('Payment verification failed');
+                        toast.error(verifyResponse.data.message);
                       }
                 }
                 catch (error) {
@@ -538,7 +550,7 @@ const handleOrderClick = (orderId) => {
                     <div className="order-details">
                     <div className="highlighted-details">
                         <div className="product-title">{list.title}</div>
-                        <div className='productprices'>Product price:Rs.{list.price}</div>
+                        {/* <div className='productprices'>Product price:Rs.{list.price}</div> */}
                         <div className='productprices'>OrderId:{list.orderid}</div>
                         <span className="order-status">Status: {list.orderStatus}</span>
                         {pdfLinks[list.orderid] && (

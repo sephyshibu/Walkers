@@ -81,10 +81,10 @@ const Productpage = () => {
                             await persistor.purge(); // Clear persisted Redux state
                            navigate('/login'); // Redirect to the product display page
                        }else  if (err.response && err.response.data.message) {
-                           seterror(err.response.data.message); // Custom server error message
+                           setError(err.response.data.message); // Custom server error message
                        } 
                        else {
-                           seterror("Failed to add to cart");
+                           setError("Failed to add to cart");
                        }
         }finally{
             setloading(false)

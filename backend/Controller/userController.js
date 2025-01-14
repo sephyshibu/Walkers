@@ -1590,20 +1590,62 @@ const placingorder = async (req, res) => {
     return res.status(500).json({ message: "Failed to place order" });
   }
 };
+const preverifypayment=async(req,res)=>{
+  try {
+    const { cartId, userId, orderid } = req.body;
+
+    const [order, cart] = await Promise.all([
+      orderdb.findById(orderid).populate('items.productId'),
+      cartdb.findById(cartId).populate('items.productId'),
+    ]);
+
+    if (!order) {
+      return res.status(404).json({ success: false, message: "Order not found" });
+    }
+
+    if (!cart) {
+      return res.status(404).json({ success: false, message: "Cart not found" });
+    }
+
+    // Verify the cart and order match
+    const isMatching = order.items.length === cart.items.length &&
+      order.items.every(orderItem => {
+        const cartItem = cart.items.find(
+          item => item.productId._id.toString() === orderItem.productId._id.toString()
+        );
+        return cartItem && cartItem.quantity === orderItem.quantity;
+      });
+
+    if (!isMatching) {
+      return res.status(400).json({
+        success: false,
+        message: "Cart has been modified; cannot proceed with payment retry.",
+      });
+    }
+
+    return res.status(200).json({ success: true, message: "Pre-verification successful" });
+  } catch (error) {
+    console.error("Error in pre-verification:", error);
+    return res.status(500).json({ success: false, message: "Pre-verification failed", error: error.message });
+  }
+}
 const verifyretrypayment=async(req,res)=>{
   console.log("dfs")
   try {
     const {
       userId,
       cartId,
+      orderid,
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
     } = req.body;
+
+    console.log("reqbody",req.body)
     console.log("signaturee", razorpay_signature);
     console.log("razorpay orderid", razorpay_order_id);
     console.log("razorpay payment", razorpay_payment_id);
-
+    
     // Generate signature for verification
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
@@ -1613,6 +1655,8 @@ const verifyretrypayment=async(req,res)=>{
     console.log("expected signature", expectedSignature);
     if (expectedSignature === razorpay_signature) {
       // Update Razorpay fields and payment status in the order
+      
+
       await orderdb.findOneAndUpdate(
         { razorpay_order_id: razorpay_order_id },
         {
@@ -1694,6 +1738,8 @@ const verifyPayment = async (req, res) => {
     console.log("expected signature", expectedSignature);
     if (expectedSignature === razorpay_signature) {
       // Update Razorpay fields and payment status in the order
+
+      
       await orderdb.findOneAndUpdate(
         { razorpay_order_id: razorpay_order_id },
         {
@@ -2602,5 +2648,5 @@ module.exports = {
   resendotp,
   fetchparticularorder,products,
   googleLogin,verifyretrypayment,
-  fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct
+  fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct,preverifypayment
 };

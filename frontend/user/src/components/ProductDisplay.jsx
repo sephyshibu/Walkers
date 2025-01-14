@@ -300,7 +300,7 @@ const ProductDisplay = () => {
               Rs.{formdata.offeramount ? formdata.price - formdata.offeramount : formdata.price}
             </p>
               {/* <p className="product-price">Rs.{formdata.price-formdata.offeramount}</p> */}
-              <p className="product-price">Quantity: {formdata.availableQuantity}</p>
+              <p className="product-price">Available: {formdata.availableQuantity}</p>
             </div>
             <div className="product-rating">
               <span>⭐⭐⭐⭐☆</span> <span className="reviews-count">(120 reviews)</span>
@@ -308,12 +308,12 @@ const ProductDisplay = () => {
             <p className="product-description">{formdata.description}</p>
             <p
               className={`product-stock ${
-                formdata.stockStatus === "In Stock"
-                  ? "in-stock"
-                  : "out-of-stock"
+                formdata.availableQuantity ==0
+                  ? "Out of Stock"
+                  : ""
               }`}
             >
-              {formdata.stockStatus}
+              {formdata.availableQuantity==0?'Out of Stock':""}
             </p>
             <div className="product-actions">
               <button className="add-to-cart" onClick={handleAddToCart}>Add to Cart</button>

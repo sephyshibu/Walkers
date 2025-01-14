@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import './AddressPage.css'
 import { useNavigate } from 'react-router'
 import { ToastContainer, toast } from 'react-toastify'
+import { persistor } from '../app/store';
 import 'react-toastify/dist/ReactToastify.css'
 import Address from './Address'
 // import address from '../../../../backend/models/address';

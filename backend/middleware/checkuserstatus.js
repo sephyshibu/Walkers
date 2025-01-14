@@ -14,7 +14,7 @@ const checkUserStatus = async (req, res, next) => {
         }
 
         if (user.status === false) {
-            return res.status(403).json({ message: "User is inactive",action: "logout" });
+            return res.status(403).json({ message: "User is inactive please logout",action: "logout" });
         }
 
         next(); // User is active, proceed to the next middleware or route handler

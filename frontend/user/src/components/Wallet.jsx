@@ -4,7 +4,8 @@ import axiosInstanceuser from '../axios'
 import './Wallet.css'
 import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-
+import { persistor } from '../app/store';
+import { useNavigate } from 'react-router';
 
 const Wallet = () => {
   const userId = useSelector((state) => state.user.user._id)
@@ -12,7 +13,7 @@ const Wallet = () => {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
   const [showTransactions, setShowTransactions] = useState(false)
-
+ const navigate=useNavigate()
   useEffect(() => {
     const fetchWallet = async () => {
       try {
@@ -24,8 +25,8 @@ const Wallet = () => {
         if (error.response?.status === 403 && error.response?.data?.action === "logout") {
           toast.error("Your account is inactive. Logging out.")
           localStorage.removeItem("userId")
-          // await persistor.purge() // Uncomment if you have persistor configured
-          // navigate('/login') // Uncomment if you have navigation configured
+          await persistor.purge() // Uncomment if you have persistor configured
+          navigate('/login') // Uncomment if you have navigation configured
         } else if (error.response && error.response.data.message) {
           setError(error.response.data.message)
         }

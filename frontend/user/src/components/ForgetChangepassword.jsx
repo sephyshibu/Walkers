@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import axiosInstanceuser from '../axios'
 import './ChangePassword.css'
+import { persistor } from '../app/store';
 import { useNavigate } from 'react-router'
 const ChangePassword = () => {
     const[password, setpassword]=useState('')
@@ -68,9 +69,19 @@ const ChangePassword = () => {
         catch(err){
             if (err.response && err.response.data && err.response.data.message) {
                 setError({ general: err.response.data.message }); // Server's custom message
-            } else {
+            } else if (err.response?.status === 403 && err.response?.data?.action === "logout") {
+                toast.error("Your account is inactive. Logging out.");
+                localStorage.removeItem("userId"); // Clear the local storage
+                 await persistor.purge(); // Clear persisted Redux state
+                navigate('/login'); // Redirect to the product display page
+            }else  if (err.response && err.response.data.message) {
+                setError(err.response.data.message); // Custom server error message
+            } 
+            
+            else {
                 setError({ general: 'Something went wrong. Please try again.' });
             }
+            
          
         }
         
