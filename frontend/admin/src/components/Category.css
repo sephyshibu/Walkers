@@ -1,34 +1,33 @@
 /* General Page Styling */
 .category-page {
-   
-    background-color: #f9f9f9;
-    font-family: Arial, sans-serif;
-    margin-left: 270px ;
-  }
-  
-  .page-title {
-    text-align: center;
-    font-size: 28px;
-    /* margin-bottom: 20px; */
-    color: #333;
-  }
-  
-  .error-messages {
-    color: red; /* Text color set to white */
-   
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 20px;
-    border-radius: 5px; /* Optional: for a rounded look */
-    font-size: 14px;
-    animation: fadeIn 0.6s ease-in-out;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+  margin-left: 270px; /* Default margin for sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  max-width: calc(100% - 270px); /* Adjust width dynamically */
+  box-sizing: border-box;
 }
 
-  
-  /* Category List Styling */
-  .category-list {
-    margin-bottom: 10px;
-  }
+.page-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.error-messages {
+  color: red;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.category-list {
+  margin-bottom: 20px;
+}
   
   .category-list h2 {
     margin-bottom: 10px;
@@ -50,6 +49,8 @@
     padding: 10px;
     text-align: center;
     border: 1px solid #ddd;
+    font-size: 1rem;
+    word-wrap: break-word;
   }
   
   .category-table thead {
@@ -59,12 +60,10 @@
   
   .active-row {
     background-color: #e7f7e4;
-    transition: background-color 0.3s ease-in-out;
   }
   
   .inactive-row {
     background-color: #f9e4e7;
-    transition: background-color 0.3s ease-in-out;
   }
   
   /* Buttons */
@@ -114,19 +113,17 @@
   .add-category-section {
     background: #fff;
     padding: 20px;
-    display: block;
-    text-align: center;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
   }
   
   .add-category-section h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
     color: #555;
     margin-bottom: 10px;
-    text-align: center;
-    
   }
+  
   
   .category-form {
     display: flex;
@@ -136,30 +133,29 @@
   
   .category-input {
     flex: 1;
-    padding: 10px 30px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-   
-    width: 505px;
-  }
-  
-  .submit-button {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 4px;
-    margin-top: 25px;
-   
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  
-  .submit-button:hover {
-    background-color: #388e3c;
-    transform: scale(1.1);
-  }
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #388e3c;
+  transform: scale(1.1);
+}
   
   /* Animations */
   @keyframes fadeIn {
@@ -172,4 +168,74 @@
       transform: translateY(0);
     }
   }
+  @media (max-width: 1024px) {
+    .category-page {
+      margin-left: 220px; /* Adjust for smaller sidebar */
+      max-width:100%;
+      padding: 15px;
+    }
   
+    .page-title {
+      font-size: 1.8rem;
+    }
+  
+    .category-table th,
+    .category-table td {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+  
+    .add-category-section {
+      padding: 15px;
+    }
+  
+    .category-input {
+      max-width: 100%;
+    }
+
+    .add-offer,.edit-button,.delete-button,.undo-button{
+    
+      margin-bottom: 10px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .category-page {
+      margin-left: 0; /* Sidebar collapses */
+      max-width: 100%;
+      padding: 15px;
+    }
+  
+    .category-table {
+      overflow-x: auto; /* Horizontal scrolling for smaller screens */
+    }
+  
+    .page-title {
+      font-size: 1.6rem;
+    }
+  
+    .submit-button {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .page-title {
+      font-size: 1.4rem;
+    }
+  
+    .category-table th,
+    .category-table td {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+  
+    .submit-button {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+    .add-offer,.edit-button,.delete-button,.undo-button{
+      margin-bottom: 10px;
+    }
+  }

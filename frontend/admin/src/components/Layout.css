@@ -78,4 +78,72 @@
   .logout-button:hover {
     background-color: #e04345;
   }
-  
+  /* Responsive Layout */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+    box-shadow: none;
+  }
+
+  .sidebar ul li a {
+    padding: 15px 20px;
+    font-size: 18px;
+  }
+
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .logout-container {
+    justify-content: center;
+   
+  }
+ 
+}
+
+/* Smaller Screens */
+@media (max-width: 480px) {
+  .sidebar ul li a {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+  .logout-button {
+    font-size: 14px;
+    padding: 8px 15px;
+    
+  }
+}
+/* Toggle Button */
+.toggle-sidebar {
+  display: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .toggle-sidebar {
+    display: block;
+  }
+
+  .sidebar-closed .sidebar {
+    display: none;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+}

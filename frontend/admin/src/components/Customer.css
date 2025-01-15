@@ -1,106 +1,154 @@
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 .customer-page {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #f9f9f9;
+  margin-left: 300px; /* Default margin for larger screens */
+  flex-wrap: wrap;
+  max-width: calc(100% - 300px); /* Dynamic width based on sidebar */
+  box-sizing: border-box;
+  transition: margin-left 0.3s ease;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
 
-    background-color: #f9f9f9;
-    margin-left: 270px ;
+.page-title {
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 2rem;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 400;
+}
+
+.page-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: #3498db;
+  margin: 15px auto 0;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tables-container {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow-x: hidden; /* Prevent horizontal scrolling on laptops */
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  table-layout: auto; /* Allows dynamic column sizing */
+}
+
+.user-table th,
+.user-table td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  word-wrap: break-word; /* Ensure long text breaks */
+}
+
+.user-table thead {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.active-row {
+  background-color: #b6dcaf;
+}
+
+.inactive-row {
+  background-color: #e47e8d;
+}
+
+.block-button,
+.unblock-button {
+  background-color: #ff5722;
+  color: black;
+  border: none;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.unblock-button {
+  background-color: #4caf50;
+}
+
+.block-button:hover {
+  background-color: #e64a19;
+  transform: scale(1.1);
+}
+
+.unblock-button:hover {
+  background-color: #388e3c;
+  transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+  .customer-page {
+    margin-left: 220px; /* Adjust for smaller sidebar */
+    max-width: calc(100% - 220px); /* Avoid overflow */
+    padding: 15px;
   }
-  
-  .page-title {
-    text-align: center;
-    padding: 50px 20px;
-    font-size: 2.5rem;
-    margin-bottom: 40px;
-    color: #2c3e50;
-    font-weight: 300;
-    letter-spacing: 2px;
-    position: relative;
-  }
-  .page-title::after{
-    content: '';
-    display: block;
-    width: 60px;
-    height: 4px;
-    background-color: #3498db;
-    margin: 20px auto 0;
-  }
-  
-  .error-message {
-    color: red;
-    text-align: center;
-  }
-  
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 0 auto;
-   
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    background: #fff;
-    animation: fadeIn 0.6s ease-in-out;
-  }
-  
+
   .user-table th,
   .user-table td {
+    font-size: 0.9rem; /* Reduce font size */
+  }
+
+  .tables-container {
+    overflow-x: auto; /* Enable horizontal scrolling only if needed */
+  }
+}
+@media (max-width: 768px) {
+  .customer-page {
+    margin-left: 0; /* Collapse sidebar */
+    max-width: 100%;
     padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-    font-size: 20px;
   }
-  .user-table tbody td {
-    color: black;
+
+  .tables-container {
+    box-shadow: none;
+    overflow-x: auto;
   }
-  
-  .user-table thead {
-    background-color: #4caf50;
-    color: #fff;
+}
+
+@media (max-width: 480px) {
+  .customer-page {
+    padding: 8px; /* Minimal padding for compact view */
   }
-  
-  .active-row {
-    background-color: #b6dcaf;
-    transition: background-color 0.3s ease-in-out;
+
+  .page-title {
+    font-size: 1.4rem;
   }
-  
-  .inactive-row {
-    background-color: #e47e8d;
-    transition: background-color 0.3s ease-in-out;
+
+  .user-table th,
+  .user-table td {
+    font-size: 0.75rem; /* Smaller text for small screens */
   }
-  
-  .block-button {
-    background-color: #ff5722;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-  }
-  
+
+  .block-button,
   .unblock-button {
-    background-color: #4caf50;
-    color: black;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
+    padding: 4px 6px; /* Compact button size */
+    font-size: 0.7rem;
   }
-  
-  .block-button:hover {
-    background-color: #e64a19;
-    transform: scale(1.1);
-  }
-  
-  .unblock-button:hover {
-    background-color: #388e3c;
-    transform: scale(1.1);
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}

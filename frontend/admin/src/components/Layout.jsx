@@ -1,4 +1,4 @@
-import React from "react";
+import React ,{useState}from "react";
 import { Outlet, Link, useLocation,useNavigate } from "react-router-dom";
 import "./Layout.css";
 import { useDispatch } from "react-redux";
@@ -7,6 +7,8 @@ const Layout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+
 
   const handleLogout = () => {
     // Clear localStorage
@@ -19,9 +21,16 @@ const Layout = () => {
     navigate("/");
   };
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <div className="layout">
+    <div className={`layout ${isSidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
+    <button className="toggle-sidebar" onClick={toggleSidebar}>
+      ☰
+    </button>
+    {isSidebarOpen && (
       <aside className="sidebar">
         <ul>
           
@@ -109,6 +118,7 @@ const Layout = () => {
 
         </ul>
       </aside>
+    )}
       <main className="content">
       <div className="logout-container">
           <button className="logout-button" onClick={handleLogout}>

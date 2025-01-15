@@ -11,7 +11,9 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 10px; /* Adds consistent spacing between elements */
+  justify-content: center; /* Centers buttons horizontally */
+  align-items: center; /* Aligns items vertically in the center */
   margin-bottom: 20px;
 }
 
@@ -20,10 +22,12 @@
   color: white;
   padding: 8px 16px;
   border: none;
-  margin-right: 10px;
-  margin-bottom: 10px;
   cursor: pointer;
   border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  flex: 1 1 auto; /* Allows buttons to grow/shrink and wrap */
+  max-width: 200px; /* Prevents buttons from being too wide */
 }
 
 .filters button:hover {
@@ -31,13 +35,23 @@
 }
 
 .filters input {
-  padding: 8px;
-  margin-right: 10px;
-  margin-bottom: 10px;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  flex: 1 1 auto; /* Makes inputs responsive */
+  max-width: 200px;
 }
+@media (max-width: 768px) {
+  .filters {
+    justify-content: center;
+  }
 
+  .filters button,
+  .filters input {
+    flex: 1 1 100%; /* Makes buttons and inputs stack on small screens */
+    max-width: none; /* Allows full width stacking */
+  }
+}
 .filters .apply-btn {
   background-color: #28a745;
   color: white;
@@ -67,31 +81,61 @@
 }
 
 /* Cards Container */
+/* Card Container Styles */
 .card-container {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  justify-content: center; /* Center the cards horizontally */
+  margin-top: 20px;
 }
 
+/* Card Styles */
 .card {
-  background-color: white;
-  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  margin: 0 10px;
+  padding: 20px;
   text-align: center;
+  flex: 1 1 calc(25% - 20px); /* Responsive width: 4 cards per row with space */
+  min-width: 200px; /* Ensures cards don't shrink too much */
+  max-width: 300px; /* Optional: Limit the max width */
+  transition: transform 0.3s ease;
 }
 
 .card h2 {
   font-size: 18px;
+  margin-bottom: 10px;
   color: #333;
 }
 
 .card p {
-  font-size: 22px;
-  font-weight: bold;
-  color: #007bff;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Hover Effect for Cards */
+.card:hover {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 1024px) {
+  .card {
+    flex: 1 1 calc(33.33% - 20px); /* 3 cards per row */
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 calc(50% - 20px); /* 2 cards per row */
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 1 1 100%; /* 1 card per row */
+  }
 }
 
 /* Sales Chart */
@@ -111,4 +155,21 @@
 /* Toast Notifications */
 .Toastify__toast-container {
   z-index: 10000;
+}
+/* Chart and Table */
+.chart-container, .table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .chart-container, .table-container {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chart-container, .table-container {
+    padding: 5px;
+  }
 }

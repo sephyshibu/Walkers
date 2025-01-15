@@ -591,7 +591,7 @@ const handleOrderClick = (orderId) => {
                                     <button
                                         onClick={() => handleDownloadPDF(list.orderid)}
                                         className="download-button"
-                                        disabled={list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.ordeStatus==="Cancelled"}
+                                        disabled={list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.orderStatus==="Cancelled"}
                                     >
                                         Generate PDF
                                     </button>

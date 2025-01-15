@@ -47,6 +47,7 @@ const Customer = () => {
     <div className='customer-page'>
         <h1 className='page-title'>All Users</h1>
         {error && <p className="error-message">{error}</p>}
+        <div className="tables-container">
         <table className="user-table">
             <thead>
                 <tr>
@@ -61,11 +62,11 @@ const Customer = () => {
                 {users.map((user)=>{
                     return(
                     <tr key={user._id} className={user.status ? "active-row" : "inactive-row"}>
-                        <td>{user._id}</td>
-                        <td>{user.username}</td>
+                        <td data-label="ID">{user._id}</td>
+                        <td data-label="Name">{user.username}</td>
                         {/* <td>{user.phonenumber}</td> */}
-                        <td>{user.email}</td>
-                        <td>{user.status?'Active':'Block'}</td>
+                        <td data-label="Email">{user.email}</td>
+                        <td data-label="Status">{user.status?'Active':'Block'}</td>
                         <td>
                             <button className={user.status ? "block-button" : "unblock-button"}
                              onClick={()=>toggleActive(user._id,user.status)}>
@@ -76,6 +77,7 @@ const Customer = () => {
                ) })}
             </tbody>
         </table>
+        </div>
     </div>
   )
 }

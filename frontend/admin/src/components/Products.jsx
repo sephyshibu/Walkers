@@ -532,6 +532,7 @@ const closeModal = () => {
       <h1 className="dashboard-title">Products Dashboard</h1>
       <div className="dashboard-content">
         <div className="showproduct">
+          <div className='tbleresponsive'>
           <table className="product-table">
             <thead>
               <tr className="table-header">
@@ -573,12 +574,14 @@ const closeModal = () => {
                      />
             </tbody>
           </table>
+          </div>
           <div className="pagination-controls">
             <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 1}>Previous</button>
             <span>Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}</span>
             <button className="pagination-button" onClick={handleNext} disabled={endIndex >= products.length}>Next</button>
           </div>
         </div>
+        
         <div className="addproduct">
         <form className="product-form">
          <label>Title: </label>
