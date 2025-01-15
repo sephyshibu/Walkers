@@ -1,7 +1,7 @@
 .couponstart{
     font-family: Arial, sans-serif;
   background-color: #f4f4f4;
-  margin: 0;
+  margin-left: 270px;
   padding: 20px;
 }
 .appliedcoupontitle{text-align: center;
@@ -22,7 +22,7 @@
   margin: 20px auto 0;
 }
 .coupon-container{
-    max-width: 1200px;
+  max-width: 1200px;
   margin: auto;
   padding: 20px;
 }
@@ -39,8 +39,9 @@
 .open-modal-btn {
     background-color: #007bff;
     color: #fff;
-    margin-bottom: 20px;
-    margin-left: 700px;
+    margin: auto;
+    margin-top: 20px;
+    margin-left: 500px;
   }
   
   .addcoupon-btn {

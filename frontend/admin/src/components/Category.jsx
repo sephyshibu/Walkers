@@ -132,7 +132,7 @@ const Category = () => {
                             {/* <td>{user.phonenumber}</td> */}
                             <td>{list.status ? "Active":"InActive"}</td>
                             <td>
-                                <button onClick={() => openModal(list._id)}>Add Offer</button>
+                                <button className='add-offer' onClick={() => openModal(list._id)}>Add Offer</button>
                                 <button className="edit-button" onClick={()=>handleEdit(list._id)}>
                                 Edit
                                 </button>
@@ -164,8 +164,9 @@ const Category = () => {
                 
                     
             </form>
+            <button  className="submit-button" onClick={handleSubmit}>Add</button>
         </div>
-        <button  className="submit-button" onClick={handleSubmit}>Add</button>
+        
     </div>
   )
 }

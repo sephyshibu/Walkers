@@ -1,11 +1,20 @@
-\`\`\`css
+
 .products-dashboard-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  max-width: 100%;
+  margin-left: 270px ;
+  
   font-family: 'Arial', sans-serif;
 }
-
+.dashboard-content{
+  display: flex;
+  gap: 140px;
+}
+.showproduct{
+  flex: 2;
+}
+.addproduct{
+  flex: 1;
+}
 .dashboard-title {
   text-align: center;
   padding: 50px 20px;
@@ -16,6 +25,7 @@
   letter-spacing: 2px;
   position: relative;
 }
+
 .dashboard-title::After{
   content: '';
   display: block;
@@ -58,11 +68,8 @@
 }
 
 .crop-button,
-.add-product-button,
-.show-list-button,
-.edit-button,
-.delete-button,
-.pagination-button {
+.add-product-button
+{
   background-color: #3498db;
   color: #ffffff;
   border: none;
@@ -73,12 +80,7 @@
   transition: background-color 0.3s ease;
 }
 
-.crop-button:hover,
-.add-product-button:hover,
-.show-list-button:hover,
-.edit-button:hover,
-.delete-button:hover,
-.pagination-button:hover {
+.add-product-button:hover{
   background-color: #2980b9;
 }
 

@@ -284,14 +284,305 @@ const closeModal = () => {
 
 
 
+  // return (
+  //   <div className="products-dashboard-container">
+  //     <h1 className="dashboard-title">Products Dashboard</h1>
+  //   <div className='addproduct'>
+  //     {/* {error && <p className="error-messages">{error}</p>} */}
+  //     <form className="product-form">
+  //       <label>Title: </label>
+  //       <br></br>
+  //       <input
+  //         type="text"
+  //         name="title"
+  //         placeholder="Title"
+  //         className="input-groupss"
+  //         value={formData.title}
+  //         onChange={handleInputChange}
+  //       />
+  //        {error.title && <p className="error-messages">{error.title}</p>}
+  //       <label>Price: </label>
+  //       <input
+  //         type="number"
+  //         name="price"
+  //         placeholder="Price"
+  //         className="input-groupss"
+  //         value={formData.price}
+  //         disabled={isPriceDisabled} // Disable conditionally
+  //         onChange={handleInputChange}
+  //       />
+  //         {error.price && <p className="error-messages">{error.price}</p>}
+  //        <label>Category: </label>
+  //       <input
+  //         type="text"
+  //         name="category"
+  //         placeholder="Category"
+  //         className="input-groupss"
+  //         value={formData.category}
+  //         onChange={handleInputChange}
+  //       />
+  //         {error.category && <p className="error-messages">{error.category}</p>}
+  //        <label>SKU: </label>
+  //       <input
+  //         type="text"
+  //         name="sku"
+  //         placeholder="SKU"
+  //         className="input-groupss"
+  //         value={formData.sku}
+  //         onChange={handleInputChange}
+  //       />
+  //         {error.sku && <p className="error-messages">{error.sku}</p>}
+  //        <label>Description: </label>
+  //       <textarea
+  //         name="description"
+  //         placeholder="Description"
+  //         className="input-groupss"
+  //         value={formData.description}
+  //         onChange={handleInputChange}
+  //       />
+  //         {error.description && <p className="error-messages">{error.description}</p>}
+  //        <label>Quantity: </label>
+  //       <input
+  //         type="number"
+  //         name="availableQuantity"
+  //         placeholder="Available Quantity"
+  //         className="input-groupss"
+  //         value={formData.availableQuantity}
+  //         disabled={isquantitydisabled}
+  //         onChange={handleInputChange}
+  //       />
+  //         {error.availableQuantity && <p className="error-messages">{error.availableQuantity}</p>}
+  //          <label>Stock Status: </label>
+  //           <input type='text' 
+  //               name="stockStatus"
+  //               className="input-groupss"
+  //               placeholder='available or out-of-stock'
+  //               value={formData.stockStatus} 
+  //               onChange={handleInputChange}>
+                    
+  //               </input>
+  //               {error.stockStatus && <p className="error-messages">{error.stockStatus}</p>}
+  //       <input type="file" name="files" accept="image/jpg, image.png, image.jpeg" onChange={handleFileChange} className="input-file" />
+  //       {error.files && <p className="error-messages">{error.files}</p>}
+  //       {previewUrls.length > 0 && currentImageIndex < previewUrls.length && (
+  //         <div className="cropper-container">
+  //           <Cropper
+  //             src={previewUrls[currentImageIndex]}
+  //             style={{ height: 400, width: '100%' }}
+  //             aspectRatio={16 / 9}
+  //             guides={false}
+  //             onInitialized={(instance) => setCropper(instance)}
+  //           />
+  //           <button type="button" onClick={handleCrop} className="crop-button">
+  //             Crop Image
+  //           </button>
+  //         </div>
+  //       )}
+
+  //       {croppedImages.length > 0 && (
+  //         <div className="cropped-images-preview">
+  //           {croppedImages.map((image, index) => (
+  //             <img key={index} src={image} alt={`Cropped ${index}`} style={{ width: '20%' }} />
+  //           ))}
+  //         </div>
+  //       )}
+
+  //       {variants.map((item,index)=>(
+  //         <div key={index}>
+  //           <label>Name</label>
+  //           <input 
+  //               type='text'
+  //               name='name'
+  //               placeholder='enter the name of variant'
+  //               value={item.name}
+  //               onChange={(e)=>handleVariantChange(index,'name', e.target.value)}/>
+
+  //           <label>Price</label>
+  //           <input 
+  //               type='number'
+  //               name='price'
+  //               placeholder='enter the price of variant'
+  //               value={item.price}
+  //               onChange={(e)=>handleVariantChange(index,'price', e.target.value)}/>
+
+  //           <label>Stock Status</label>
+  //           <input 
+  //               type='text'
+  //               name='name'
+  //               placeholder='enter the name of variant'
+  //               value={item.stockStatus}
+  //               onChange={(e)=>handleVariantChange(index,'stockStatus', e.target.value)}/>
+  //         </div>
+  //       ))}
+  //     {/* <button type="button" onClick={handleAddVariant}>Add Variant</button> */}
+  //       <button type="button" onClick={handleAddProduct} className="add-product-button">
+  //         Add Product
+  //       </button>
+  //     </form>
+
+  //     </div>  
+     
+  //     <button className="show-list-button" onClick={handleShowListClick}>
+  //       {showList ? 'Hide List' : 'Show List'}
+  //     </button>
+  //     {loading && (
+  //     <div className="loading-container" style={{
+  //       display: 'flex',
+  //       justifyContent: 'center',
+  //       alignItems: 'center',
+  //       color:"blue"
+  //     }}>
+  //       <ReactLoading type="spin" color="blue" height={100} width={50} />
+  //     </div>
+  //   )}
+  //   <div className='showproduct'>
+  //     {showList && !loading && (
+  //     <table className="product-table">
+  //               <thead>
+  //                   <tr className="table-header">
+  //                       <th>Title</th>
+  //                       <th>Price</th>
+  //                       <th>Category</th>
+  //                       {/* <th>SKU</th> */}
+  //                       {/* <th>Description</th> */}
+  //                       <th>Stock Status</th>
+  //                       <th>Available Quantity</th>
+  //                       <th>Images</th>
+
+  //                       <th>Actions</th>
+  //                   </tr>
+  //               </thead>
+  //               <tbody>
+  //                   {displayedProducts.map((product) => (
+  //                       <tr key={product._id} className="table-row">
+  //                           <td>{product.title}</td>
+  //                           <td>{product.price}</td>
+  //                           <td>{product.category}</td>
+  //                           {/* <td>{product.sku}</td> */}
+  //                           {/* <td>{product.description}</td> */}
+  //                           <td>{product.stockStatus}</td>
+  //                           <td>{product.availableQuantity}</td>
+  //                           <td>
+  //                               {product.images.map((img, index) => (
+  //                                   <img key={index} src={img} className="product-image" alt={`${product.title} ${index}`} width="100" />
+  //                               ))}
+  //                           </td>
+  //                           {/* <td>
+  //                             {product.variants && product.variants.length>0?(
+  //                               product.variants.map((item,index)=>(
+  //                                 <div key={index}>
+  //                                   <p>Name:{item.name}</p>
+  //                                   <p>Price:{item.price}</p>
+  //                                   <p>Stock Status:{item.stockStatus}</p>
+  //                                 </div>
+  //                               ))
+  //                             ):(
+  //                               <p>No varients are availble in this product</p>
+  //                             )}
+  //                           </td> */}
+  //                           <td>
+  //                               <button onClick={() => openModal(product._id)}>Add Offer</button>
+  //                               <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
+  //                               <button  className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id,product.status)}>
+  //                                       {product.status?"Delete":"Undo"}
+  //                               </button>
+  //                           </td>
+  //                       </tr>
+  //                   ))}
+  //                   <AddOffer
+  //                       isOpen={isModalOpen}
+  //                       onRequestClose={closeModal}
+  //                       productId={selectedProductId}
+  //                   />
+  //               </tbody>
+  //           </table>
+  //             )}
+  //             {showList &&(
+  //           <div className="pagination-controls">
+  //             <button
+  //               className="pagination-button"
+  //               onClick={handlePrevious}
+  //               disabled={currentPage === 1}
+  //             >
+  //               Previous
+  //             </button>
+  //             <span>
+  //               Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
+  //             </span>
+  //             <button
+  //               className="pagination-button"
+  //               onClick={handleNext}
+  //               disabled={endIndex >= products.length}
+  //             >
+  //               Next
+  //             </button>
+  //           </div>
+  //           )}
+              
+  //   </div>
+
+
+        
+  // </div>
+
+  // );
+
   return (
     <div className="products-dashboard-container">
       <h1 className="dashboard-title">Products Dashboard</h1>
-      
-      {/* {error && <p className="error-messages">{error}</p>} */}
-      <form className="product-form">
-        <label>Title: </label>
-        <br></br>
+      <div className="dashboard-content">
+        <div className="showproduct">
+          <table className="product-table">
+            <thead>
+              <tr className="table-header">
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Stock Status</th>
+                <th>Available Quantity</th>
+                <th>Images</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayedProducts.map((product) => (
+                <tr key={product._id} className="table-row">
+                  <td>{product.title}</td>
+                  <td>{product.price}</td>
+                  <td>{product.category}</td>
+                  <td>{product.stockStatus}</td>
+                  <td>{product.availableQuantity}</td>
+                  <td>
+                    {product.images.length>0 &&(
+                      <img  src={product.images[0]} className="product-image" alt={`${product.title} 0`} width="100" />
+                    )}
+                  </td>
+                  <td>
+                    <button className="add-offer" onClick={() => openModal(product._id)}>Add Offer</button>
+                    <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
+                    <button className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id, product.status)}>
+                      {product.status ? "Delete" : "Undo"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+               <AddOffer
+                        isOpen={isModalOpen}
+                        onRequestClose={closeModal}
+                         productId={selectedProductId}
+                     />
+            </tbody>
+          </table>
+          <div className="pagination-controls">
+            <button className="pagination-button" onClick={handlePrevious} disabled={currentPage === 1}>Previous</button>
+            <span>Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}</span>
+            <button className="pagination-button" onClick={handleNext} disabled={endIndex >= products.length}>Next</button>
+          </div>
+        </div>
+        <div className="addproduct">
+        <form className="product-form">
+         <label>Title: </label>
+         <br></br>
         <input
           type="text"
           name="title"
@@ -420,111 +711,9 @@ const closeModal = () => {
         </button>
       </form>
 
-
-     
-      <button className="show-list-button" onClick={handleShowListClick}>
-        {showList ? 'Hide List' : 'Show List'}
-      </button>
-      {loading && (
-      <div className="loading-container" style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color:"blue"
-      }}>
-        <ReactLoading type="spin" color="blue" height={100} width={50} />
+        </div>
       </div>
-    )}
-
-      {showList && !loading && (
-      <table className="product-table">
-                <thead>
-                    <tr className="table-header">
-                        <th>Title</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        {/* <th>SKU</th> */}
-                        {/* <th>Description</th> */}
-                        <th>Stock Status</th>
-                        <th>Available Quantity</th>
-                        <th>Images</th>
-
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {displayedProducts.map((product) => (
-                        <tr key={product._id} className="table-row">
-                            <td>{product.title}</td>
-                            <td>{product.price}</td>
-                            <td>{product.category}</td>
-                            {/* <td>{product.sku}</td> */}
-                            {/* <td>{product.description}</td> */}
-                            <td>{product.stockStatus}</td>
-                            <td>{product.availableQuantity}</td>
-                            <td>
-                                {product.images.map((img, index) => (
-                                    <img key={index} src={img} className="product-image" alt={`${product.title} ${index}`} width="100" />
-                                ))}
-                            </td>
-                            {/* <td>
-                              {product.variants && product.variants.length>0?(
-                                product.variants.map((item,index)=>(
-                                  <div key={index}>
-                                    <p>Name:{item.name}</p>
-                                    <p>Price:{item.price}</p>
-                                    <p>Stock Status:{item.stockStatus}</p>
-                                  </div>
-                                ))
-                              ):(
-                                <p>No varients are availble in this product</p>
-                              )}
-                            </td> */}
-                            <td>
-                                <button onClick={() => openModal(product._id)}>Add Offer</button>
-                                <button className="edit-button" onClick={() => handleEditProduct(product._id)}>Edit</button>
-                                <button  className={`delete-button ${product.status ? 'delete-active' : 'undo-active'}`} onClick={() => handleDeleteProduct(product._id,product.status)}>
-                                        {product.status?"Delete":"Undo"}
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                    <AddOffer
-                        isOpen={isModalOpen}
-                        onRequestClose={closeModal}
-                        productId={selectedProductId}
-                    />
-                </tbody>
-            </table>
-              )}
-              {showList &&(
-            <div className="pagination-controls">
-              <button
-                className="pagination-button"
-                onClick={handlePrevious}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span>
-                Page {currentPage} of {Math.ceil(products.length / itemsPerPage)}
-              </span>
-              <button
-                className="pagination-button"
-                onClick={handleNext}
-                disabled={endIndex >= products.length}
-              >
-                Next
-              </button>
-            </div>
-            )}
-              
-  
-
-
-        
     </div>
-
   );
 };
 

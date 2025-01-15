@@ -3,6 +3,7 @@
    
     background-color: #f9f9f9;
     font-family: Arial, sans-serif;
+    margin-left: 270px ;
   }
   
   .page-title {
@@ -113,6 +114,8 @@
   .add-category-section {
     background: #fff;
     padding: 20px;
+    display: block;
+    text-align: center;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
@@ -122,11 +125,13 @@
     color: #555;
     margin-bottom: 10px;
     text-align: center;
+    
   }
   
   .category-form {
     display: flex;
     gap: 10px;
+    
   }
   
   .category-input {
@@ -134,7 +139,7 @@
     padding: 10px 30px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin-left: 500px;
+   
     width: 505px;
   }
   
@@ -147,7 +152,7 @@
     font-size: 14px;
     border-radius: 4px;
     margin-top: 25px;
-    margin-left: 789px;
+   
     transition: transform 0.3s ease, background-color 0.3s ease;
   }
   

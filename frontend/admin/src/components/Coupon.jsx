@@ -209,12 +209,14 @@ const Coupon = () => {
               ) : (
                 <p>No coupons available</p>
               )}
-        </div>
-        </>
-        )}
-        <button className="open-modal-btn" onClick={() => setModalOpen(true)}>
+               <button className="open-modal-btn" onClick={() => setModalOpen(true)}>
           Add Coupon
         </button>
+        </div>
+       
+        </>
+        )}
+        
         {modalOpen&&
         (<div className="modal-overlay">
         <div className="modal-content">

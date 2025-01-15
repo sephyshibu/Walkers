@@ -8,7 +8,8 @@ body {
 
 .order-page {
     width: 95%;
-    margin: 20px auto;
+    margin-top: 80px;
+    margin-left: 200px ;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -64,6 +65,7 @@ body {
 .orders-list {
     overflow-x: auto;
     margin-top: 20px;
+  
 }
 
 .order-table {
@@ -102,6 +104,13 @@ body {
     margin: 4px 0;
     font-size: 0.9rem;
     color: #555;
+}
+.pagination-controlls{
+    margin-left: 200px ;
+    display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
 }
 
 /* Actions Button */

@@ -136,7 +136,7 @@ const Orders = () => {
                 </table>
             </div>
 
-            <div className="pagination-controls">
+            <div className="pagination-controlls">
                 <button 
                     onClick={() => handlePageChange(currentPage - 1)} 
                     disabled={currentPage === 1}
