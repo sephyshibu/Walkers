@@ -607,7 +607,7 @@ const handleOrderClick = (orderId) => {
                         <div className="order-actions">
                                 
                                 {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
-                                <button className='retry-button' onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)}>
+                                <button disabled={list.orderStatus==="Cancelled"} className='retry-button' onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)}>
                                     Retry Payment
                                 </button>
                                     )}
