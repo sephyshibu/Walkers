@@ -184,7 +184,7 @@ console.log("products", products)
         }, 1000), // Throttle with a 1-second delay
         [userId]
     );
-
+    console.log("search porduct details",filteredproduct)
     const handleSearch = (e) => {
         const query = e.target.value;
         setsearchterm(query);

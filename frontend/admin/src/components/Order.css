@@ -41,6 +41,9 @@ body {
     font-weight: bold;
     text-align: center;
 }
+.tableordercontainer {
+    overflow-x: auto;
+}
 
 /* Filters Section */
 .filters {
@@ -63,7 +66,7 @@ body {
 
 /* Table Styling */
 .orders-list {
-    overflow-x: auto;
+
     margin-top: 20px;
   
 }
@@ -112,6 +115,26 @@ body {
   align-items: center;
   margin-top: 2rem;
 }
+.pagination-controlls button {
+    margin: 5px;
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-controlls button:hover
+ {
+    background-color: #2980b9;
+}
+
+.pagination-controlls button:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
 
 /* Actions Button */
 .action-button {
@@ -135,37 +158,78 @@ body {
 }
 
 /* Responsive Styling */
-@media screen and (max-width: 768px) {
+@media (max-width: 768px) {
     .order-page {
+        width: 100%;
+        margin: 0;
         padding: 10px;
     }
 
-    .filters {
-        justify-content: center;
-    }
-
-    .order-table th, 
-    .order-table td {
-        font-size: 0.8rem;
-        padding: 6px 5px;
-    }
-
-    h1 {
+    .orderheadadmin {
         font-size: 1.5rem;
+        padding: 15px;
     }
-}
 
-@media screen and (max-width: 480px) {
-    .filters select {
+    .order-table thead {
+        display: none;
+    }
+
+    .order-table, 
+    .order-table tbody, 
+    .order-table tr, 
+    .order-table td {
+        display: block;
         width: 100%;
     }
 
-    .order-table {
-        font-size: 0.75rem;
+    .order-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: hidden;
     }
 
-    .action-button {
-        font-size: 0.75rem;
-        padding: 4px 8px;
+    .order-table td {
+        text-align: left;
+       
+        position: relative;
+        border: none;
     }
+
+    .order-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .pagination-controlls {
+        flex-direction: column;
+        align-items: center;
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .pagination-controlls button,
+    .pagination-controlls select {
+        width: 80%;
+        margin: 0.5rem 0;
+    }
+
+    .pagination-controlls span {
+        text-align: center;
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 }

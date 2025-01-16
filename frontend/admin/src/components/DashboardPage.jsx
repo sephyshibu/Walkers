@@ -69,7 +69,7 @@ const SalesReportPDF = ({ data }) => (
       </View>
       
       <View style={styles.section}>
-        <Text style={styles.heading}>Monthly Sales</Text>
+        <Text style={styles.heading}>Report Sales</Text>
         
         {/* Table Header */}
         <View style={[styles.tableRow, styles.tableHeader]}>

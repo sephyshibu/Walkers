@@ -298,6 +298,7 @@ const CartPage = () => {
             setMessage("Please select a valid coupon.");
             return;
         }
+     
     
         // Reset total price to the original value before applying a new coupon
         const originalTotalPrice = cart.items.reduce(
@@ -313,7 +314,8 @@ const CartPage = () => {
         try {
             // Apply the coupon on the backend
             const response = await axiosInstanceuser.post(`/applycoupon/${userId}`, {
-                couponId: couponItem._id,
+                couponId: couponItem._id
+                
             });
     
             if (response.data.success) {
@@ -335,7 +337,25 @@ const CartPage = () => {
         }
     };
     
-
+    const removeCoupon = () => {
+        if (selectedCoupon) {
+          const discount = selectedCoupon.couponamount;
+          const originalTotalPrice = cart.items.reduce(
+            (total, item) => total + item.price * item.quantity,
+            0
+          );
+      
+          // Reset the total price by adding back the discount
+          setCart((prevCart) => ({
+            ...prevCart,
+            totalprice: originalTotalPrice,
+          }));
+      
+          setSelectedCoupon(null); // Remove the selected coupon
+          toast.success("Coupon removed successfully!");
+        }
+      };
+      
   return (
   
     <div className="cart-page">
@@ -395,8 +415,25 @@ const CartPage = () => {
                 <div className="applied-coupon">
                   
                  
-                    <h5>Applied Coupon: {selectedCoupon.title}</h5>
+                    <h5>Applied Coupon: {selectedCoupon.title}
+                    <button
+                        className="remove-coupon-btn"
+                        onClick={removeCoupon}
+                        style={{
+                        marginLeft: "10px",
+                        padding: "5px",
+                        border: "none",
+                        background: "red",
+                        color: "white",
+                        borderRadius: "50%",
+                        cursor: "pointer",
+                        }}
+                    >
+                        &times;
+                    </button>
+                    </h5>
                     <p>You saved Rs.{selectedCoupon.couponamount}</p>
+                   
                 </div>
             )}
           <button className="placeorderbtn" type='button' onClick={handlePlaceorder}>CheckOut</button>

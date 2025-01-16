@@ -609,8 +609,10 @@ const getProducts = async (req, res) => {
       const skip = (pageNum - 1) * pageSize;
 
       products = await Productdb.find(query)
+        .sort(sort)
         .skip(skip)
         .limit(pageSize)
+
         .populate("offerId", "offeramount")
         .lean();
 
@@ -1591,6 +1593,7 @@ const placingorder = async (req, res) => {
   }
 };
 const preverifypayment=async(req,res)=>{
+ 
   try {
     const { cartId, userId, orderid } = req.body;
 
@@ -1617,12 +1620,13 @@ const preverifypayment=async(req,res)=>{
       });
 
     if (!isMatching) {
+      
       return res.status(400).json({
         success: false,
         message: "Cart has been modified; cannot proceed with payment retry.",
       });
     }
-
+    
     return res.status(200).json({ success: true, message: "Pre-verification successful" });
   } catch (error) {
     console.error("Error in pre-verification:", error);
@@ -2430,10 +2434,11 @@ const returnorder = async (req, res) => {
 // }
 const applycoupon=async(req,res)=>{
   const { userId } = req.params;
-  const { couponId } = req.body;
+  const { couponId,id} = req.body;
   console.log("userId", userId)
-  console.log("couponId", couponId)
+  console.log("couponId", id)
   try {
+   
       const coupon = await coupondb.findById(couponId);
       console.log("coupon",coupon)
       if (!coupon || coupon.isblocked || new Date() > new Date(coupon.expiredon)) {

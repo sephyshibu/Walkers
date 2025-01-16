@@ -98,6 +98,7 @@ const Orders = () => {
                     ):(
                         <>
             <div className="orders-list">
+                <div className='tableordercontainer'>
                 <table className="order-table">
                     <thead>
                         <tr>
@@ -134,7 +135,8 @@ const Orders = () => {
                         ))}
                     </tbody>
                 </table>
-            </div>
+                </div>
+            
 
             <div className="pagination-controlls">
                 <button 
@@ -155,6 +157,7 @@ const Orders = () => {
                     <option value="10">10 per page</option>
                     <option value="15">15 per page</option>
                 </select>
+            </div>
             </div>
             </>
             )}

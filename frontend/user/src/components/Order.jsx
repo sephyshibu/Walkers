@@ -447,7 +447,7 @@ try {
       userId,
       orderid,
     });
-
+   console.log("firts")
     if (!preVerifyResponse.data.success) {
       toast.error(preVerifyResponse.data.message || 'Pre-verification failed');
       return;
@@ -500,9 +500,18 @@ try {
 
     
 } catch (error) {
-    console.error('Error retrying payment:', error);
-    toast.error('Retry payment failed. Please try again.');
-}
+  
+    // Handle network or unexpected errors
+    console.log("second");
+    if (error.response) {
+        // Server responded with a status code other than 2xx
+        toast.error(error.response.data.message || 'Retry payment failed. Please try again.');
+    } else {
+        // Network or unexpected error
+        console.error('Error retrying payment:', error);
+        toast.error('An unexpected error occurred. Please try again.');
+    }
+  }
 }
 
 const handleOrderClick = (orderId) => {
