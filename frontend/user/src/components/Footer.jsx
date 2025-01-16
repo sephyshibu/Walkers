@@ -15,7 +15,7 @@ const Footer = () => {
         </div>
 
         {/* Section 2: Quick Links */}
-        <div className="footer-section">
+        {/* <div className="footer-section">
           <h3>Quick Links</h3>
           <ul>
             <li><a href="/home">Home</a></li>
@@ -23,7 +23,7 @@ const Footer = () => {
             <li><a href="/contact">Contact Us</a></li>
             <li><a href="/about">About Us</a></li>
           </ul>
-        </div>
+        </div> */}
 
         {/* Section 3: Contact Information */}
         <div className="footer-section">

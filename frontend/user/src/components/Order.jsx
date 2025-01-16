@@ -51,6 +51,10 @@ const styles = StyleSheet.create({
       flexGrow: 1,
       padding: 8,
       textAlign: 'center',
+      width: '25%', // Allocate a fixed width for each cell, adjust as necessary
+      overflow: 'hidden', // Ensures content does not overflow
+      textOverflow: 'ellipsis', // Adds "..." for overflowing content
+      whiteSpace: 'nowrap', // Prevents text from wrapping
     },
     tableHeader: {
       backgroundColor: '#f3f3f3',
@@ -89,6 +93,7 @@ const styles = StyleSheet.create({
     summaryLabel: {
       flexGrow: 1,
       padding: 5,
+      width:'50%',
       textAlign: 'center',
       fontWeight: 'bold',
     },
@@ -596,7 +601,7 @@ const handleOrderClick = (orderId) => {
                         <div>Total Price: Rs. {list.totalprice}</div>
                         <div>Payment Method: {list.paymentmethod}</div>
                         <div>Payment Status: {list.paymentstatus}</div>
-                        
+                        <div>Refund date:{new Date(list.refundDate?list.refundDate:"").toLocaleDateString()}</div>
                 
                     </div>   
                         )}

@@ -307,7 +307,7 @@ const CartPage = () => {
         );
     
         if (originalTotalPrice < couponItem.minprice) {
-            toast.success(`Minimum cart value for this coupon is Rs.${couponItem.minprice}`);
+            toast.info(`Minimum cart value for this coupon is Rs.${couponItem.minprice}`);
             return;
         }
     

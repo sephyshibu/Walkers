@@ -1172,7 +1172,8 @@ const fetchorder = async (req, res) => {
             isreturned:item.isreturned,
             returnstatus:item.returnstatus,
             refundstatus:item.refundstatus,
-            returnreason:item.returnreason
+            returnreason:item.returnreason,
+            refundDate:item.refundDate
           })),
           totalPrice: order.totalprice,
           orderStatus: order.orderStatus,
@@ -1563,7 +1564,7 @@ const placingorder = async (req, res) => {
       razorpayidorder = razorpayOrder.id;
     }
 
-    // console.log("after razor pay",razorpayOrder.id)
+    console.log("ash on delivery create new order")
     const neworder = new orderdb({
       userId,
       cartId,
@@ -1577,11 +1578,30 @@ const placingorder = async (req, res) => {
       shippingFee,
       totalprice,
     });
-
+    console.log("ash on delivery after create new order")
     
 
     const saveorder = await neworder.save();
+
+    if (paymentmethod === "COD" && paymentstatus === "Pending") {
+      console.log("dccd cash on delivery")
+      const cartdoc = await cartdb.findOne({ _id: cartId, userId });
+      if (cartdoc) {
+        await cartdb.deleteOne({ _id: cartId });
+      } else {
+        console.log(`No cart found for userId: ${userId}`);
+      }
+      return res.status(201).json({
+        success: true,
+        orderId: razorpayidorder,
+        orderDetails: saveorder,
+      });
+  
+    }
+
+
     if (paymentstatus === "Pending") {
+
       return res.status(202).json({
         success: false,
         message: "Payment is pending. Please complete the payment.",
@@ -1590,14 +1610,7 @@ const placingorder = async (req, res) => {
       });
     }
 
-    if (paymentmethod === "COD") {
-      const cartdoc = await cartdb.findOne({ _id: cartId, userId });
-      if (cartdoc) {
-        await cartdb.deleteOne({ _id: cartId });
-      } else {
-        console.log(`No cart found for userId: ${userId}`);
-      }
-    }
+    
 
     return res.status(201).json({
       success: true,
