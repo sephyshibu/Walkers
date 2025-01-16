@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import ReactLoading from 'react-loading'
 import{Page,Text,View,Document,PDFDownloadLink,StyleSheet} from '@react-pdf/renderer'
 
+
 const styles = StyleSheet.create({
     page: {
       padding: 30,
@@ -112,6 +113,7 @@ const styles = StyleSheet.create({
       paymentStatus,
       paymentMethod,
       orderStatus,
+      address
     } = orders;
   
     console.log("order", orders);
@@ -140,6 +142,18 @@ const styles = StyleSheet.create({
             <Text style={styles.text}>
               Delivery Date: {new Date(deliveryDate).toLocaleDateString()}
             </Text>
+          </View>
+
+
+        {/* adddress Details */}
+          <View style={styles.section}>
+            <Text style={styles.heading}>Shipping address</Text>
+            <Text style={styles.text}>Address Name-{address.addressName}</Text>
+            <Text style={styles.text}>Street Address: {address.streetAddress}</Text>
+            <Text style={styles.text}>Pincode: {address.pincode}</Text>
+            <Text style={styles.text}>Phone number: {address.phonenumber}</Text>
+            <Text style={styles.text}>State: {address.state}</Text>
+            
           </View>
   
           {/* Table Header */}

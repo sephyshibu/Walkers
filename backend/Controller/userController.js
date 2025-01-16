@@ -1081,7 +1081,26 @@ const fetchparticularorder = async (req, res) => {
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+    const addressDoc = await addressdb.findOne({
+      userId: order.userId,
+      "address._id": order.addressId, // Assuming order contains `addressId`
+    }, {
+      "address.$": 1, // Fetch only the specific address matching `addressId`
+    }).lean();
 
+    if (!addressDoc || !addressDoc.address || addressDoc.address.length === 0) {
+      return res.status(404).json({ message: "Address not found" });
+    }
+
+    // Extract the address details
+    const selectedAddress = addressDoc.address[0];
+    const addressDetails = {
+      addressName: selectedAddress.addressname,
+      streetAddress: selectedAddress.streetAddress,
+      pincode: selectedAddress.pincode,
+      phonenumber:selectedAddress.phonenumber,
+      state:selectedAddress.state
+    };
     // Remove `reason` from each item in the `items` array
     const filteredItems = order.items.map(({ returnreason, ...rest }) => rest);
 
@@ -1097,8 +1116,9 @@ const fetchparticularorder = async (req, res) => {
       orderId:order._id,
       totalprice:order.totalprice,
       shippingFee:order.shippingFee,
-      tax:order.tax
-
+      tax:order.tax,
+      address: addressDetails,
+      
     };
     const invoiceUrl = `/download/invoice/${orderId}`;
 
