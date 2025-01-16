@@ -2652,7 +2652,32 @@ const retrypayment=async(req,res)=>{
   }
 }
 
+const couponamount=async(req,res)=>{
+  const { couponId } = req.params;
 
+    try {
+        // Fetch the coupon from the database using the coupon ID
+        const coupon = await coupondb.findById(couponId);
+
+        if (!coupon) {
+            return res.status(404).json({ message: "Coupon not found." });
+        }
+
+        // Check if the coupon is valid (e.g., check expiration date, usage limit, etc.)
+        const currentDate = new Date();
+        if (coupon.expirationDate < currentDate) {
+            return res.status(400).json({ message: "Coupon has expired." });
+        }
+
+       console.log("coupon",coupon.couponamount)
+
+        // Return the discount amount
+        res.status(200).json({ couponamount: coupon.couponamount });
+    } catch (error) {
+        console.error("Error fetching coupon details:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+};
 
 module.exports = {
 
@@ -2695,7 +2720,7 @@ module.exports = {
   login,
   verifyotp,
   resendotp,
-  fetchparticularorder,products,
+  fetchparticularorder,products,couponamount,
   googleLogin,verifyretrypayment,
   fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct,preverifypayment
 };

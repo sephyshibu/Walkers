@@ -160,7 +160,7 @@
 
 // export default PaymentMethod
 
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import axiosInstanceuser from '../axios'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -171,6 +171,7 @@ import './PaymentMethod.css'
 
 const PaymentMethod = () => {
     const [selectedmethod, setselectedmethod] = useState('')
+    const [couponAmount, setCouponAmount] = useState(0); // State to hold coupon discount
     const navigate = useNavigate()
     const location = useLocation();
     const { couponId } = location.state || {};
@@ -181,9 +182,35 @@ const PaymentMethod = () => {
     const totalprice = useSelector((state) => state.cart.cart.totalprice)
     const addressId = useSelector((state) => state.defaultAddress.address.address._id)
 
+   
+
+//new code 
+    useEffect(() => {
+        const fetchCouponAmount = async () => {
+            if (couponId) {
+                try {
+                    const response = await axiosInstanceuser.get(`/coupon/${couponId}`);
+                    if (response.status === 200) {
+                        setCouponAmount(response.data.couponamount); // Assuming API returns discountAmount
+                    } else {
+                        toast.warn("Invalid coupon applied.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching coupon details:", error);
+                    toast.error("Failed to apply coupon. Please try again.");
+                }
+            }
+        };
+        fetchCouponAmount();
+    }, [couponId]);
+
+
     const handlePaymentSelect = (method) => {
         setselectedmethod(method)
     }
+    console.log("coupon Id", couponId)
+    console.log("cart totalrice", totalprice)
+
     const handleFailedPayment = async () => {
         try {
             // Call the new API endpoint to update product quantities
@@ -290,6 +317,10 @@ const PaymentMethod = () => {
                     
         }
     }
+    console.log("totla price",totalprice)
+    console.log("coupon price",couponAmount)
+    const effectivePrice = totalprice - couponAmount;
+    console.log("effective",effectivePrice)
 
     return (
         <div className='payemnt-page-container'>
@@ -304,11 +335,19 @@ const PaymentMethod = () => {
                     onClick={() => handlePaymentSelect('RazorPay')}>
                     <h4>RazorPay</h4>
                 </div>
-                <div className={`payement-card ${selectedmethod === 'COD' ? 'selected' : ""} ${totalprice > 1000 ? "disabled" : ""}`}
-                    onClick={() => totalprice <= 1000 && handlePaymentSelect('COD')}>
+                {/* <div className={`payement-card ${selectedmethod === 'COD' ? 'selected' : ""} ${totalprice > 1000 ? "disabled" : ""}`}
+                    onClick={() => totalprice<= 1000 && handlePaymentSelect('COD')}>
                     <h4>Cash on Delivery</h4>
                     {totalprice > 1000 && <span className="disabled-text">Not available for orders above ₹1000</span>}
+                </div> */}
+
+                <div className={`payement-card ${selectedmethod === 'COD' ? 'selected' : ""} ${effectivePrice > 1000 ? "disabled" : ""}`}
+                    onClick={() => effectivePrice <= 1000 && handlePaymentSelect('COD')}>
+                    <h4>Cash on Delivery</h4>
+                    {effectivePrice > 1000 && <span className="disabled-text">Not available for orders above ₹1000</span>}
                 </div>
+
+
             </div>
             <ToastContainer />
             <button className='paymentm' onClick={handlePlaceOrder} disabled={!selectedmethod}>

@@ -308,7 +308,7 @@ const ProductDisplay = () => {
             <p className="product-description">{formdata.description}</p>
             <p
               className={`product-stock ${
-                formdata.availableQuantity ==0
+                formdata.availableQuantity==0
                   ? "Out of Stock"
                   : ""
               }`}

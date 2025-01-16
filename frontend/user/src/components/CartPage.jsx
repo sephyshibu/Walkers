@@ -320,13 +320,14 @@ const CartPage = () => {
     
             if (response.data.success) {
                 const discount = couponItem.couponamount;
-    
+                const discountedTotal = originalTotalPrice - discount;
+                console.log("discount total",discountedTotal)
                 // Update cart state with the discounted price
                 setCart((prevCart) => ({
                     ...prevCart,
                     totalprice: Math.max(0, originalTotalPrice - discount),
                 }));
-    
+             
                 setSelectedCoupon(couponItem);
                 toast.success(`Coupon applied successfully! You saved Rs.${discount}`);
             } else {
