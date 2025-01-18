@@ -366,7 +366,7 @@ const fetchorder = async (req, res) => {
             .sort({ _id: -1 })  // Sort by _id in descending order (newest first)
             .skip(skip)
             .limit(limit);
-
+        console.log("cancelled orders",orders)
         const enrichedOrders = await Promise.all(
             orders.map(async (order) => {
                 let addressname = 'Address not found';
@@ -381,9 +381,10 @@ const fetchorder = async (req, res) => {
                         addressname = addressDoc.address[0].addressname;
                     }
                 }
-
+                const filteredItems = order.items.filter((item) => !item.iscancelled);
                 return {
                     ...order._doc,
+                    items: filteredItems,
                     addressname,
                 };
             })

@@ -13,6 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const CartPage = () => {
     const [cart, setCart] = useState({ items: [], totalprice: 0 });
     const[coupon, setcoupon]=useState([])
+    const [showCoupons, setShowCoupons] = useState(false);
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
     const[usedcoupon,setusedcoupon]=useState([])
@@ -394,7 +395,7 @@ const CartPage = () => {
         )}
 
         </div>
-
+        <div className="order-summary-container">
         {/* Order Summary */}
         <div className="order-summary">
           <h4>Order Summary</h4>
@@ -443,7 +444,14 @@ const CartPage = () => {
 
 
         <div className="coupon-section">
-                    <h3>Available Coupons</h3>
+                    <h3><button
+                        className="dropdown-toggle"
+                        onClick={() => setShowCoupons((prev) => !prev)}
+                        >
+                        {showCoupons ? "Hide Available Coupons" : "Show Available Coupons"}
+                        </button>
+                    </h3>
+                    {showCoupons && (
                     <div className='coupon-list'>
                     {coupon.length > 0 ? (
                         coupon.map((couponItem) => (
@@ -465,6 +473,8 @@ const CartPage = () => {
                         <p>No coupons available</p>
                     )}
                     </div>
+                    )}
+        </div>
         </div>
         
       </div>

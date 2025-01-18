@@ -20,7 +20,8 @@ const CheckOut = () => {
     const location = useLocation();
     const { couponId } = location.state || {};
     console.log("place order", userId)
-    const [defaultaddress, setdefaultaddress]=useState({})
+    const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState(null);
     const[cart,setcart]=useState({items:[], totalprice:0})
     const[error,seterror]=useState('')
     const [couponDiscount, setCouponDiscount] = useState(0);
@@ -30,7 +31,7 @@ const CheckOut = () => {
         const fetchdefaultaddress=async()=>{
             try {
                 setIsLoading(true)
-                const response=await axiosInstanceuser.get(`/fetchdefaultaddress/${userId}`,{
+                const response=await axiosInstanceuser.get(`/fetchaddress/${userId}`,{
                     headers: {
                         'User-Id': userId  // Pass the userId in the headers
                     }})
@@ -40,9 +41,9 @@ const CheckOut = () => {
                     }})
                 console.log('response from fetch default address', response.data.address)
                 console.log("response from fetch cart",responsecart.data)
-                setdefaultaddress(response.data.address)
-                dispatch(defaultaddr(response.data))
-
+                // setaddress(response.data.address)
+                // dispatch(defaultaddr(response.data))
+                setAddresses(response.data.address)
                 setcart(responsecart.data)
                 // dispatch(proceed(responsecart.data))
                 // console.log(defaultaddress)
@@ -78,8 +79,8 @@ const CheckOut = () => {
             fetchdefaultaddress();
         }
         
-    },[userId,dispatch])
-    console.log('this is default ',defaultaddress)
+    },[userId,couponId,navigate])
+    console.log('this is default ',addresses)
     console.log("cart", cart)
     const handleAddress=()=>{
             navigate('/account')
@@ -87,10 +88,18 @@ const CheckOut = () => {
 
     const handleproccedtopayment=(e)=>{
         e.preventDefault()
-        
-        navigate('/checkout/payment',{ state: { couponId } });
-        
-    }
+        if (!selectedAddress) {
+            toast.error('Please select a shipping address.');
+            return;
+          }
+          navigate('/checkout/payment', { state: { couponId } });
+        };
+
+
+    const handleAddressSelection = (address) => {
+        setSelectedAddress(address);
+        dispatch(defaultaddr(address)); // Dispatch the selected address as default
+      };
   return (
     <div className="place-order-page">
         <Navbar/>
@@ -98,18 +107,31 @@ const CheckOut = () => {
         {error && <p className='error-messageplaceorder'>{error}</p>}
     <div className='checkout-container'>
         <div className='shipping-address-section'>
-        {defaultaddress ? ( // Check for null instead of checking `.length`
-                    <div className="address-details">
-                        <p><strong>{defaultaddress.addressname}</strong></p>
-                        <p>{defaultaddress.streetAddress}</p>
-                        <p>{defaultaddress.pincode}</p>
-                        <p>{defaultaddress.state}</p>
-                        <p>{defaultaddress.phonenumber}</p>
-                    </div>
-                ) : (
-                    <p>No default address found. Please add an address.</p>
-                )}
-                <button type='button' className='manageaddress' onClick={handleAddress}>Manage Address</button>
+       <h4>Shipping Addresses</h4>
+          {addresses.length > 0 ? (
+            addresses.map((addr) => (
+              <div key={addr._id} className="address-option">
+                <input
+                  type="radio"
+                  id={addr._id}
+                  name="shippingAddress"
+                  value={addr._id}
+                  checked={selectedAddress?._id === addr._id}
+                  onChange={() => handleAddressSelection(addr)}
+                />
+                <label htmlFor={addr._id}>
+                  <p><strong>{addr.addressname}</strong></p>
+                  <p>{addr.streetAddress}</p>
+                  <p>{addr.pincode}</p>
+                  <p>{addr.state}</p>
+                  <p>{addr.phonenumber}</p>
+                </label>
+              </div>
+            ))
+          ) : (
+            <p>No addresses found. Please add an address.</p>
+          )}
+        <button type='button' className='manageaddress' onClick={handleAddress}>Manage Address</button>
         </div>
         <div className="order-summary-section">
           <h4>Order Summary</h4>

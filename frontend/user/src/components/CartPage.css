@@ -243,6 +243,19 @@ button[type='button']:disabled {
   padding: 5px;
   font-size: 20px;
 }
+.dropdown-toggle {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.dropdown-toggle:hover {
+  background-color: #45a049;
+}
 .coupon-section {
   width: 100%;
   margin-top: 20px;
@@ -257,13 +270,13 @@ button[type='button']:disabled {
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   flex: 1;
-  margin: 0 10px;
+  margin-top: 15px;
   text-align: center;
 }
 .eachcoupon {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align text to the left */
+  align-items: flex-start; 
   justify-content: space-between;
   border: 1px solid #ccc;
   padding: 16px;

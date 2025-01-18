@@ -170,7 +170,8 @@ const styles = StyleSheet.create({
                 <Text style={styles.tableCell}>Title</Text>
                 <Text style={styles.tableCell}>Quantity</Text>
                 <Text style={styles.tableCell}>Price</Text>
-                <Text style={styles.tableCell}>isreturned</Text>
+                <Text style={styles.tableCell}>Is Returned</Text>
+                <Text style={styles.tableCell}>Is Cancelled</Text>
               </View>
             </View>
   
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
                     <Text style={styles.tableCell}>{item.quantity}</Text>
                     <Text style={styles.tableCell}>{item.price}</Text>
                     <Text style={styles.tableCell}>{item.isreturned?"Yes":"No"}</Text>
+                    <Text style={styles.tableCell}>{item.iscancelled?"Yes":"No"}</Text>
                   </View>
                 ))
               ) : (
@@ -236,6 +238,9 @@ const Order = () => {
     const [returnReason, setReturnReason] = useState('');
     const [returnProductId, setReturnProductId] = useState(null);
     const[loading,setloading]=useState(false)
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false); // Track overlay visibility
+
+
     const navigate=useNavigate()
     const fetchOrders = useCallback(async () => {
   
@@ -264,6 +269,7 @@ const Order = () => {
                         productId:item.productId,
                         quantity:item.quantity,
                         isreturned:item.isreturned,
+                        iscancelled:item.iscancelled,
                         returnstatus:item.returnstatus,
                         refundstatus:item.refundstatus,
                         returnreason:item.returnreason,
@@ -319,8 +325,9 @@ const Order = () => {
     // if (!orders || !orders.orderdata) {
     //     return <p>Loading order details...</p>;
     // }
-const openoverlay=(orderid)=>{
+const openoverlay=(orderid,productid)=>{
     setcurrentorderid(orderid)
+    setReturnProductId(productid);
     setShowOverlay(true)
  
 }
@@ -335,7 +342,7 @@ const closeReturnOverlay = () => {
     setReturnOverlay(false);
     setReturnReason('');
 };
-const handleCancelOrder = async (orderId) => {
+const handleCancelOrder = async () => {
         console.log("get reason",reason)
         if (!reason.trim()) {
             setFeedback('Please provide a cancellation reason.');
@@ -344,20 +351,29 @@ const handleCancelOrder = async (orderId) => {
         
 
         try {
-            const response = await axiosInstanceuser.put(`/cancelorder/${orderId}`, {
+            const response = await axiosInstanceuser.put(`/cancelorder/${userId}`, {
                 orderStatus: 'Cancelled',
                 cancellationreason:reason,
-                userId
+                productid: returnProductId,
+                orderid: currentorderid,
+                
             });
             console.log('Order cancelled:', response.data);
             setorder((prevOrders) =>
-                prevOrders.map((order) =>
-                    order.orderId === currentorderid
-                        ? { ...order, orderStatus: 'Cancelled' }
-                        : order
-                )
-            );
-            toast.error("ordercancelled")
+              prevOrders.map((order) =>
+                  order.orderId === currentorderid
+                      ? {
+                            ...order,
+                            items: order.items.map((item) =>
+                                item.productId === returnProductId
+                                    ? { ...item, iscancelled: true }
+                                    : item
+                            ),
+                        }
+                      : order
+              )
+          );
+            toast.success("ordercancelled")
             setFeedback('Your order has been cancelled successfully.');
             // setorder((prevorder)=>prevorder.map((order)=>order.orderId===currentorderid?{...order,orderStatus:"Cancelled"}:order))
              // Update the orders state directly to reflect the cancelled order
@@ -374,6 +390,10 @@ const handleCancelOrder = async (orderId) => {
     const closeOverlay = () => {
         setShowOverlay(false);
         setReason('');
+    };
+    const closedetailsOverlay = () => {
+      setIsOverlayVisible(false); // Hide overlay
+      setSelectedOrder(null); // Clear selected order
     };
 const handlereturn=async()=>{
     // console.log("productid",productid)
@@ -541,6 +561,12 @@ const handleOrderClick = (orderId) => {
     }
   };
 
+const showDetails = (orderId) => {
+    setSelectedOrder(orderId); // Set selected order
+    setIsOverlayVisible(true); // Show overlay
+  };
+
+
     return (
 <div className="order-page">
     <ToastContainer />
@@ -580,12 +606,25 @@ const handleOrderClick = (orderId) => {
                     <div className="order-details">
                     <div className="highlighted-details">
                         <div className="product-title">{list.title}</div>
-                        {/* <div className='productprices'>Product price:Rs.{list.price}</div> */}
+                        <div className='productprices'>Product price:Rs.{list.price}</div>
+                        <div className='productprices'>Product quantiy:{list.quantity}</div>
                         <div className='productprices'>OrderId:{list.orderid}</div>
-                        <span className="order-status">Status: {list.orderStatus}</span>
+                        
+                          
+                        {list.iscancelled ? (
+                            <div className="status-message">This product is cancelled by user.</div>
+                        ) : list.isreturned ? (
+                            <div className="status-message">This product is returned.</div>
+                        ) : (
+                            <span className="order-status">Status: {list.orderStatus}</span>
+                        )}
                         {pdfLinks[list.orderid] && (
                                         <div className='pdf-link'>{pdfLinks[list.orderid]}</div>
                                     )}
+
+                        <button className='show-details-button' onClick={() => showDetails(list.orderid)}>
+                                    {selectedOrder === list.orderid && isOverlayVisible ? "Close Details" : "Show Details"}
+                        </button>
                     </div>
                     
                     {/* <div className="order-header" >
@@ -593,7 +632,8 @@ const handleOrderClick = (orderId) => {
                         </div>  */}
                         {/* <div>Product price:{list.price}</div>
                         <div>Product quantity:{list.quantity}</div> */}
-                    {selectedOrder===list.orderid && (
+                    
+                    {selectedOrder===list.orderid && isOverlayVisible && (
                     <div className="other-details"> 
                        
                         <div>Order Date: {new Date(list.orderdate).toLocaleDateString()}</div>
@@ -619,14 +659,14 @@ const handleOrderClick = (orderId) => {
                                     <button
                                         onClick={() => handleDownloadPDF(list.orderid)}
                                         className="download-button"
-                                        disabled={list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.orderStatus==="Cancelled"}
+                                        disabled={list.isreturned===true||list.iscancelled===true||list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.orderStatus==="Cancelled"}
                                     >
-                                        Generate PDF
+                                        Generate Invoice
                                     </button>
                                     {/* Display the download link for the specific order */}
                                     
                                  <button
-                                    disabled={list.isreturned || list.orderStatus!='Delivered'}
+                                    disabled={list.iscancelled==true||list.isreturned || list.orderStatus!='Delivered'}
                                     onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
                                     className="return-button"
                                 >
@@ -635,11 +675,11 @@ const handleOrderClick = (orderId) => {
                                 </button> 
                              
                                  <button 
-                                disabled={list.orderStatus === 'Delivered' || list.orderStatus === 'Cancelled' || list.ordeStatus==='Shipped'}
-                                onClick={() => openoverlay(list.orderid)}
+                                disabled={list.orderStatus==="Cancelled"||list.iscancelled||list.orderStatus==="Delivered"||list.orderStatus=="Shipped"}
+                                onClick={() => openoverlay(list.orderid,list.productId._id)} //changed now
                                 className="action-button"
                             >
-                                Cancel
+                                {list.iscancelled?"Cancelled":"Cancel"}
                             </button> 
                             
 
@@ -667,7 +707,7 @@ const handleOrderClick = (orderId) => {
                             className="reason-textarea"
                         ></textarea>
                         <div className="overlay-buttons">
-                            <button onClick={()=>handleCancelOrder(currentorderid)} className="action-button">
+                            <button onClick={handleCancelOrder} className="action-button">
                                 Submit
                             </button>
                             <button onClick={closeOverlay} className="action-button secondary">

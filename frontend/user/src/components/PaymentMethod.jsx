@@ -180,7 +180,7 @@ const PaymentMethod = () => {
     const cartId = useSelector((state) => state.cart.cart._id)
     const cartitems = useSelector((state) => state.cart.cart.items)
     const totalprice = useSelector((state) => state.cart.cart.totalprice)
-    const addressId = useSelector((state) => state.defaultAddress.address.address._id)
+    const addressId = useSelector((state) => state.defaultAddress.address._id)
 
    
 

@@ -875,23 +875,33 @@ const updateaddress = async (req, res) => {
   }
 };
 const deleteorder = async (req, res) => {
-  const { orderid } = req.params;
-  const { reason,userId } = req.body;
+  const { userId } = req.params;
+  const { productid, orderid, reason } = req.body;
+
   console.log("backend reason", reason);
   console.log("backend userId",userId)
+  console.log("backend product",productid)
+  console.log("backend order",orderid)
   try {
-    const orderdoc = await orderdb.findById(orderid);
-    console.log("delete order", orderdoc);
+    const orderdoc = await orderdb.findOne({ _id: orderid, userId });
+    console.log("rewr",orderdoc)
 
     if (!orderdoc) {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    orderdoc.orderStatus = "Cancelled";
-    orderdoc.cancelationreason = reason;
+    const product = orderdoc.items.find(item => item.productId.toString() === productid);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found in order" });
+  }
 
+    product.iscancelled=true
+    // orderdoc.orderStatus = "Cancelled"
+    orderdoc.cancelationreason = reason;
+    const refund=product.price*product.quantity
     if(orderdoc.paymentstatus==="Success")
     {
+      
       const userwallet=await wallet.findOne({userId:orderdoc.userId})
       console.log("wallet",userwallet)
       if(!userwallet)
@@ -901,7 +911,7 @@ const deleteorder = async (req, res) => {
   
       const transaction = {
           transaction_id: uuidv4(), // Generate a unique transaction ID
-          amount: orderdoc.totalprice-orderdoc.shippingFee,
+          amount: refund-orderdoc.tax,
           transactionmethod: "refundcancel",
         };
       console.log("transaction", transaction)
@@ -915,11 +925,11 @@ const deleteorder = async (req, res) => {
    
     await orderdoc.save();
 
-    for (const item of orderdoc.items) {
-      await Productdb.findByIdAndUpdate(item.productId, {
-        $inc: { availableQuantity: item.quantity },
-      });
-    }
+    
+    await Productdb.findByIdAndUpdate(productid, {
+        $inc: { availableQuantity: product.quantity },
+      })
+    
 
     res.status(200).json({ message: "Order deleted successfully" });
   } catch (error) {
@@ -1170,6 +1180,7 @@ const fetchorder = async (req, res) => {
             quantity: item.quantity,
             price: item.price,
             isreturned:item.isreturned,
+            iscancelled:item.iscancelled,
             returnstatus:item.returnstatus,
             refundstatus:item.refundstatus,
             returnreason:item.returnreason,
