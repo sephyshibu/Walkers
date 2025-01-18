@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "walkersuser", required: true },
     cartId: { type: mongoose.Schema.Types.ObjectId, ref: "Cart", required: true },
     addressId: { type: mongoose.Schema.Types.ObjectId, ref: "address", required: true },
-    paymentmethod:{ type: String, enum:['Card', 'RazorPay', 'COD'], required:true},
+    paymentmethod:{ type: String, enum:['Wallet', 'RazorPay', 'COD'], required:true},
     paymentstatus:{ type: String, enum:['Pending', 'Success', 'Failed'], required:true},
     orderStatus: {type: String,enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled','Pending'],default: 'Processing',},
     cancelationreason:{type:String, default:null},

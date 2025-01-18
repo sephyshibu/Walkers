@@ -496,7 +496,7 @@ try {
             key:"rzp_test_qp0MD1b9oAJB0i",
             amount:totalprice,
             currency:"INR",
-            name: "Your Company Name",
+            name: "Solar Walkers",
             description: "Order Payment",
             order_id: razorpayid,
             handler:async(response)=>{

@@ -235,6 +235,40 @@ const PaymentMethod = () => {
             return
         }
 
+        if(selectedmethod==="Wallet"){
+            console.log("wallet method")
+            try {
+                const response=await axiosInstanceuser.post('/placeorderbywallet',{
+                    userId,
+                    cartId,
+                    addressId,
+                    paymentmethod: selectedmethod,
+                    
+                    items: cartitems,
+                    totalprice,
+                    couponId
+                    })
+
+                console.log("resposne from payament wallet",response)
+                toast.success("payament success through wallet")
+                navigate('/thankyoupage')
+                return
+
+            } catch (error) {
+                console.error('Failed to place order:', error);
+                if (error.response && error.response.data.message) {
+                    toast.error(error.response.data.message);
+                } 
+                
+               
+                else {
+                    toast.error('Error placing the order. Please try again.');
+                                    }
+                        
+            }
+        }
+        console.log("after walalet if it is going down")
+
         try {
             const response = await axiosInstanceuser.post('/placeorder', {
                 userId,
@@ -327,9 +361,9 @@ const PaymentMethod = () => {
             <Navbar />
             <h2 className='paymentmethodtilte'>Payment Method</h2>
             <div className='payment-method'>
-                <div className={`payement-card ${selectedmethod === 'Card' ? 'selected' : ""}`}
-                    onClick={() => handlePaymentSelect('Card')}>
-                    <h4>Credit/Debit Cards</h4>
+                <div className={`payement-card ${selectedmethod === 'Wallet' ? 'selected' : ""}`}
+                    onClick={() => handlePaymentSelect('Wallet')}>
+                    <h4>Wallet</h4>
                 </div>
                 <div className={`payement-card ${selectedmethod === 'RazorPay' ? 'selected' : ""}`}
                     onClick={() => handlePaymentSelect('RazorPay')}>

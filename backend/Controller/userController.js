@@ -1505,6 +1505,91 @@ const addaddress = async (req, res) => {
   }
 };
 
+const placeorderbywallet=async(req,res)=>{
+  try {
+    let {
+      userId,
+      cartId,
+      addressId,
+      paymentmethod,
+    
+      items,
+      totalprice,
+      couponId
+    } = req.body;
+
+    let razorpayidorder = null;
+    console.log("request body in wallet", req.body)
+
+    const walletdoc=await wallet.findOne({userId})
+    console.log("wallet doc",walletdoc)
+
+    if(!walletdoc){
+      return res.status(404).json({message:"wallletr dopesnot found"})
+    }
+    console.log("wallet before if")
+
+ 
+      if (totalprice <= walletdoc.balance) {
+      console.log("wallet afeter if")
+        const transaction={
+          transaction_id:uuidv4(),
+          amount:totalprice,
+          transactionmethod:"paymentmadebywallet",
+        }
+        console.log("transaction", transaction)
+      walletdoc.transactions.push(transaction);
+      walletdoc.balance-=transaction.amount
+
+      await walletdoc.save()
+      console.log("wallet baalance reduced")
+
+      const neworder=new orderdb({
+        userId,
+      cartId,
+      addressId,
+      paymentmethod,
+      paymentstatus: "Success",
+      orderStatus: "Processing",
+      items,
+     
+      razorpay_order_id: razorpayidorder,
+      
+      totalprice,
+      })
+      console.log("wallet after create new order")
+      const saveorder = await neworder.save();
+
+
+      
+      const cartdoc = await cartdb.findOne({ _id: cartId, userId });
+      if (cartdoc) {
+          await cartdb.deleteOne({ _id: cartId });
+      } else {
+          console.log(`No cart found for userId: ${userId}`);
+      }
+      return res.status(201).json({
+          success: true,
+          orderId: razorpayidorder,
+          orderDetails: saveorder,
+        });
+    
+      
+
+    }else{
+      return res.status(400).json({message:"Wallet doesnot have sufficient balance"})
+    }
+  
+  } catch (error) {
+
+    console.error("Error placing order:", error);
+    return res.status(500).json({ message: "Failed to place order" });
+  }
+}
+
+
+
+
 const placingorder = async (req, res) => {
   try {
     let {
@@ -1575,7 +1660,7 @@ const placingorder = async (req, res) => {
       razorpayidorder = razorpayOrder.id;
     }
 
-    console.log("ash on delivery create new order")
+    console.log("cash on delivery create new order")
     const neworder = new orderdb({
       userId,
       cartId,
@@ -2730,6 +2815,7 @@ module.exports = {
   signup,
   login,
   verifyotp,
+  placeorderbywallet,
   resendotp,
   fetchparticularorder,products,couponamount,
   googleLogin,verifyretrypayment,

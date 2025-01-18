@@ -14,6 +14,11 @@ const Wallet = () => {
   const [loading, setLoading] = useState(true)
   const [showTransactions, setShowTransactions] = useState(false)
  const navigate=useNavigate()
+
+ const[formdata,setformdata]=useState({
+        addmoneynumber:""
+     })
+
   useEffect(() => {
     const fetchWallet = async () => {
       try {
@@ -45,7 +50,15 @@ const Wallet = () => {
   }
 
   const formatTransactionMethod = (method) => {
-    return method === 'refundreturn' ? 'Refund (Return)' : 'Refund (Cancel)'
+    if(method==='refundreturn'){
+      return "Refund (return)"
+    }
+    else if(method==='refundcancel'){
+       return "Refund (cancel)"
+    }
+    else{
+      return 'Payment through wallet'
+    }
   }
 
   if (loading) {
@@ -55,6 +68,29 @@ const Wallet = () => {
   if (error) {
     return <div className="wallet-error">{error}</div>
   }
+  const handleChange=(e)=>{
+    setformdata({
+        ...formdata,
+        [e.target.name]:e.target.value
+    })
+}
+
+  const handleAddMoney=async(addmoneynumber)=>{
+    console.log("added money",addmoneynumber)
+
+    
+
+
+
+
+
+
+
+  }
+
+
+
+
 
   return (
     <div className="wallet-container">
@@ -62,10 +98,16 @@ const Wallet = () => {
   <h2 className="wallet-title">Your Wallet</h2>
   {wallet && (
     <>
+    <div className='wallet section'>
       <div className="wallet-balance">
         <h3>Current Balance</h3>
         <p className="balance-amount">Rs. {wallet.balance.toFixed(2)}</p>
       </div>
+      <div className='wallet-addmoney'>
+        <input type='number' className='addmoneynumber'placeholder='enter the amount' name='addmoneynumber' value={formdata.addmoneynumber} onChange={handleChange}/>
+        <button type='button' onClick={()=>handleAddMoney(addmoneynumber)}>Add Money</button>
+      </div>
+    </div> 
 
       <div className="wallet-transactions">
         <h3>Transaction History</h3>
@@ -87,10 +129,10 @@ const Wallet = () => {
                   </td>
                   <td
                     className={`transaction-amount ${
-                      transaction.amount >= 0 ? 'positive' : 'negative'
+                      transaction.transactionmethod === "paymentmadebywallet" ? 'negative' : 'positive'
                     }`}
                   >
-                    {transaction.amount >= 0 ? '+' : '-'}Rs. {Math.abs(transaction.amount).toFixed(2)}
+                    {transaction.transactionmethod === "paymentmadebywallet" ? '-' : '+'}Rs. {Math.abs(transaction.amount).toFixed(2)}
                   </td>
                 </tr>
               ))}
