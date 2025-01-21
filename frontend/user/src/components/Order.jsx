@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
                 <Text style={styles.tableCell}>Title</Text>
                 <Text style={styles.tableCell}>Quantity</Text>
                 <Text style={styles.tableCell}>Price</Text>
-                <Text style={styles.tableCell}>Is Returned</Text>
-                <Text style={styles.tableCell}>Is Cancelled</Text>
+                <Text style={styles.tableCell}>Returned</Text>
+                <Text style={styles.tableCell}>Cancelled</Text>
               </View>
             </View>
   

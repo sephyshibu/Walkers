@@ -260,7 +260,8 @@ button[type='button']:disabled {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px 20px;
+  
+  padding: 10px 70px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;

@@ -6,6 +6,7 @@ import{ToastContainer, toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import { persistor } from '../app/store';
 import { useNavigate } from 'react-router';
+import { current } from '@reduxjs/toolkit'
 
 const Wallet = () => {
   const userId = useSelector((state) => state.user.user._id)
@@ -24,8 +25,11 @@ const Wallet = () => {
       try {
         const response = await axiosInstanceuser.get(`fetchwallet/${userId}`)
         console.log("wallet", response.data.walletdoc)
-        setWallet(response.data.walletdoc[0])
+        const walletData = response.data.walletdoc[0];
+        
+        setWallet(response.data.walletdoc[0]);
         setLoading(false)
+      
       } catch (error) {
         if (error.response?.status === 403 && error.response?.data?.action === "logout") {
           toast.error("Your account is inactive. Logging out.")
@@ -41,8 +45,9 @@ const Wallet = () => {
 
     if (userId) {
       fetchWallet()
+      
     }
-  }, [userId])
+  }, [userId,formdata])
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -55,6 +60,9 @@ const Wallet = () => {
     }
     else if(method==='refundcancel'){
        return "Refund (cancel)"
+    }
+    else if(method==="addmoney"){
+      return "Add Money"
     }
     else{
       return 'Payment through wallet'
@@ -75,20 +83,77 @@ const Wallet = () => {
     })
 }
 
-  const handleAddMoney=async(addmoneynumber)=>{
+const handleAddMoney=async(addmoneynumber)=>{
     console.log("added money",addmoneynumber)
 
+    //i want to create an order id for razorpay
+try{
+    const response=await axiosInstanceuser.post('/createrazorpay',{
+      amount:addmoneynumber*100,
+      currency:'INR'
+    })
+
+    console.log("response from razorpay wallet",response.data)
+
+    const{id:order_id}=response.data
     
+    const options = {
+      key: "rzp_test_qp0MD1b9oAJB0i", // Replace with your Razorpay key
+      amount: addmoneynumber, // Convert to paisa
+      currency: "INR",
+      name: "Solar Walkers",
+      description: "Add Money to Wallet",
+      order_id: order_id, // Order ID from your server
+      handler: async (response) => {
+        try {
+          // Verify payment and update wallet
+          const verificationResponse = await axiosInstanceuser.post(
+            "/verify",
+            {
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_signature: response.razorpay_signature,
+              addmoneynumber,userId
+            }
+          );
 
+          if (verificationResponse.data.success) {
+            toast.success("Money added to wallet successfully!");
+            setWallet((prev) => ({
+              ...prev,
+              balance: Number(prev.balance) + Number(addmoneynumber),
+            }));
 
+            setformdata((prev) => ({
+              ...prev,
+              addmoneynumber: "",
+            }));
 
+          } else {
+            toast.error("Payment verification failed. Please try again.");
+          }
+        } catch (err) {
+          console.error("Error verifying payment:", err);
+          toast.error("Payment verification failed. Please try again.");
+        }
+      },
+      prefill: {
+        name: "Your Name",
+        email: "your-email@example.com",
+        contact: "1234567890",
+      },
+      theme: {
+        color: "#F37254",
+      },
+    };
 
-
-
-
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  } catch (err) {
+    console.error("Error creating Razorpay order:", err);
+    toast.error("Failed to initiate payment. Please try again.");
   }
-
-
+};
 
 
 
@@ -105,7 +170,7 @@ const Wallet = () => {
       </div>
       <div className='wallet-addmoney'>
         <input type='number' className='addmoneynumber'placeholder='enter the amount' name='addmoneynumber' value={formdata.addmoneynumber} onChange={handleChange}/>
-        <button type='button' onClick={()=>handleAddMoney(addmoneynumber)}>Add Money</button>
+        <button className="addmoneybutton" type='button' onClick={()=>handleAddMoney(formdata.addmoneynumber)}>Add Money</button>
       </div>
     </div> 
 
@@ -121,7 +186,7 @@ const Wallet = () => {
               </tr>
             </thead>
             <tbody>
-              {wallet.transactions.reverse().map((transaction) => (
+              {wallet.transactions.slice().reverse().map((transaction) => (
                 <tr key={transaction.transaction_id} className="transaction-item">
                   <td className="transaction-date">{formatDate(transaction.createdAt)}</td>
                   <td className="transaction-method">

@@ -1587,7 +1587,25 @@ const placeorderbywallet=async(req,res)=>{
   }
 }
 
+const createrazorpay=async(req,res)=>{
+    try {
+      const{amount,currency}=req.body
 
+      const options={
+        amount:amount,
+        currency:currency,
+        receipt: `receipt_${Date.now()}`,
+      
+      }
+
+      const order=await razorpayInstance.orders.create(options)
+      console.log("wallet add money", order)
+      res.status(200).json(order)
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      res.status(500).json({ error: "Failed to create Razorpay order" });
+    }
+}
 
 
 const placingorder = async (req, res) => {
@@ -1762,6 +1780,45 @@ const preverifypayment=async(req,res)=>{
     return res.status(500).json({ success: false, message: "Pre-verification failed", error: error.message });
   }
 }
+
+const verifypaymentwallet=async(req,res)=>{
+  const{userId,razorpay_payment_id,razorpay_order_id,razorpay_signature,addmoneynumber}=req.body
+  console.log("req body wallet", req.body)
+  const body = razorpay_order_id + "|" + razorpay_payment_id;
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(body.toString())
+      .digest("hex");
+    console.log("expected signature", expectedSignature);
+    if (expectedSignature === razorpay_signature) {
+      const transaction={
+        transaction_id:uuidv4(),
+        amount:addmoneynumber,
+        transactionmethod:"addmoney",
+      }
+      console.log("transaction", transaction)
+      const walletdoc=await wallet.findOne({userId})
+    console.log("wallet doc",walletdoc)
+
+    if(!walletdoc){
+      return res.status(404).json({message:"wallletr dopesnot found"})
+    }
+
+    walletdoc.transactions.push(transaction);
+    walletdoc.balance+=Number(transaction.amount)
+
+    await walletdoc.save()
+
+
+      res.status(200).json({ success: true });
+    } else {
+      res.status(400).json({ success: false, error: "Payment verification failed" });
+    }
+}
+
+
+
+
 const verifyretrypayment=async(req,res)=>{
   console.log("dfs")
   try {
@@ -2814,10 +2871,10 @@ module.exports = {
   getProducts,
   signup,
   login,
-  verifyotp,
+  verifyotp,createrazorpay,
   placeorderbywallet,
   resendotp,
-  fetchparticularorder,products,couponamount,
+  fetchparticularorder,products,couponamount,verifypaymentwallet,
   googleLogin,verifyretrypayment,
   fetchcoupon, coupondetails,sortoptionorders,retryupdateproduct,preverifypayment
 };

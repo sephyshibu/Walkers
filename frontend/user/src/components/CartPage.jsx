@@ -3,6 +3,7 @@ import axiosInstanceuser from '../axios'
 import './CartPage.css'
 import { useSelector } from 'react-redux'
 import Navbar from './Navbar'
+import Footer from "./Footer";
 import{cartitems} from '../features/CartSlice'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -359,7 +360,7 @@ const CartPage = () => {
       };
       
   return (
-  
+  <>
     <div className="cart-page">
           <Navbar/>
           <ToastContainer/>
@@ -478,7 +479,10 @@ const CartPage = () => {
         </div>
         
       </div>
+      
     </div>
+    <Footer/>
+    </>
   )
 }
 

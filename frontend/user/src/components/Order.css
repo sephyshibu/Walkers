@@ -249,8 +249,8 @@
     font-weight: bold;
     cursor: pointer;
     position: absolute;
-    top: 10px; /* Adjust as per your layout */
-    right: 10px; /* Adjust as per your layout */
+    top: 350px; /* Adjust as per your layout */
+    right: 20px; /* Adjust as per your layout */
     padding: 0;
     line-height: 1;
   }
