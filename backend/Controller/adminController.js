@@ -359,14 +359,25 @@ const fetchorder = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const totalOrders = await Orderdb.countDocuments();
+        const totalOrders = await Orderdb.countDocuments({
+          $or: [
+              { paymentMethod: { $ne: "RazorPay" } },
+              { paymentStatus: { $ne: "Pending" } }
+          ]
+      });
 
-        const orders = await Orderdb.find()
-            .populate('userId', 'username email')
-            .sort({ _id: -1 })  // Sort by _id in descending order (newest first)
-            .skip(skip)
-            .limit(limit);
-        console.log("cancelled orders",orders)
+      const orders = await Orderdb.find({
+          $or: [
+              { paymentmethod: { $ne: "RazorPay" } },
+              { paymentstatus: { $ne: "Pending" } }
+          ]
+      })
+          .populate('userId', 'username email')
+          .sort({ _id: -1 }) // Sort by _id in descending order (newest first)
+          .skip(skip)
+          .limit(limit); 
+
+    
         const enrichedOrders = await Promise.all(
             orders.map(async (order) => {
                 let addressname = 'Address not found';

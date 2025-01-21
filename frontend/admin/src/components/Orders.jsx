@@ -152,11 +152,11 @@ const Orders = () => {
                 >
                     Next
                 </button>
-                <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
+                {/* <select value={itemsPerPage} onChange={handleItemsPerPageChange}>
                     <option value="5">5 per page</option>
                     <option value="10">10 per page</option>
                     <option value="15">15 per page</option>
-                </select>
+                </select> */}
             </div>
             </div>
             </>

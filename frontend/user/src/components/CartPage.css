@@ -15,17 +15,29 @@
 
 .cart-container {  
   display: flex;
-  flex-wrap: wrap; /* Allows wrapping of sections if needed */
-  gap: 30px;
+  justify-content: space-between;
+  align-items: flex-start; /* Align items to the top */
+  gap: 20px; 
+ 
 }
 
 .cart-items {
   flex: 2;
   /* background-color: #f9f9f9; */
   padding: 20px;
+  max-width: 60%;
   /* border-radius: 8px; */
   /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
+.order-summary-container {
+  flex: 1; /* Takes up less space */
+  max-width: 35%; /* Optional: Limit the width of the order summary */
+  background-color: #f9f9f9; /* Optional: Add a background color for distinction */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for emphasis */
+}
+
 .cart-item {
   background-color: #fff;
   padding: 15px;
@@ -89,6 +101,7 @@
   border-radius: 50%;
   padding: 5px;
 }
+
 
 .order-summary {
   flex: 1;
@@ -272,6 +285,11 @@ button[type='button']:disabled {
   flex: 1;
   margin-top: 15px;
   text-align: center;
+}
+.coupon-section{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
 }
 .eachcoupon {
   display: flex;

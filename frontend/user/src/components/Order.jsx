@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     );
   };
 
-const Order = () => {
+  const Order = () => { 
     const userId=useSelector((state)=>state.user.user._id)
     const[reason,setReason]=useState('')
     const [sortoptions,setsortoptions]=useState('')
@@ -232,6 +232,7 @@ const Order = () => {
     const[error,seterror]=useState('')
     const[currentorderid,setcurrentorderid]=useState(null)
     const[filter,setfilter]=useState([])
+    
     const [showOverlay, setShowOverlay] = useState(false); // Overlay state
     const [feedback, setFeedback] = useState(''); // Feedback message
     const [returnOverlay, setReturnOverlay] = useState(false);
@@ -251,36 +252,36 @@ const Order = () => {
                 setorder(response.data.orders.reverse()); // Update state with orders array
            
 
-                const combinedItems=response.data.orders.flatMap((order)=>(
+                // const combinedItems=response.data.orders.flatMap((order)=>(
                     
-                    order.items.map((item)=>({
-                        ...item,
-                        cartId:order.cartId,
-                        addressId:order.addressId,
-                        orderid:order.orderId, 
-                        userId:order.userId,
-                        orderStatus:order.orderStatus,
-                        addressname:order.addressname,
-                        paymentmethod:order.paymentMethod, 
-                        paymentstatus:order.paymentStatus,
-                        totalprice:order.totalPrice,
-                        orderdate:order.orderDate, 
-                        deliverydate:order.deliveryDate,
-                        productId:item.productId,
-                        quantity:item.quantity,
-                        isreturned:item.isreturned,
-                        iscancelled:item.iscancelled,
-                        returnstatus:item.returnstatus,
-                        refundstatus:item.refundstatus,
-                        returnreason:item.returnreason,
-                        razorpay_order_id:order.razorpay_order_id,
-                    }))
+                //     order.items.map((item)=>({
+                //         ...item,
+                //         cartId:order.cartId,
+                //         addressId:order.addressId,
+                //         orderid:order.orderId, 
+                //         userId:order.userId,
+                //         orderStatus:order.orderStatus,
+                //         addressname:order.addressname,
+                //         paymentmethod:order.paymentMethod, 
+                //         paymentstatus:order.paymentStatus,
+                //         totalprice:order.totalPrice,
+                //         orderdate:order.orderDate, 
+                //         deliverydate:order.deliveryDate,
+                //         productId:item.productId,
+                //         quantity:item.quantity,
+                //         isreturned:item.isreturned,
+                //         iscancelled:item.iscancelled,
+                //         returnstatus:item.returnstatus,
+                //         refundstatus:item.refundstatus,
+                //         returnreason:item.returnreason,
+                //         razorpay_order_id:order.razorpay_order_id,
+                //     }))
                     
-                ))
-                console.log("orderID",orders.orderid)
+                // ))
+                // console.log("orderID",orders.orderid)
                
-                 console.log("Combined Orders",combinedItems)
-                 setorder(combinedItems)
+                //  console.log("Combined Orders",combinedItems)
+                //  setorder(combinedItems)
 
             }  catch (error) {
                     if (error.response?.status === 403 && error.response?.data?.action === "logout") {
@@ -305,26 +306,7 @@ const Order = () => {
     }, [userId, fetchOrders]);
     
 
-// useEffect(()=>{
-//     let filtered=[...orders]
 
-//     if(sortoptions==='Active'){
-//         filtered=filtered.filter((order=>order.orderStatus=='Processing' || order.orderStatus=='Shipped' ))
-//     }
-//     else if(sortoptions==='Cancelled'){
-//         filtered=filtered.filter((order=>order.orderStatus==='Cancelled'))
-//     }
-//     else if(sortoptions==='Delivered')
-//     {
-//         filtered=filtered.filter((order=>order.orderStatus==='Delivered'))
-//     }
-    
-//     setfilter(filtered)
-// },[sortoptions,orders])
-
-    // if (!orders || !orders.orderdata) {
-    //     return <p>Loading order details...</p>;
-    // }
 const openoverlay=(orderid,productid)=>{
     setcurrentorderid(orderid)
     setReturnProductId(productid);
@@ -474,13 +456,7 @@ const handleRetryPayment=async(orderid,razorpayid,totalprice,cartId)=>{
     console.log("reqbody",orderid,razorpayid,totalprice,cartId)
     console.log("userId",userId)
 try {
-    // const response=await axiosInstanceuser.post('/retrypayment',{orderid,razorpayid})
-    // if (response.data.success) {
-    //     toast.success('Payment retried successfully!');
-    //     navigate('/thankyoupage');
-    // } else {
-    //     toast.error('Retry payment failed. Please try again.');
-    // }
+    
     const preVerifyResponse = await axiosInstanceuser.post('/preverifypayment', {
       cartId,
       userId,
@@ -573,17 +549,7 @@ const showDetails = (orderId) => {
  
         <h1 className='ordertitle'>Your Orders</h1>
         {error && <div className="error-messages">{error}</div>}
-        {/* <div className="filters">
-        <label>
-            <select value={sortoptions} onChange={(e) => setsortoptions(e.target.value)}>
-                <option value="">Select Status</option>
-                <option value="Active">Active</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Delivered">Delivered</option>
-            
-            </select>
-        </label>
-    </div> */}
+        
     {loading? (
             <div
                 style={{
@@ -597,104 +563,114 @@ const showDetails = (orderId) => {
             </div>
                                         
     ):(
-    <div className="orders-list">
-        {orders.length > 0 ? (
-            orders.map((list) => (
-                <div key={list.orderid} className="order-card" onClick={()=>handleOrderClick(list.orderid)}>
-                <div  className='order-content'>
-                    
-                    <div className="order-details">
-                    <div className="highlighted-details">
-                        <div className="product-title">{list.title}</div>
-                        <div className='productprices'>Product price:Rs.{list.price}</div>
-                        <div className='productprices'>Product quantiy:{list.quantity}</div>
-                        <div className='productprices'>OrderId:{list.orderid}</div>
-                        
-                          
-                        {list.iscancelled ? (
-                            <div className="status-message">This product is cancelled by user.</div>
-                        ) : list.isreturned ? (
-                            <div className="status-message">This product is returned.</div>
-                        ) : (
-                            <span className="order-status">Status: {list.orderStatus}</span>
-                        )}
-                        {pdfLinks[list.orderid] && (
-                                        <div className='pdf-link'>{pdfLinks[list.orderid]}</div>
-                                    )}
 
-                        <button className='show-details-button' onClick={() => showDetails(list.orderid)}>
-                                    {selectedOrder === list.orderid && isOverlayVisible ? "Close Details" : "Show Details"}
-                        </button>
-                    </div>
-                    
-                    {/* <div className="order-header" >
-                    
-                        </div>  */}
-                        {/* <div>Product price:{list.price}</div>
-                        <div>Product quantity:{list.quantity}</div> */}
-                    
-                    {selectedOrder===list.orderid && isOverlayVisible && (
-                    <div className="other-details"> 
-                       
-                        <div>Order Date: {new Date(list.orderdate).toLocaleDateString()}</div>
-                        <div className="delivery-date">Delivery Date: {new Date(list.deliverydate).toLocaleDateString()}</div>
-                        <div>Total Price: Rs. {list.totalprice}</div>
-                        <div>Payment Method: {list.paymentmethod}</div>
-                        <div>Payment Status: {list.paymentstatus}</div>
-                        <div>Refund date:{new Date(list.refundDate?list.refundDate:"").toLocaleDateString()}</div>
+      <div className="orders-list">
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <div key={order.orderId} className="order-card" onClick={() => setSelectedOrder(order.orderId)}>
+                <div className="order-contents">
+
                 
-                    </div>   
-                        )}
-                    </div>
-                </div>
-                   
-                                    
-                        <div className="order-actions">
-                                
-                                {list.paymentstatus==="Pending" && list.paymentmethod==="RazorPay" &&(
-                                <button disabled={list.orderStatus==="Cancelled"} className='retry-button' onClick={()=>handleRetryPayment(list.orderid,list.razorpay_order_id,list.totalprice,list.cartId)}>
-                                    Retry Payment
-                                </button>
-                                    )}
-                                    <button
-                                        onClick={() => handleDownloadPDF(list.orderid)}
-                                        className="download-button"
-                                        disabled={list.isreturned===true||list.iscancelled===true||list.orderStatus==='Processing' || list.orderStatus==="Shipped"|| list.orderStatus==="Cancelled"}
-                                    >
-                                        Generate Invoice
-                                    </button>
-                                    {/* Display the download link for the specific order */}
-                                    
-                                 <button
-                                    disabled={list.iscancelled==true||list.isreturned || list.orderStatus!='Delivered'}
-                                    onClick={() => openReturnOverlay(list.orderid, list.productId._id)}
+                      <p>Order ID: {order.orderId}</p>
+                      <p>Order date: {order.orderDate}</p>
+                      <p>Delivery date: {order.deliveryDate}</p>
+                      <p>Total Price: {order.totalPrice}</p>
+                      <p>Payment Method: {order.paymentMethod}</p>
+                      <p>Payment Status: {order.paymentStatus}</p>
+                 
+                  <div className="order-items-preview">
+                    <p className='item-head'>Items:</p>
+                    {order.items.map((item) => (
+                      <p className="itemtitle"key={item.productId}>{item.title}</p>
+                    ))}
+                  </div>
+                  
+                  
+                  {selectedOrder === order.orderId && (
+                    <div className="order-items">
+                     <button
+                      className="closes-button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the parent `onClick`
+                        setSelectedOrder(null);
+                      }}
+                    >
+                      ✖
+                    </button>
+                    
+                      {order.items.map((item) => (
+                        <div key={item.productId} className="order-item">
+                          <p className='product-titles'>Product: {item.title}</p>
+                          <p className='productprices'>Price: {item.price}</p>
+                          <p className='productprices'>Quantity: {item.quantity}</p>
+                          {item.iscancelled ? (
+                          <div className="status-message">This product is cancelled by user.</div>
+                        ) : item.isreturned ? (
+                          <div className="status-message">This product is returned.</div>
+                        ) : (order.paymentMethod !== "RazorPay" || order.paymentStatus !== "Pending") ? (
+                          <span className="order-status">Status: {order.orderStatus}</span>
+                        ) : null}
+                    <div className='orderactions'>
+                          <button 
+                                disabled={order.orderStatus==="Cancelled"||item.iscancelled||order.orderStatus==="Delivered"||order.orderStatus=="Shipped"}
+                                onClick={() => openoverlay(order.orderId,item.productId._id)} //changed now
+                                className="action-button"
+                            >
+                                {item.iscancelled?"Cancelled":"Cancel"}
+                            </button> 
+                            <button
+                                    disabled={item.iscancelled==true||item.isreturned || order.orderStatus!='Delivered'}
+                                    onClick={() => openReturnOverlay(order.orderId, item.productId._id)}
                                     className="return-button"
                                 >
                                    
-                                    {list.isreturned ? "Returned" : "Return"}
+                                    {item.isreturned ? "Returned" : "Return"}
                                 </button> 
-                             
-                                 <button 
-                                disabled={list.orderStatus==="Cancelled"||list.iscancelled||list.orderStatus==="Delivered"||list.orderStatus=="Shipped"}
-                                onClick={() => openoverlay(list.orderid,list.productId._id)} //changed now
-                                className="action-button"
-                            >
-                                {list.iscancelled?"Cancelled":"Cancel"}
-                            </button> 
-                            
+                            </div>
+                            </div>
+                          
+                          ))}
+                      {pdfLinks[order.orderId] && (
+                                        <div className='pdf-link'>{pdfLinks[order.orderId]}</div>
+                                    )}
 
-                        </div>
-                        
-                       
-                        </div>    
-                    
-            
-                
-                
+                        {order.paymentStatus === "Pending" &&
+                          order.paymentMethod === "RazorPay" &&
+                          !order.items.some((item) => item.iscancelled) && (
+                            <button
+                              className="retry-button"
+                              onClick={() =>
+                                handleRetryPayment(
+                                  order.orderId,
+                                  order.razorpay_order_id,
+                                  order.totalPrice,
+                                  order.cartId
+                                )
+                              }
+                            >
+                              Retry Payment
+                            </button>
+                          )}
+                        <button
+                               onClick={() => handleDownloadPDF(order.orderId)}
+                                        className="download-button"
+                                        disabled={order.orderStatus==='Processing' || order.orderStatus==="Shipped"|| order.orderStatus==="Cancelled"}
+                                    >
+                                        Generate Invoice
+                                    </button>
+                                   
+                    </div>
+                  )}
+                </div>
+              </div>
             ))
-        ) : (
+          ) : (
             <p>No orders found.</p>
-        )}
+          )}
+        </div>
+      )}
+
+     
     
         {showOverlay  && (
                 <div className="overlay">
@@ -740,8 +716,8 @@ const showDetails = (orderId) => {
                             </div>
                         )}
             </div>
-            )}
-    </div>   
+          
+     
     
     );
 }

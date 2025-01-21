@@ -48,36 +48,62 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
+    padding: 20px;
+    background-color: white;
 }
 
 .order-card {
-    background: #fff;
+    background: white;
     border: 1px solid #ddd;
     border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    width: 100%;
-    margin-bottom: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+ 
 }
 .order-status {
     font-weight: bold;
     color: #007bff;
   }
   
-.order-card:hover{
-    transform: scale(1.03);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+
+.order-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
 }
-.order-content {
+.item-head{
+    font-size: 19px;
+
+}
+
+.order-contents {
     display: flex;
+    
     flex-direction: column;
     gap: 15px;
   }
+  .order-items-preview {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+    overflow: hidden;
+    max-width: 400px;
+  }
+  
+  .order-items-preview .itemtitle{
+    margin: 5px 0;
+    font-weight: 800;
+    font-size: 14px;
+    color: blue;
+  }
+  
+  .order-items-preview p strong {
+    color: #333;
+  }
+  
+
   
 .order-header {
     display: flex;
@@ -87,7 +113,29 @@
     font-weight: bold;
     gap: 20px;
 }
+.order-items {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.order-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
 .order-details {
     display: flex;
     flex-wrap: wrap; /* Ensures content adjusts on smaller screens */
@@ -108,21 +156,31 @@
     font-size: 14px;
     color: #333;
 }
-
-.product-title {
+.product-titles,
+.productprices,
+.order-status,
+.status-message {
+  width: 180px; /* Fixed width for consistency */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.product-titles {
     font-weight: bold;
     margin-bottom: 5px;
+   
 }
 
 .productprices {
     font-size: 16px;
     margin-bottom: 5px;
+   
 }
 
 .order-status {
     font-size: 14px;
     font-weight: bold;
     color: #007bff;
+    
 }
 
 .other-details {
@@ -182,6 +240,31 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-top: 20px;
+}
+.closes-button {
+    background-color: transparent;
+    color: #ff0000; /* Red color */
+    border: none;
+    font-size: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px; /* Adjust as per your layout */
+    right: 10px; /* Adjust as per your layout */
+    padding: 0;
+    line-height: 1;
+  }
+  
+  .closes-button:hover {
+    color: #d32f2f; /* Darker red on hover */
+  }
+  
+.orderactions{
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
 }
 .return-button{
     padding: 10px 9px;  /* Smaller padding */
@@ -394,8 +477,9 @@ textarea.reason-textarea {
     cursor: pointer;
   }
   .status-message{
-    background-color: red;
-    color: white;
+    
+    color: red;
+    max-width: 400px;
   }
   .show-details-button:hover {
     background-color: #0056b3;
