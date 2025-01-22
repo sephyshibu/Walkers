@@ -911,7 +911,7 @@ const deleteorder = async (req, res) => {
   
       const transaction = {
           transaction_id: uuidv4(), // Generate a unique transaction ID
-          amount: refund-orderdoc.tax,
+          amount: refund,
           transactionmethod: "refundcancel",
         };
       console.log("transaction", transaction)

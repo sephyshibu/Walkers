@@ -577,6 +577,7 @@ const showDetails = (orderId) => {
                       <p>Total Price: {order.totalPrice}</p>
                       <p>Payment Method: {order.paymentMethod}</p>
                       <p>Payment Status: {order.paymentStatus}</p>
+                      
                  
                   <div className="order-items-preview">
                     <p className='item-head'>Items:</p>
@@ -606,7 +607,14 @@ const showDetails = (orderId) => {
                           {item.iscancelled ? (
                           <div className="status-message">This product is cancelled by user.</div>
                         ) : item.isreturned ? (
-                          <div className="status-message">This product is returned.</div>
+                          <div className="status-message">This product is returned.
+                           {item.refundDate &&(
+                              <p>Refund Date: {new Date(item.refundDate).toLocaleDateString()}</p>
+                            )}
+                            {item.returnstatus==="Rejected" &&(
+                              <p>The return product is rejected</p>
+                            )}
+                          </div>
                         ) : (order.paymentMethod !== "RazorPay" || order.paymentStatus !== "Pending") ? (
                           <span className="order-status">Status: {order.orderStatus}</span>
                         ) : null}

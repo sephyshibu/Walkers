@@ -356,22 +356,23 @@ const categoryfetch=async(req,res)=>{
 const fetchorder = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 5;
         const skip = (page - 1) * limit;
 
-        const totalOrders = await Orderdb.countDocuments({
-          $or: [
-              { paymentMethod: { $ne: "RazorPay" } },
-              { paymentStatus: { $ne: "Pending" } }
+        const query = {
+          $nor: [
+              { 
+                  $and: [
+                      { paymentmethod: "RazorPay" },
+                      { paymentstatus: "Pending" }
+                  ]
+              }
           ]
-      });
+      };
 
-      const orders = await Orderdb.find({
-          $or: [
-              { paymentmethod: { $ne: "RazorPay" } },
-              { paymentstatus: { $ne: "Pending" } }
-          ]
-      })
+      const totalOrders = await Orderdb.countDocuments(query);
+
+      const orders = await Orderdb.find(query)
           .populate('userId', 'username email')
           .sort({ _id: -1 }) // Sort by _id in descending order (newest first)
           .skip(skip)

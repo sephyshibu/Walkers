@@ -46,6 +46,7 @@ const Orders = () => {
             setedited(false)
             setCurrentPage(responsePage);
             setTotalPages(totalPages);
+            console.log("combined orders",combinedItems)
         } catch (error) {
             console.log('Error in fetching orders:', error);
             setError('Error in fetching orders');
@@ -107,6 +108,7 @@ const Orders = () => {
                             <td>Payment Method</td>
                             <td>Payment Status</td>
                             <td>Order status</td>
+                            <td>Return status</td>
                             <td>Product title</td>
                             <td>Total Price</td>
                             <td>Actions</td>
@@ -120,13 +122,14 @@ const Orders = () => {
                                 <td>{list.paymentmethod}</td>
                                 <td>{list.paymentstatus}</td>
                                 <td>{list.orderStatus}</td>
+                                <td>{list.isreturned?"Returned Item":"nil"}</td>
                                 <td>{list.title}</td>
                                 <td>{list.totalprice}</td>
                                 <td>
                                     <button
                                         className="action-button"
                                         onClick={() => handleEdit(list)}
-                                        disabled={list.orderStatus === "Cancelled"}
+                                        disabled={list.orderStatus === "Cancelled" || list.orderStatus==="Delivered"}
                                     >
                                         Action
                                     </button>

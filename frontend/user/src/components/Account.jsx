@@ -7,12 +7,20 @@ import Order from './Order'
 import WishList from './WishList'
 import Wallet from './Wallet'
 import AccountDetail from './AccountDetail'
+import { useLocation } from 'react-router-dom'; // Import useLocation
 import axiosInstanceuser from '../axios'
 const Account = () => {
     const[activesection,setactivesection]=useState('address')
 
 
-   
+    const location = useLocation();
+
+    // Use useEffect to read the passed state and set the active section
+    useEffect(() => {
+        if (location.state?.section) {
+            setactivesection(location.state.section);
+        }
+    }, [location.state]);
 
     const renderContent=()=>{
         switch(activesection){

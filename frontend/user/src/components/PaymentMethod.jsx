@@ -219,7 +219,7 @@ const PaymentMethod = () => {
             // dispatch(clearCart());
             console.log("dafwsdf")
             toast.error("Payment failed. Items have been returned to inventory.");
-            navigate('/account');
+            navigate('/account', { state: { section: 'orders' } });
         } catch (error) {
             console.error('Error updating product quantities:', error);
             toast.error('An error occurred while processing your failed payment.');
