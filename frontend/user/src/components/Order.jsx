@@ -572,8 +572,8 @@ const showDetails = (orderId) => {
 
                 
                       <p>Order ID: {order.orderId}</p>
-                      <p>Order date: {order.orderDate}</p>
-                      <p>Delivery date: {order.deliveryDate}</p>
+                      <p>Order date: {new Date(order.orderDate).toLocaleDateString()}</p>
+                      <p>Delivery date: {new Date(order.deliveryDate).toLocaleDateString()}</p>
                       <p>Total Price: {order.totalPrice}</p>
                       <p>Payment Method: {order.paymentMethod}</p>
                       <p>Payment Status: {order.paymentStatus}</p>

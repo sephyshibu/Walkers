@@ -672,7 +672,8 @@ const checkout = async (req, res) => {
     // Find cart and populate product details
     const cart = await cartdb.findOne({ userId }).populate({
       path: "items.productId",
-      select: "title status variants",
+      select: "title status variants category",
+      
     });
 
     console.log("Cart: ", JSON.stringify(cart, null, 2));
@@ -697,6 +698,15 @@ const checkout = async (req, res) => {
         unavailableProducts.push({
           title: product.title || "Unknown Product",
           reason: "Product is unavailable",
+        });
+        continue;
+      }
+
+      const category = await Categorydb.findOne({ categoryname: product.category });
+      if (!category || category.status === false) {
+        unavailableProducts.push({
+          title: product.title || "Unknown Product",
+          reason: "Category is inactive",
         });
         continue;
       }
