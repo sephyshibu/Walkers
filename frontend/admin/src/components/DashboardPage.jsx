@@ -121,7 +121,7 @@ const DashboardPage = () => {
       console.error('Error fetching sales data:', error);
     }
   };
-
+  console.log("sales data", salesData)
   const updateHeading = () => {
     switch (filter) {
       case 'year':

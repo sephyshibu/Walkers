@@ -255,9 +255,9 @@ const PaymentMethod = () => {
                 return
 
             } catch (error) {
-                console.error('Failed to place order:', error);
+                 console.error('Failed to place order:', error);
                 if (error.response && error.response.data.message) {
-                    toast.error(error.response.data.message);
+                     return  toast.error(error.response.data.message);
                 } 
                 
                
@@ -267,6 +267,7 @@ const PaymentMethod = () => {
                         
             }
         }
+        
         console.log("after walalet if it is going down")
 
         try {

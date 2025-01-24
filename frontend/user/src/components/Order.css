@@ -65,6 +65,7 @@
 .order-status {
     font-weight: bold;
     color: #007bff;
+    /* max-width: 400px; */
   }
   
 
@@ -117,7 +118,7 @@
     margin-top: 15px;
     padding: 10px;
     background-color: #f9f9f9;
-    border: 1px solid #ddd;
+    border: 3px solid #ddd;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -476,11 +477,41 @@ textarea.reason-textarea {
     margin-left: 10px;
     cursor: pointer;
   }
-  .status-message{
+  /* .status-message{
     
     color: red;
     max-width: 400px;
-  }
+  } */
   .show-details-button:hover {
     background-color: #0056b3;
   }
+  .status-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    min-height: 40px; /* Set a minimum height for consistent spacing */
+  }
+  
+  .status-message, 
+  .order-status, 
+  .status-placeholder {
+    font-size: 14px; /* Consistent font size */
+    line-height: 1.5; /* Consistent line height */
+  }
+  
+  .status-placeholder {
+    width: 180px;
+    height: 20px; /* Adjust to match the status-message height */
+    visibility: hidden; /* Make it invisible but keep the space */
+  }
+  
+  .status-message {
+    color: #d9534f; /* Example: Red for canceled products */
+    max-width: 400px;
+  }
+  
+  .order-status {
+    color: #5cb85c; /* Example: Green for active orders */
+  }
+  

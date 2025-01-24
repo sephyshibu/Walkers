@@ -81,7 +81,7 @@ const handleDisplay = (id) => {
                 </div>):(<>
       {wishlistshow.length === 0 && (
         <div className="empty-wishlist">
-          <p>No wishlist found. Start adding your favorite items!</p>
+          {/* <p>No wishlist found. Start adding your favorite items!</p> */}
           <button onClick={() => navigate('/product')} className="button">
             Explore Products
           </button>
@@ -116,7 +116,7 @@ const handleDisplay = (id) => {
             </div>
           ))
         ) : (
-          <p className="no-wishlist-message">No wishlist found.</p>
+          <p className="no-wishlist-message">No wishlist found. Start adding your favorite items!</p>
         )}
       </div>
       </>

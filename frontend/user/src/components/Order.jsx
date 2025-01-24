@@ -601,23 +601,28 @@ const showDetails = (orderId) => {
                     
                       {order.items.map((item) => (
                         <div key={item.productId} className="order-item">
-                          <p className='product-titles'>Product: {item.title}</p>
+                          <p className='product-titles'>{item.title}</p>
                           <p className='productprices'>Price: {item.price}</p>
                           <p className='productprices'>Quantity: {item.quantity}</p>
+                          <div className="status-container">
                           {item.iscancelled ? (
-                          <div className="status-message">This product is cancelled by user.</div>
-                        ) : item.isreturned ? (
-                          <div className="status-message">This product is returned.
-                           {item.refundDate &&(
-                              <p>Refund Date: {new Date(item.refundDate).toLocaleDateString()}</p>
-                            )}
-                            {item.returnstatus==="Rejected" &&(
-                              <p>The return product is rejected</p>
-                            )}
-                          </div>
-                        ) : (order.paymentMethod !== "RazorPay" || order.paymentStatus !== "Pending") ? (
-                          <span className="order-status">Status: {order.orderStatus}</span>
-                        ) : null}
+                            <div className="status-message">This product is cancelled.</div>
+                          ) : item.isreturned ? (
+                            <div className="status-message">
+                              This product is returned.
+                              {item.refundDate && (
+                                <p>Refund Date: {new Date(item.refundDate).toLocaleDateString()}</p>
+                              )}
+                              {item.returnstatus === "Rejected" && (
+                                <p>The return product is rejected</p>
+                              )}
+                            </div>
+                          ) : (order.paymentMethod !== "RazorPay" || order.paymentStatus !== "Pending") ? (
+                            <span className="order-status">Status: {order.orderStatus}</span>
+                          ) : (
+                            <div className="status-placeholder"></div>
+                          )}
+                        </div>
                     <div className='orderactions'>
                           <button 
                                 disabled={order.orderStatus==="Cancelled"||item.iscancelled||order.orderStatus==="Delivered"||order.orderStatus=="Shipped"}

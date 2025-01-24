@@ -1539,8 +1539,12 @@ const placeorderbywallet=async(req,res)=>{
     }
     console.log("wallet before if")
 
- 
-      if (totalprice <= walletdoc.balance) {
+    if (totalprice > walletdoc.balance) {
+      console.log("insi=ufficient")
+      return res.status(400).json({ message: "Wallet does not have sufficient balance" });
+    }
+ console.log("after ")
+    if (totalprice <= walletdoc.balance) {
       console.log("wallet afeter if")
         const transaction={
           transaction_id:uuidv4(),

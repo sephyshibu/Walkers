@@ -71,7 +71,6 @@
     cursor: not-allowed;
   }
   
-  button:hover:not(:disabled) {
-    background-color: #e68900;
-  }
+  /* button:hover:not(:disabled) {
+    /* background-color: #e68900; */
   
