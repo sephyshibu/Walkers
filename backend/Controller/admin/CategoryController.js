@@ -9,6 +9,7 @@ const wallet =require('../models/wallet')
 const coupondb= require('../models/coupon')
 const offerdb=require('../models/offer')
 const { v4: uuidv4 } = require('uuid'); // create transaction id for uniqque
+
 const addCategory=async(req,res)=>{
     const{category}=req.body
     const normalizedCategory=category.trim().toLowerCase()

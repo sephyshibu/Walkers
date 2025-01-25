@@ -258,20 +258,11 @@ const fetchorder = async (req, res) => {
    
       returnorder,
      
-    addwishlist,
-    fetchwishlist,
-    removeproductfrowwishlist,
+   
     
     deleteorder,
     fetchorder,
-    
-    refreshToken,
-    
-    login,
-    verifyotp,
-    resendotp,
     fetchparticularorder,
-    googleLogin,
-   
+ 
   };
   

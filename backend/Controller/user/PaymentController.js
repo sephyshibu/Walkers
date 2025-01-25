@@ -391,27 +391,10 @@ const placingorder = async (req, res) => {
     }
   };
   module.exports = {
-
-   
-      returnorder,
-   
     verifyPayment,
-    addwishlist,
-    fetchwishlist,
-    removeproductfrowwishlist,
-    
-    deleteorder,
-    fetchorder,
-   
     placingorder,
-    
-    refreshToken,
-    
-    login,
-    verifyotp,
-    resendotp,
-    fetchparticularorder,verifypaymentwallet,
-    googleLogin,verifyretrypayment,
+   verifypaymentwallet,
+   verifyretrypayment,
    preverifypayment
   };
   

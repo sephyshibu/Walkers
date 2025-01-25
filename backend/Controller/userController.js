@@ -672,7 +672,7 @@ const checkout = async (req, res) => {
     // Find cart and populate product details
     const cart = await cartdb.findOne({ userId }).populate({
       path: "items.productId",
-      select: "title status variants category",
+      select: "title status variants category availableQuantity",
       
     });
 
@@ -710,6 +710,14 @@ const checkout = async (req, res) => {
         });
         continue;
       }
+      if (item.quantity > product.availableQuantity) {
+        unavailableProducts.push({
+          title: product.title || "Unknown Product",
+          reason: `Requested quantity (${item.quantity}) exceeds available stock (${product.availableQuantity})`,
+        });
+        continue;
+      }
+    }
 
       // If variantId exists, check variant availability
       // if (item.variantId) {
@@ -724,7 +732,9 @@ const checkout = async (req, res) => {
       //         });
       //     }
       // }
-    }
+    
+
+    
 
     // If there are unavailable products, return an error response
     if (unavailableProducts.length > 0) {
