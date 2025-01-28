@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router'
 import Signup from './components/Signup'
-import Otp from './components/otp'
+import Otp from './components/Otp'
 import Login from './components/Login'
 import Home from './components/Home'
 import Productpage from './components/Productpage'
