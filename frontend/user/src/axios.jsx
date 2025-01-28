@@ -6,7 +6,7 @@ import { addtoken } from './features/tokenSlice';
 
 // Axios instance
 const axiosInstanceuser = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: import.meta.env.VITE_PORT,
   withCredentials: true,
 });
 

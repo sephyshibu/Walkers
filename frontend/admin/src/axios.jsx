@@ -4,7 +4,7 @@ import { loginAdmin } from './Slices/adminSlice';
 // import {useDispatch} from 'react-redux'
 
 const axiosInstanceadmin = axios.create({
-  baseURL: 'http://localhost:3000/admin',
+  baseURL: import.meta.env.VITE_PORT,
   withCredentials: true,
 });
 

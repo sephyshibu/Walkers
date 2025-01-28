@@ -62,3 +62,63 @@ router.post('/createrazorpay',verifyAccessToken,createrazorpay)
 router.post('/verify',verifyAccessToken,verifypaymentwallet)
 
 module.exports=router
+
+// router.post('/signup', signup);
+// router.post('/refresh', refreshToken);
+// router.post('/login', login);
+// router.post('/verifyotp', verifyotp);
+// router.post('/forgetpasswordverifyotp', forgetpasswordverifyotp);
+// router.post('/resendotp', resendotp);
+// router.put('/updatepasswordemail', updatepasswordemail);
+// router.post('/forgetpasswordresendotp', forgetpasswordresendotp);
+// router.post('/auth/google', googleLogin);
+// router.get('/fetchcategory', categoryname);
+// router.get('/fetchbestproducts', products);
+
+// // Routes requiring `verifyAccessToken` middleware
+// router.use(verifyAccessToken);
+
+// // User-specific routes
+// router.get('/getproducts', getProducts);
+// router.get('/products/display/:id', fetchproductdetails);
+// router.get('/products/recommendations/:category', fetchrecom);
+// router.post('/addcart', checkusersstatus, addcart);
+// router.get('/fetchcart/:userId', checkusersstatus, fetchcart);
+// router.put('/updatecartminus/:userId', updatecartminus);
+// router.put('/updatecartplus/:userId', updatecartplus);
+// router.post('/addaddress', addaddress);
+// router.get('/fetchaddress/:userId', checkusersstatus, fetchaddress);
+// router.get('/fetechspecificaddress/:id', fetechspecificaddress);
+// router.put('/updateaddress/:id', updateaddress);
+// router.delete('/deleteaddress/:id', deleteaddress);
+// router.put('/updatestatus/:id', updateStatus);
+// router.put('/updatepassword/:id', checkusersstatus, changepassword);
+// router.get('/fetchdefaultaddress/:userId', checkusersstatus, fetchdefaultaddress);
+// router.post('/placeorder', checkusersstatus, placingorder);
+// router.post('/checkout', checkusersstatus, checkout);
+// router.get('/fetchorder/:userId', checkusersstatus, fetchorder);
+// router.get('/order/:orderId', checkusersstatus, fetchparticularorder);
+// router.put('/cancelorder/:userId', checkusersstatus, deleteorder);
+// router.delete('/deleteitem/:userId', deleteitem);
+// router.put('/userupdate/:userId', updateuserdetail);
+// router.post('/checkemail', checkemail);
+// router.post('/verifypayment', checkusersstatus, verifyPayment);
+// router.post('/addwishlist', addwishlist);
+// router.get('/fetchwishlist/:userId', checkusersstatus, fetchwishlist);
+// router.delete('/removeproductfrowwishlist/:userId', removeproductfrowwishlist);
+// router.put('/returnorder/:userId', returnorder);
+// router.get('/fetchcoupon/:userId', fetchcoupon);
+// router.get('/coupon/:couponId', couponamount);
+// router.post('/applycoupon/:userId', applycoupon);
+// router.get('/fetchcoupondetails/:couponId', checkusersstatus, coupondetails);
+// router.get('/fetchorderstatus/:userId', sortoptionorders);
+// router.get('/fetchwallet/:userId', checkusersstatus, fetchwallet);
+// router.get('/searchquery', searchLimiter, searchoption);
+// router.post('/verifyretrypayment', checkusersstatus, verifyretrypayment);
+// router.post('/preverifypayment', checkusersstatus, preverifypayment);
+// router.post('/updateProductQuantities', checkusersstatus, retryupdateproduct);
+// router.post('/placeorderbywallet', placeorderbywallet);
+// router.post('/createrazorpay', createrazorpay);
+// router.post('/verify', verifypaymentwallet);
+
+// module.exports = router;

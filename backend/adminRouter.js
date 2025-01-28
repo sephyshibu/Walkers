@@ -8,6 +8,7 @@ router.post('/',loginAdmin)
 
 router.post('/refresh',refreshToken)
 
+
 router.get('/viewusers',verifyAccessToken,userfetch)
 router.put('/customer/:userId/block',verifyAccessToken,toggleUserStatus )
 router.put('/coupon/:itemId/block',verifyAccessToken,toggleCouponStatus)
