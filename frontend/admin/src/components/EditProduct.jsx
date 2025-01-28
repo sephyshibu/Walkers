@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
-import './EditProduct.css';
+import './Editproduct.css';
 
 const EditProduct = () => {
     const { id } = useParams();
