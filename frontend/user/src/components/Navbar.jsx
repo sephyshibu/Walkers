@@ -2,7 +2,7 @@ import React from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import {Link,useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css'; // Add this CSS file for styling
-import walker from '../images/walkers-logo.png'
+import walker from '../images/Walkers-logo.png'
 import { persistor } from '../app/store';
 import trolley from '../images/trolley.png'
 const Navbar = () => {
