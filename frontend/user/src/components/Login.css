@@ -115,16 +115,16 @@
   .google-btn {
     margin-top: 15px;
     padding: 1px;
-    margin-left: 90px;
+    margin-left: 120px;
     border: none;
     border-radius: 5px;
     color: white;
     cursor: pointer;
   }
   
-  .google-btn:hover {
+  /* .google-btn:hover {
     background-color: #7891b9;
-  }
+  } */
   
   /* Messages */
   .error-message, .success-message {
