@@ -1,5 +1,6 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const NodeCache=require('node-cache')
 const Users = require("../mongodb");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -17,6 +18,7 @@ const wallet= require('../models/wallet')
 const coupondb=require('../models/coupon')
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const otpCache = new NodeCache({ stdTTL: 300, checkperiod: 60 }); // TTL in seconds
 const { v4: uuidv4 } = require('uuid'); 
 
 const { userInfo } = require("os");
@@ -72,10 +74,10 @@ const checkemail = async (req, res) => {
     const emailSent = await SendVerificationEmail(email, otp);
     if (!emailSent) {
       return res.json(" failed to send email error");
-    }
+    } 
 
-    req.session.userOTP = otp;
-    req.session.userData = { email };
+    // req.session.userOTP = otp;
+    // req.session.userData = { email };
 
     return res.status(200).json({ message: "successful", email });
   } catch (error) {
@@ -104,14 +106,15 @@ const signup = async (req, res) => {
     }
     const otp = generateOTP();
     const emailSent = await SendVerificationEmail(email, otp);
+    otpCache.set(email, { username, email, password, phonenumber, otp }, 300); // Expires in 5 minutes
     if (!emailSent) {
       return res.json(" failed to send email error");
     }
 
-    req.session.userOTP = otp;
-    req.session.userData = { email, password, username };
-    console.log("session ", req.session);
-    console.log("OTP send session", req.session.userOTP);
+    // req.session.userOTP = otp;
+    // req.session.userData = { email, password, username };
+    // console.log("session ", req.session);
+    // console.log("OTP send session", req.session.userOTP);
 
 
     res.status(200).json({ message: "Backend Successful" });
@@ -266,19 +269,29 @@ const refreshToken = async (req, res) => {
 const verifyotp = async (req, res) => {
   console.log("verify otp");
   try {
-    const { otp } = req.body;
-    console.log("OTP from frontend", otp);
-    console.log("otp from the backend", req.session.userOTP);
-    console.log(req.session.userData);
-    if (otp === req.session.userOTP) {
-      const user = req.session.userData;
-      const hash = await bcrypt.hash(user.password, 10);
+    const { otp, details } = req.body; // Frontend should send email along with OTP
+    console.log("email req",details.email)
+    console.log("otp req",otp)
+    // const cachedData = otpCache.get(email);
+    // const cachedOtp = otpCache.get(otp);
+    // const cachedusername = otpCache.get(username);
+    // const cachedemai= otpCache.get(email);
+    // const cachedhash = otpCache.get(password);
+    // const cachedphone = otpCache.get(phonenumber);
+    const cachedData = otpCache.get(details.email);
+   console.log("cache data", cachedData)
+    // console.log("OTP from frontend", otp);
+    // console.log("otp from the backend", req.session.userOTP);
+    // console.log(req.session.userData);
+    if (otp === cachedData.otp) {
+      console.log("jhiio")
+      const hash = await bcrypt.hash(cachedData.password, 10);
 
       const newuser = new Users({
-        username: user.username,
-        email: user.email,
+        username: cachedData.username,
+        email: cachedData.email,
         password: hash,
-        phonenumber: user.phonenumber,
+        phonenumber: cachedData.phonenumber,
       });
 
       await newuser.save();
@@ -289,14 +302,15 @@ const verifyotp = async (req, res) => {
       await newwallet.save();
       console.log("wallet created")
 
+      otpCache.del(cachedData.email);
       
-      console.log(
-        "from session deconstruct",
-        user.username,
-        user.email,
-        user.password,
-        user.phonenumber
-      );
+      // console.log(
+      //   "from session deconstruct",
+      //   cachedusername,
+      //   cachedemai,
+      //   cachedhash,
+      //   cachedphone
+      // );
       res.status(200).json({ message: "User created Successfully" });
     } else {
       res.status(400).json({ message: "Invalid OTP, Please try again" });
@@ -308,13 +322,23 @@ const verifyotp = async (req, res) => {
 };
 const resendotp = async (req, res) => {
   try {
-    const { email } = req.session.userData;
+    const { details } = req.body;
+    const { username, email, password, phonenumber } = details;
+    // const{username,password,phonenumber}=details
     if (!email) {
-      return res.status(400).json({ message: "email i not found in session" });
+      return res.status(400).json({ message: "email is not found in session" });
     }
     const otp = generateOTP();
-    req.session.userOTP = otp;
+    
+  //   otpCache.set(email, otp, (err, success) => {
+  //     if (err) {
+  //         console.log('Error setting OTP in cache', err);
+  //     } else {
+  //         console.log('OTP successfully set in cache for', email);
+  //     }
+  // });
     const emailsend = await SendVerificationEmail(email, otp);
+    otpCache.set(email, { username,email,password, phonenumber, otp }, 300); // Expires in 5 minutes
     if (emailsend) {
       console.log("resend otp ", otp);
       res.status(200).json({ message: "OTP Resend Successfully" });

@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",
     "mongoose": "^8.9.1",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
     "passport": "^0.7.0",

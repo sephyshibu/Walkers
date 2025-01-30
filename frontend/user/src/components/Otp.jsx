@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstanceuser from '../axios'
 import { useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 
 import './Otp.css'
 const Otp = () => {
     const[otp,setotp]=useState({
         otp:""
     })
+    const location = useLocation();
+    const details = location.state?.details || '';
+   console.log("email",details.email)
     const navigate=useNavigate()
     const[error,seterror]=useState('')
     const[msg,setmsg]=useState('')
@@ -57,7 +61,7 @@ const Otp = () => {
     const handleSubmit=async(e)=>{
         e.preventDefault()
         try{
-            const verifyotp=await axiosInstanceuser.post('/verifyotp',otp)
+            const verifyotp=await axiosInstanceuser.post('/verifyotp',{otp: otp.otp,details})
             setmsg(verifyotp.data.message)
             seterror('')
             navigate('/login')
@@ -76,7 +80,7 @@ const Otp = () => {
     const handleResend=async(e)=>{
         e.preventDefault()
         try{
-           const resendotp=await axiosInstanceuser.post('/resendotp') 
+           const resendotp=await axiosInstanceuser.post('/resendotp',{details}) 
            setmsg(resendotp.data.message)
            seterror('')
         

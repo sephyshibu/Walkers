@@ -101,7 +101,8 @@ const signup=()=>{
                 confirmpassword: '',
                 phonenumber: ''
             });
-            navigate('/otp')
+            navigate('/otp', { state: { details: formdata } });
+
         }
         catch(err)
         {
@@ -125,7 +126,8 @@ const signup=()=>{
             </div>
             <div className="signup-form">
              
-            <form>
+            <form onSubmit={handleSubmit}>
+
                 <div>
                 <input type='text'
                     className="form-input"
@@ -174,7 +176,7 @@ const signup=()=>{
                      {errors.phonenumber && <p className="error">{errors.phonenumber}</p>}
                 </div>
                 
-                <button onClick={handleSubmit} className="submit-btn">Submit</button>
+                <button type="submit"className="submit-btn">Submit</button>
 
               
             </form>

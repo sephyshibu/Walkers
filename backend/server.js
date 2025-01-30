@@ -12,7 +12,7 @@ const session=require('express-session')
 const passport=require('../backend/passport')
 
 
-mongoose.connect(process.env.MONGODB_URL)
+// mongoose.connect(process.env.MONGODB_URL)
 const corsOptions={
     origin: ['http://localhost:5173', 'http://localhost:5174'], // Allow your client app's origin
     credentials: true, // Allow credentials (cookies) to be sent
