@@ -254,7 +254,7 @@ const handleDeleteVariant=async(variantid,currentStatus)=>{
 
 
             <div className="variants-section">
-            <h3>Variants</h3>
+            {/* <h3>Variants</h3> */}
             {variants.map((variant, index) => (
                 <div key={index} className="variant-item">
                     <input
@@ -297,13 +297,13 @@ const handleDeleteVariant=async(variantid,currentStatus)=>{
                     </button>
                 </div>
                 ))}
-                <button
+                {/* <button
                     onClick={() => {
                         setVariants([...variants, { name: '', price: '' }]);
                     }}
                 >
                     Add Variant
-                </button>
+                </button> */}
             </div>
 
 
